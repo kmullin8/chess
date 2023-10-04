@@ -19,7 +19,6 @@ public class ChessBoardTests {
         board = TestFactory.getNewBoard();
     }
 
-
     @Test
     @DisplayName("Add and Get Piece")
     public void getAddPiece() {

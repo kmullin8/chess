@@ -12,7 +12,6 @@ public abstract class ChessPieceImpl implements ChessPiece{
         chessPiece = chessPieceInput;
     }
 
-
     @Override
     public ChessGame.TeamColor getTeamColor() {
         return teamColor;
