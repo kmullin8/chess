@@ -1,5 +1,8 @@
 package chess;
 
+import passoffTests.TestFactory;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Queen extends ChessPieceImpl{
@@ -9,6 +12,289 @@ public class Queen extends ChessPieceImpl{
     }
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return null;
+        Collection<ChessMove> queenMoves = new ArrayList<>();
+        boolean nextPositionValid;
+        ChessPositionImpl inicialPosition;
+
+        //down
+        nextPositionValid = true;
+        inicialPosition = (ChessPositionImpl) myPosition;
+        while(nextPositionValid){
+            ChessPositionImpl nextPosition;
+            int newRow = inicialPosition.getRow();
+            int newCol = inicialPosition.getColumn() - 1;
+
+            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+                nextPositionValid = false;
+            }
+            else {
+                //initialize new position
+                nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
+                    nextPositionValid = false;
+                }
+                else { //next position does not have a piece add move
+                    queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                    inicialPosition = nextPosition;
+                }
+            }
+        }
+
+        //down right
+        nextPositionValid = true;
+        inicialPosition = (ChessPositionImpl) myPosition;
+        while(nextPositionValid){
+            ChessPositionImpl nextPosition;
+            int newRow = inicialPosition.getRow() + 1;
+            int newCol = inicialPosition.getColumn() - 1;
+
+            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+                nextPositionValid = false;
+            }
+            else {
+                //initialize new position
+                nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
+                    nextPositionValid = false;
+                }
+                else { //next position does not have a piece add move
+                    queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                    inicialPosition = nextPosition;
+                }
+            }
+        }
+
+        //right
+        nextPositionValid = true;
+        inicialPosition = (ChessPositionImpl) myPosition;
+        while(nextPositionValid){
+            ChessPositionImpl nextPosition;
+            int newRow = inicialPosition.getRow() + 1;
+            int newCol = inicialPosition.getColumn();
+
+            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+                nextPositionValid = false;
+            }
+            else {
+                //initialize new position
+                nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
+                    nextPositionValid = false;
+                }
+                else { //next position does not have a piece add move
+                    queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                    inicialPosition = nextPosition;
+                }
+            }
+        }
+
+        //up right
+        nextPositionValid = true;
+        inicialPosition = (ChessPositionImpl) myPosition;
+        while(nextPositionValid){
+            ChessPositionImpl nextPosition;
+            int newRow = inicialPosition.getRow() + 1;
+            int newCol = inicialPosition.getColumn() + 1;
+
+            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+                nextPositionValid = false;
+            }
+            else {
+                //initialize new position
+                nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
+                    nextPositionValid = false;
+                }
+                else { //next position does not have a piece add move
+                    queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                    inicialPosition = nextPosition;
+                }
+            }
+        }
+
+        //up
+        nextPositionValid = true;
+        inicialPosition = (ChessPositionImpl) myPosition;
+        while(nextPositionValid){
+            ChessPositionImpl nextPosition;
+            int newRow = inicialPosition.getRow();
+            int newCol = inicialPosition.getColumn() + 1;
+
+            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+                nextPositionValid = false;
+            }
+            else {
+                //initialize new position
+                nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
+                    nextPositionValid = false;
+                }
+                else { //next position does not have a piece add move
+                    queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                    inicialPosition = nextPosition;
+                }
+            }
+        }
+
+        //up left
+        nextPositionValid = true;
+        inicialPosition = (ChessPositionImpl) myPosition;
+        while(nextPositionValid){
+            ChessPositionImpl nextPosition;
+            int newRow = inicialPosition.getRow() - 1;
+            int newCol = inicialPosition.getColumn() + 1;
+
+            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+                nextPositionValid = false;
+            }
+            else {
+                //initialize new position
+                nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
+                    nextPositionValid = false;
+                }
+                else { //next position does not have a piece add move
+                    queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                    inicialPosition = nextPosition;
+                }
+            }
+        }
+
+        //left
+        nextPositionValid = true;
+        inicialPosition = (ChessPositionImpl) myPosition;
+        while(nextPositionValid){
+            ChessPositionImpl nextPosition;
+            int newRow = inicialPosition.getRow() - 1;
+            int newCol = inicialPosition.getColumn();
+
+            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+                nextPositionValid = false;
+            }
+            else {
+                //initialize new position
+                nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
+                    nextPositionValid = false;
+                }
+                else { //next position does not have a piece add move
+                    queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                    inicialPosition = nextPosition;
+                }
+            }
+        }
+
+
+        //down left
+        nextPositionValid = true;
+        inicialPosition = (ChessPositionImpl) myPosition;
+        while(nextPositionValid){
+            ChessPositionImpl nextPosition;
+            int newRow = inicialPosition.getRow() - 1;
+            int newCol = inicialPosition.getColumn() - 1;
+
+            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+                nextPositionValid = false;
+            }
+            else {
+                //initialize new position
+                nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
+                    nextPositionValid = false;
+                }
+                else { //next position does not have a piece add move
+                    queenMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                    inicialPosition = nextPosition;
+                }
+            }
+        }
+
+        //test code
+//        System.out.println("rook moves:");
+//        for (ChessMove move : queenMoves) {
+//            System.out.println(move.getEndPosition().getRow() + ", " + move.getEndPosition().getColumn());
+//        }
+
+        return queenMoves;
     }
 }
