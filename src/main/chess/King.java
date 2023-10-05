@@ -25,7 +25,15 @@ public class King extends ChessPieceImpl{
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
 
-            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+            if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                    kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                }
+            }
+            else {
 
                 kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
             }
@@ -40,7 +48,15 @@ public class King extends ChessPieceImpl{
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
 
-            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+            if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                    kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                }
+            }
+            else {
 
                 kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
             }
@@ -55,7 +71,15 @@ public class King extends ChessPieceImpl{
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
 
-            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+            if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                    kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                }
+            }
+            else {
 
                 kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
             }
@@ -70,7 +94,15 @@ public class King extends ChessPieceImpl{
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
 
-            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+            if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                    kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                }
+            }
+            else {
 
                 kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
             }
@@ -85,7 +117,15 @@ public class King extends ChessPieceImpl{
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
 
-            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+            if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                    kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                }
+            }
+            else {
 
                 kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
             }
@@ -100,7 +140,15 @@ public class King extends ChessPieceImpl{
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
 
-            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+            if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                    kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                }
+            }
+            else {
 
                 kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
             }
@@ -115,7 +163,15 @@ public class King extends ChessPieceImpl{
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
 
-            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+            if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                    kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                }
+            }
+            else {
 
                 kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
             }
@@ -130,7 +186,15 @@ public class King extends ChessPieceImpl{
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
 
-            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+            if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                    kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                    //set myPosition to next nextPosition to increment move
+                }
+            }
+            else {
 
                 kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
             }
