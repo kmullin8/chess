@@ -15,10 +15,8 @@ public class Rook extends ChessPieceImpl{
         Collection<ChessMove> rookMoves = new ArrayList<>();
         boolean nextPositionValid;
         ChessPositionImpl inicialPosition;
-        //validMoves.add(TestFactory.getNewMove(position, TestFactory.getNewPosition(2, 4), null));
 
         //generate all valid rook moves and add to rookMoves
-
         //generate right moves
         nextPositionValid = true;
         inicialPosition = (ChessPositionImpl) myPosition;

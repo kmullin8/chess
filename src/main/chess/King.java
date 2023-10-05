@@ -20,7 +20,7 @@ public class King extends ChessPieceImpl{
         newRow = myPosition.getRow();
         newCol = myPosition.getColumn() + 1;
 
-        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+        if(newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
 
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
@@ -43,7 +43,7 @@ public class King extends ChessPieceImpl{
         newRow = myPosition.getRow() + 1;
         newCol = myPosition.getColumn() + 1;
 
-        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+        if(newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
 
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
@@ -66,7 +66,7 @@ public class King extends ChessPieceImpl{
         newRow = myPosition.getRow() + 1;
         newCol = myPosition.getColumn();
 
-        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+        if(newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
 
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
@@ -89,7 +89,7 @@ public class King extends ChessPieceImpl{
         newRow = myPosition.getRow() + 1 ;
         newCol = myPosition.getColumn() - 1;
 
-        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+        if(newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
 
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
@@ -112,7 +112,7 @@ public class King extends ChessPieceImpl{
         newRow = myPosition.getRow();
         newCol = myPosition.getColumn() - 1;
 
-        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+        if(newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
 
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
@@ -135,7 +135,7 @@ public class King extends ChessPieceImpl{
         newRow = myPosition.getRow() - 1;
         newCol = myPosition.getColumn() - 1;
 
-        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+        if(newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
 
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
@@ -158,7 +158,7 @@ public class King extends ChessPieceImpl{
         newRow = myPosition.getRow() - 1;
         newCol = myPosition.getColumn();
 
-        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+        if(newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
 
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
@@ -181,7 +181,7 @@ public class King extends ChessPieceImpl{
         newRow = myPosition.getRow() - 1;
         newCol = myPosition.getColumn() + 1;
 
-        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+        if(newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
 
             //initialize new position
             nextPosition = new ChessPositionImpl(newRow, newCol);
@@ -201,9 +201,9 @@ public class King extends ChessPieceImpl{
         }
 
         //test code
-        for (ChessMove move : kingMoves) {
-            System.out.println(move.getEndPosition().getRow() + ", " + move.getEndPosition().getColumn());
-        }
+//        for (ChessMove move : kingMoves) {
+//            System.out.println(move.getEndPosition().getRow() + ", " + move.getEndPosition().getColumn());
+//        }
 
         return kingMoves;
     }
