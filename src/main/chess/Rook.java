@@ -35,6 +35,13 @@ public class Rook extends ChessPieceImpl{
                 nextPosition = new ChessPositionImpl(newRow, newCol);
 
                 if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        rookMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
                     nextPositionValid = false;
                 }
                 else { //next position does not have a piece add move
@@ -62,6 +69,13 @@ public class Rook extends ChessPieceImpl{
                 nextPosition = new ChessPositionImpl(newRow, newCol);
 
                 if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        rookMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
                     nextPositionValid = false;
                 }
                 else { //next position does not have a piece add move
@@ -89,6 +103,13 @@ public class Rook extends ChessPieceImpl{
                 nextPosition = new ChessPositionImpl(newRow, newCol);
 
                 if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        rookMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
                     nextPositionValid = false;
                 }
                 else { //next position does not have a piece add move
@@ -116,6 +137,13 @@ public class Rook extends ChessPieceImpl{
                 nextPosition = new ChessPositionImpl(newRow, newCol);
 
                 if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+
+                    if(board.getPiece(nextPosition).getTeamColor() != this.getTeamColor()){ //enter if piece at next position is different color
+                        rookMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+
+                        //set myPosition to next nextPosition to increment move
+                        inicialPosition = nextPosition;
+                    }
                     nextPositionValid = false;
                 }
                 else { //next position does not have a piece add move
@@ -128,6 +156,7 @@ public class Rook extends ChessPieceImpl{
         }
 
         //test code
+//        System.out.println("rook moves:");
 //        for (ChessMove move : rookMoves) {
 //            System.out.println(move.getEndPosition().getRow() + ", " + move.getEndPosition().getColumn());
 //        }

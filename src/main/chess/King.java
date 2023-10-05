@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class King extends ChessPieceImpl{
@@ -9,6 +10,137 @@ public class King extends ChessPieceImpl{
     }
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return null;
+        Collection<ChessMove> kingMoves = new ArrayList<>();
+        int newRow;
+        int newCol;
+        ChessPositionImpl nextPosition;
+
+        //generate all valid king moves and add to kingMoves
+        //generate right move
+        newRow = myPosition.getRow();
+        newCol = myPosition.getColumn() + 1;
+
+        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+
+            //initialize new position
+            nextPosition = new ChessPositionImpl(newRow, newCol);
+
+            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+
+                kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+            }
+        }
+
+        //generate up-right move
+        newRow = myPosition.getRow() + 1;
+        newCol = myPosition.getColumn() + 1;
+
+        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+
+            //initialize new position
+            nextPosition = new ChessPositionImpl(newRow, newCol);
+
+            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+
+                kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+            }
+        }
+
+        //generate up move
+        newRow = myPosition.getRow() + 1;
+        newCol = myPosition.getColumn();
+
+        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+
+            //initialize new position
+            nextPosition = new ChessPositionImpl(newRow, newCol);
+
+            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+
+                kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+            }
+        }
+
+        //generate up-left move
+        newRow = myPosition.getRow() + 1 ;
+        newCol = myPosition.getColumn() - 1;
+
+        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+
+            //initialize new position
+            nextPosition = new ChessPositionImpl(newRow, newCol);
+
+            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+
+                kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+            }
+        }
+
+        //generate left move
+        newRow = myPosition.getRow();
+        newCol = myPosition.getColumn() - 1;
+
+        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+
+            //initialize new position
+            nextPosition = new ChessPositionImpl(newRow, newCol);
+
+            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+
+                kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+            }
+        }
+
+        //generate left-down move
+        newRow = myPosition.getRow() - 1;
+        newCol = myPosition.getColumn() - 1;
+
+        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+
+            //initialize new position
+            nextPosition = new ChessPositionImpl(newRow, newCol);
+
+            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+
+                kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+            }
+        }
+
+        //generate down move
+        newRow = myPosition.getRow() - 1;
+        newCol = myPosition.getColumn();
+
+        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+
+            //initialize new position
+            nextPosition = new ChessPositionImpl(newRow, newCol);
+
+            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+
+                kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+            }
+        }
+
+        //generate down-right move
+        newRow = myPosition.getRow() - 1;
+        newCol = myPosition.getColumn() + 1;
+
+        if(newRow >= 0 && newCol >= 0 && newRow <= 8 && newCol <= 8){ // is new position outside of board
+
+            //initialize new position
+            nextPosition = new ChessPositionImpl(newRow, newCol);
+
+            if(board.getPiece(nextPosition) == null){ // enter if next position has a piece
+
+                kingMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+            }
+        }
+
+        //test code
+        for (ChessMove move : kingMoves) {
+            System.out.println(move.getEndPosition().getRow() + ", " + move.getEndPosition().getColumn());
+        }
+
+        return kingMoves;
     }
 }
