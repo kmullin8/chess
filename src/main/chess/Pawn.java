@@ -107,7 +107,7 @@ public class Pawn extends ChessPieceImpl{
                     pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.ROOK));
                     pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.KNIGHT));
                 }
-                else if(board.getPiece(nextPosition) == null) { // enter if next position has a piece
+                else if(board.getPiece(nextPosition) == null) { // enter if next position does not have a piece
 
                     pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
 
@@ -116,7 +116,7 @@ public class Pawn extends ChessPieceImpl{
                         newRow = myPosition.getRow() + 2;
                         nextPosition = new ChessPositionImpl(newRow, newCol);
 
-                        if (board.getPiece(nextPosition) == null) { // enter if next position has a piece
+                        if (board.getPiece(nextPosition) == null) { // enter if next position does not have a piece
 
                             pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
                         }
@@ -124,42 +124,109 @@ public class Pawn extends ChessPieceImpl{
                 }
             }
 
-            newCol = myPosition.getColumn() + 1;
-            nextPosition = new ChessPositionImpl(newRow, newCol);
+            //capture
+            if(this.getTeamColor() == ChessGame.TeamColor.WHITE) {
 
-            if(board.getPiece(nextPosition) != null) { // enter if next position has a piece
+                newRow = myPosition.getRow() + 1;
+                newCol = myPosition.getColumn() + 1;
 
-                if(board.getPiece(nextPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+                if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
 
-                    if(newRow == 8){
+                    //initialize new position
+                    nextPosition = new ChessPositionImpl(newRow, newCol);
 
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.QUEEN));
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.BISHOP));
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.ROOK));
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.KNIGHT));
+                    if(board.getPiece(nextPosition) != null) { // enter if next position has a piece
+
+                        if(board.getPiece(nextPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+
+                            if(newRow == 8){
+
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.QUEEN));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.BISHOP));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.ROOK));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.KNIGHT));
+                            }
+                            else{
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+                            }
+                        }
                     }
-                    else{
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+                }
+
+                newRow = myPosition.getRow() + 1;
+                newCol = myPosition.getColumn() - 1;
+
+                if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
+
+                    //initialize new position
+                    nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                    if(board.getPiece(nextPosition) != null) { // enter if next position has a piece
+
+                        if(board.getPiece(nextPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+
+                            if(newRow == 8){
+
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.QUEEN));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.BISHOP));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.ROOK));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.KNIGHT));
+                            }
+                            else{
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+                            }
+                        }
                     }
                 }
             }
+            else {
+                newRow = myPosition.getRow() - 1;
+                newCol = myPosition.getColumn() - 1;
 
-            newCol = myPosition.getColumn() - 1;
-            nextPosition = new ChessPositionImpl(newRow, newCol);
+                if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
 
-            if(board.getPiece(nextPosition) != null) { // enter if next position has a piece
+                    //initialize new position
+                    nextPosition = new ChessPositionImpl(newRow, newCol);
 
-                if(board.getPiece(nextPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+                    if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(newRow == 8){
+                        if (board.getPiece(nextPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
 
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.QUEEN));
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.BISHOP));
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.ROOK));
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.KNIGHT));
+                            if (newRow == 1) {
+
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.QUEEN));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.BISHOP));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.ROOK));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.KNIGHT));
+                            } else {
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+                            }
+                        }
                     }
-                    else{
-                        pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+                }
+
+                newRow = myPosition.getRow() - 1;
+                newCol = myPosition.getColumn() - 1;
+
+                if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
+
+                    //initialize new position
+                    nextPosition = new ChessPositionImpl(newRow, newCol);
+
+                    if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
+
+                        if (board.getPiece(nextPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+
+                            if (newRow == 1) {
+
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.QUEEN));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.BISHOP));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.ROOK));
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, ChessPiece.PieceType.KNIGHT));
+                            } else {
+                                pawnMoves.add(new ChessMoveImpl(myPosition, nextPosition, null));
+                            }
+                        }
                     }
                 }
             }
