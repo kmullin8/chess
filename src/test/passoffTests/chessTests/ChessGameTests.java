@@ -23,7 +23,7 @@ public class ChessGameTests {
 
     @Test
     @DisplayName("Normal Make Move")
-    public void validMoves() throws InvalidMoveException {
+    public void validMoves() throws InvalidMoveException  {
         /*
         | | | | | | | | |
 		| | | | | | | |q|

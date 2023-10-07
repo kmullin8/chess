@@ -2,21 +2,42 @@ package chess;
 
 import passoffTests.TestFactory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ChessBoardImpl implements ChessBoard {
 
     public Map<ChessPosition, ChessPiece> chessBoard;
+    private ChessPositionImpl kingPositionWhite;
+    private ChessPositionImpl kingPositionBlack;
 
     public ChessBoardImpl(){
         this.chessBoard = new HashMap<>();
+        kingPositionWhite = null;
+        kingPositionBlack = null;
     }
 
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
 
         chessBoard.put(position, piece);
+
+        if(piece.getPieceType() == ChessPiece.PieceType.KING){
+            if(piece.getTeamColor() == ChessGame.TeamColor.WHITE){
+                kingPositionWhite = (ChessPositionImpl) position;
+            }
+            else{
+                kingPositionBlack =  (ChessPositionImpl) position;
+            }
+        }
+    }
+
+    public void movePiece (ChessPosition startPosition,ChessPosition endPosition, ChessPiece piece){
+        chessBoard.remove(startPosition);
+        chessBoard.remove(endPosition);
+        addPiece(endPosition, piece);
     }
 
     @Override
@@ -71,4 +92,104 @@ public class ChessBoardImpl implements ChessBoard {
 //            }
 //        }
     }
+
+    ChessPositionImpl getKingPosition(ChessGame.TeamColor teamColor){
+        if(teamColor == ChessGame.TeamColor.WHITE){
+            return kingPositionWhite;
+        }
+        else{
+            return kingPositionBlack;
+        }
+    }
+
+    boolean isInCheck(ChessGame.TeamColor teamColor){
+        boolean inCheck = false;
+        ChessPositionImpl kingPosition;
+
+        if(teamColor == ChessGame.TeamColor.WHITE){
+            kingPosition = kingPositionWhite;
+        }
+        else{
+            kingPosition = kingPositionBlack;
+        }
+
+        if(kingPosition == null){
+            return inCheck;
+        }
+
+        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard.entrySet()) {//iterate through board
+            ChessPositionImpl currentPosition = (ChessPositionImpl) entry.getKey();
+            ChessPieceImpl currentPiece = (ChessPieceImpl) entry.getValue();
+
+            if(currentPiece.getTeamColor() != teamColor) {
+                Collection<ChessMove> validPieceMoves = currentPiece.pieceMoves(this, currentPosition);
+
+                //see if validPieceMoves contains kings position
+                for (ChessMove move : validPieceMoves) {
+
+                    if (move.getEndPosition().getColumn() == kingPosition.getColumn() && move.getEndPosition().getRow() == kingPosition.getRow()) {
+
+                        inCheck = true;
+                    }
+                }
+            }
+        }
+
+        return inCheck;
+    }
+
+    boolean isInCheckmate(ChessGame.TeamColor teamColor){
+        boolean inCheck = true;
+        ChessPositionImpl kingPosition;
+
+        if(teamColor == ChessGame.TeamColor.WHITE){
+            kingPosition = kingPositionWhite;
+        }
+        else{
+            kingPosition = kingPositionBlack;
+        }
+
+        if(kingPosition == null){
+            return false;
+        }
+
+        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard.entrySet()) {//iterate through board
+            ChessPositionImpl friendlyPosition = (ChessPositionImpl) entry.getKey();
+            ChessPieceImpl friedlyPiece = (ChessPieceImpl) entry.getValue();
+
+            if(friedlyPiece.getTeamColor() == teamColor) { //iterate through every friendly piece
+                Collection<ChessMove> validPieceMoves = friedlyPiece.pieceMoves(this, friendlyPosition); //get moves of friendly piece
+
+            }
+
+            if(currentPiece.getTeamColor() != teamColor) { //check enemy piece end point includes kings location
+                Collection<ChessMove> validPieceMoves = currentPiece.pieceMoves(this, currentPosition);
+
+                //see if validPieceMoves contains kings position
+                for (ChessMove move : validPieceMoves) {
+
+                    if (move.getEndPosition().getColumn() == kingPosition.getColumn() && move.getEndPosition().getRow() == kingPosition.getRow()) {
+
+                        inCheck = true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+//
+//    public ChessPositionImpl findKing(ChessGame.TeamColor teamColor){
+//        ChessPositionImpl kingPosition = null;
+//        ChessPiece kingPiece = new King(teamColor);
+//
+//        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard.entrySet()) {
+//            if (entry.getValue().equals(kingPiece)) {
+//                kingPosition = (ChessPositionImpl) entry.getKey();
+//                break; // Exit the loop when a match is found
+//            }
+//        }
+//
+//        return kingPosition;
+//    }
 }

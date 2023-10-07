@@ -201,7 +201,7 @@ public class Knight extends ChessPieceImpl{
         }
 
         //test code
-//        System.out.println("rook moves:");
+//        System.out.println("knight moves:" +  myPosition.getRow() + "," + myPosition.getColumn());
 //        for (ChessMove move : knightMoves) {
 //            System.out.println(move.getEndPosition().getRow() + ", " + move.getEndPosition().getColumn());
 //        }
