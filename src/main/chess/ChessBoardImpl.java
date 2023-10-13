@@ -19,6 +19,12 @@ public class ChessBoardImpl implements ChessBoard {
         kingPositionBlack = null;
     }
 
+    public ChessBoardImpl(Map<ChessPosition, ChessPiece> chessBoardInput, ChessPositionImpl kingPositionWhiteInput, ChessPositionImpl kingPositionBlackInput){
+        this.chessBoard = chessBoardInput;
+        kingPositionWhite = kingPositionWhiteInput;
+        kingPositionBlack = kingPositionBlackInput;
+    }
+
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
 
@@ -102,6 +108,16 @@ public class ChessBoardImpl implements ChessBoard {
         }
     }
 
+    void setKingPosition(ChessGame.TeamColor teamColor, ChessPositionImpl kingPositionInput){
+
+        if(teamColor == ChessGame.TeamColor.WHITE){
+            kingPositionWhite = kingPositionInput;
+        }
+        else{
+            kingPositionBlack = kingPositionInput;
+        }
+    }
+
     boolean isInCheck(ChessGame.TeamColor teamColor){
         boolean inCheck = false;
         ChessPositionImpl kingPosition;
@@ -139,7 +155,6 @@ public class ChessBoardImpl implements ChessBoard {
     }
 
     boolean isInCheckmate(ChessGame.TeamColor teamColor) {
-        boolean inCheck = true;
         ChessPositionImpl kingPosition;
 
         if (teamColor == ChessGame.TeamColor.WHITE) {
@@ -163,8 +178,10 @@ public class ChessBoardImpl implements ChessBoard {
                 for (ChessMove move : validPieceMoves) {
                     ChessBoardImpl chessBoardCopy = new ChessBoardImpl();
                     chessBoardCopy.chessBoard.putAll(chessBoard); // Create a copy of the board
+                    chessBoardCopy.setKingPosition(ChessGame.TeamColor.WHITE, getKingPosition(ChessGame.TeamColor.WHITE));
+                    chessBoardCopy.setKingPosition(ChessGame.TeamColor.BLACK, getKingPosition(ChessGame.TeamColor.BLACK));
 
-                    chessBoardCopy.movePiece(move.getEndPosition(), move.getStartPosition(), friendlyPiece);
+                    chessBoardCopy.movePiece(move.getStartPosition(), move.getEndPosition(), friendlyPiece);
                     if (!chessBoardCopy.isInCheck(teamColor)) {
                         return false;
                     }
@@ -173,5 +190,34 @@ public class ChessBoardImpl implements ChessBoard {
         }
 
         return true;
+    }
+
+    boolean isInStalemate(ChessGame.TeamColor teamColor) {
+
+        boolean isInStalemate = true;
+        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard.entrySet()) {
+
+            ChessPositionImpl friendlyPosition = (ChessPositionImpl) entry.getKey();
+            ChessPieceImpl friendlyPiece = (ChessPieceImpl) entry.getValue();
+            Collection<ChessMove> validPieceMoves = null;
+
+            if (friendlyPiece.getTeamColor() == teamColor) {
+                validPieceMoves = friendlyPiece.pieceMoves(this, friendlyPosition);
+
+                for (ChessMove move : validPieceMoves) {
+                    ChessBoardImpl chessBoardCopy = new ChessBoardImpl();
+                    chessBoardCopy.chessBoard.putAll(chessBoard); // Create a copy of the board
+                    chessBoardCopy.setKingPosition(ChessGame.TeamColor.WHITE, getKingPosition(ChessGame.TeamColor.WHITE));
+                    chessBoardCopy.setKingPosition(ChessGame.TeamColor.BLACK, getKingPosition(ChessGame.TeamColor.BLACK));
+
+                    chessBoardCopy.movePiece(move.getStartPosition(), move.getEndPosition(), friendlyPiece);
+                    if (!chessBoardCopy.isInCheck(teamColor)) {
+                        isInStalemate = false;
+                    }
+                }
+            }
+        }
+
+        return isInStalemate;
     }
 }

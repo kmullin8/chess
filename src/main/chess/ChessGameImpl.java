@@ -146,7 +146,8 @@ public class ChessGameImpl implements ChessGame{
 
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
-        return false;
+
+        return chessBoard.isInStalemate(teamColor);
     }
 
     @Override
