@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class ChessGameImpl implements ChessGame{
 
@@ -29,7 +31,26 @@ public class ChessGameImpl implements ChessGame{
         }
 
         ChessPieceImpl currentPiece = (ChessPieceImpl) chessBoard.getPiece(startPosition);
-        Collection <ChessMove> validPieceMoves = currentPiece.pieceMoves(chessBoard,startPosition);
+        Collection <ChessMove> pieceMoves = currentPiece.pieceMoves(chessBoard,startPosition);
+        Collection <ChessMove> validPieceMoves = new ArrayList<>();
+
+        ChessBoardImpl chessBoardCopy = chessBoard;
+
+//        for (ChessMove move : pieceMoves) {
+////            chessBoardCopy.movePiece(move.getStartPosition(), move.getEndPosition(), currentPiece);
+////
+////            if(!chessBoardCopy.isInCheck(currentPiece.getTeamColor())){
+////                validPieceMoves.add(move);
+////            }
+////        }
+
+        for (ChessMove move : pieceMoves) {
+
+            if(checkValidMoves(move, currentPiece)){
+
+                validPieceMoves.add(move);
+            }
+        }
 
         return validPieceMoves;
     }
@@ -130,6 +151,11 @@ public class ChessGameImpl implements ChessGame{
         else {
             throw new InvalidMoveException("Invalid move: " + move);
         }
+    }
+
+    boolean checkValidMoves(ChessMove move, ChessPieceImpl currentPiece){
+
+        return chessBoard.checkValidMoves(move, currentPiece);
     }
 
     @Override

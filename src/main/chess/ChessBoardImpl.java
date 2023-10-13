@@ -118,6 +118,22 @@ public class ChessBoardImpl implements ChessBoard {
         }
     }
 
+    boolean checkValidMoves(ChessMove move, ChessPieceImpl currentPiece){
+
+        ChessBoardImpl chessBoardCopy = new ChessBoardImpl();
+        chessBoardCopy.chessBoard.putAll(chessBoard); // Create a copy of the board
+        chessBoardCopy.setKingPosition(ChessGame.TeamColor.WHITE, getKingPosition(ChessGame.TeamColor.WHITE));
+        chessBoardCopy.setKingPosition(ChessGame.TeamColor.BLACK, getKingPosition(ChessGame.TeamColor.BLACK));
+
+        chessBoardCopy.movePiece(move.getStartPosition(), move.getEndPosition(), currentPiece);
+
+        if(!chessBoardCopy.isInCheck(currentPiece.getTeamColor())){
+            return true;
+        }
+
+        return false;
+    }
+
     boolean isInCheck(ChessGame.TeamColor teamColor){
         boolean inCheck = false;
         ChessPositionImpl kingPosition;
