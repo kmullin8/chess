@@ -107,14 +107,18 @@ public class ChessGameImpl implements ChessGame{
 
                 //change team turn
                 if(getTeamTurn() == TeamColor.WHITE){
+
                     setTeamTurn(TeamColor.BLACK);
                     if(isInCheck(TeamColor.BLACK)){
+
                         isInCheckmate(TeamColor.BLACK);
                     }
                 }
                 else{
+
                     setTeamTurn(TeamColor.WHITE);
                     if(isInCheck(TeamColor.WHITE)){
+
                         isInCheckmate(TeamColor.WHITE);
                     }
                 }
