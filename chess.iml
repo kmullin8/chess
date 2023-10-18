@@ -6,10 +6,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/starter" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/dataAccess" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" scope="TEST" name="org.junit.jupiter:junit-jupiter:5.9.2" level="project" />
-    <orderEntry type="library" name="org.junit.jupiter:junit-jupiter:5.9.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="com.google.code.gson" level="project" />
+    <orderEntry type="library" name="com.google.code.gson" level="project" />
+    <orderEntry type="library" exported="" name="eclipsesource.jaxrs.provider.gson" level="project" />
   </component>
 </module>
