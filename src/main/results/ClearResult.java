@@ -4,6 +4,9 @@ package results;
  * result of Clears the database. Removes all users, games, and authTokens
  */
 public class ClearResult {
+    /**
+     * message to return upon failure
+     */
     private String message;
 
     /**

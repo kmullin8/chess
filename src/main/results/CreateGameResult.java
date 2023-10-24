@@ -4,7 +4,13 @@ package results;
  * result of Creates a new game
  */
 public class CreateGameResult {
+    /**
+     * message to return upon failure
+     */
     private String message;
+    /**
+     * game ID of new game
+     */
     private int gameID;
 
     /**

@@ -4,6 +4,9 @@ package results;
  * Logs out the user represented by the authToken
  */
 public class LogoutResult {
+    /**
+     * message to return upon failure
+     */
     private String message;
 
     /**

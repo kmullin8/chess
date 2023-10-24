@@ -5,6 +5,9 @@ package requests;
  */
 public class CreateGameRequest {
 
+    /**
+     * new game name
+     */
     private String gameName;
 
     /**

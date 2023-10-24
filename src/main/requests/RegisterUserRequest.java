@@ -4,8 +4,18 @@ package requests;
  * processes Register a new user
  */
 public class RegisterUserRequest {
+
+    /**
+     * new username
+     */
     private String username;
+    /**
+     * new password for user
+     */
     private String password;
+    /**
+     * new email for user
+     */
     private String email;
 
     /**

@@ -4,6 +4,9 @@ package requests;
  * process request Gives a list of all games
  */
 public class ListGamesRequest {
+    /**
+     * unique token for authentication
+     */
     private String authToken;
 
     /**

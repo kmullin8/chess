@@ -5,6 +5,9 @@ package requests;
  */
 public class LogoutRequest {
 
+    /**
+     * unique token for authentication
+     */
     private String authToken;
 
     /**

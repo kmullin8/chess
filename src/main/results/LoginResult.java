@@ -4,8 +4,17 @@ package results;
  * result of Logs in an existing user (returns a new authToken).
  */
 public class LoginResult {
+    /**
+     * username of login request
+     */
     private String username;
+    /**
+     * new token for authentication
+     */
     private String authToken;
+    /**
+     * message to return upon failure
+     */
     private String message;
 
     /**

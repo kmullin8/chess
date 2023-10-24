@@ -5,7 +5,13 @@ package requests;
  */
 public class LoginRequest {
 
+    /**
+     * username of current player
+     */
     private String username;
+    /**
+     * password of current player
+     */
     private String password;
 
     /**

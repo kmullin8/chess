@@ -8,7 +8,13 @@ import java.util.List;
  * result of Gives a list of all games
  */
 public class ListGamesResult {
+    /**
+     * message to return upon failure
+     */
     private String message;
+    /**
+     * list of games
+     */
     private List<ChessGameImpl> games;
 
     /**
