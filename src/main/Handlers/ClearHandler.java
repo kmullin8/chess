@@ -1,11 +1,11 @@
 package Handlers;
 
-public class Handlers {
+public class ClearHandler {
 
     /**
      * handlers default constructor
      */
-    public Handlers(){
+    public ClearHandler(){
 
     }
 }
