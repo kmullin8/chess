@@ -1,4 +1,5 @@
 dataAccess
+DataAccessException
 httpService
 model
 requests
