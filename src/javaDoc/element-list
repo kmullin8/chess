@@ -1,6 +1,6 @@
 dataAccess
 DataAccessException
-httpService
+services
 model
 requests
 results

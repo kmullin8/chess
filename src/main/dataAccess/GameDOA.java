@@ -4,6 +4,7 @@ import DataAccessException.DataAccessException;
 import model.GameModel;
 import model.UserModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ public class GameDOA {
      * game database
      */
     private static List<GameModel> gameDatabase;
+
+    public GameDOA(){
+        gameDatabase = new ArrayList<>();
+    }
 
     /**
      *

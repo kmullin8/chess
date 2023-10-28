@@ -1,5 +1,8 @@
 package model;
 
+import com.google.gson.Gson;
+import java.util.UUID;
+
 /**
  * creates key for a user
  */
@@ -14,4 +17,17 @@ public class AuthTokenModel {
      * username for player
      */
     private String username;
+
+    public AuthTokenModel(String username){
+        this.username = username;
+        this.authToken = UUID.randomUUID().toString();
+    }
+
+    public String getUsername(){
+        return username;
+    }
+
+    public String getAuthToken(){
+        return authToken;
+    }
 }
