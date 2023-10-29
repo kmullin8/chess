@@ -46,7 +46,7 @@ public class Server {
 
             Spark.post("/user", this::registerUser);
             Spark.post("/session", this::logInUser);
-//            Spark.delete("/session", this::logOutUser);
+            Spark.delete("/session", this::logOutUser);
 //            Spark.get("/game", this::listGames);
 //            Spark.post("/game", this::createGame);
 //            Spark.put("/game", this::joinGame);
@@ -93,16 +93,16 @@ public class Server {
         return send("username", user.getUsername(), "authToken", authToken);
     }
 
-//    /**
-//     * Endpoint for [DELETE] /session
-//     * Authorization header required.
-//     */
-//    public Object logOutUser(Request req, Response ignore) throws CodedException {
-//        var authData = throwIfUnauthorized(req);
-//        authService.deleteSession(authData.authToken());
-//        return send("username", authData.username(), "authToken", authData.authToken());
-//    }
-//
+    /**
+     * Endpoint for [DELETE] /session
+     * Authorization header required.
+     */
+    public Object logOutUser(Request req, Response ignore) throws CodedException {
+        var authToken = throwIfUnauthorized(req);
+        logoutService.deleteSession(authToken.getAuthToken());
+        return send("username", authToken.getUsername(), "authToken", authToken.getAuthToken());
+    }
+
 //    /**
 //     * Endpoint for [GET] /game
 //     * Authorization header required.

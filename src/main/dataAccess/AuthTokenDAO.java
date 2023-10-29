@@ -5,7 +5,9 @@ import model.AuthTokenModel;
 import model.GameModel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * accesses database for authToken
@@ -79,8 +81,14 @@ public class AuthTokenDAO {
      *
      * @throws DataAccessException throws if error
      */
-    public void deleteAuthToken() throws DataAccessException{
-
+    public void deleteAuth(String authToken) throws DataAccessException {
+        Iterator<AuthTokenModel> iterator = authTokenModelDatabase.iterator();
+        while (iterator.hasNext()) {
+            AuthTokenModel authTokenModel = iterator.next();
+            if (Objects.equals(authTokenModel.getAuthToken(), authToken)) {
+                iterator.remove(); // Safely remove the element from the list
+            }
+        }
     }
 
     /**
