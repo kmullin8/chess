@@ -25,9 +25,12 @@ public class AuthTokenDAO {
      *
      * @throws DataAccessException throws if error
      */
-    public void createAuthToken(String userName) throws DataAccessException{
+    public AuthTokenModel createAuthToken(String username) throws DataAccessException{
         //creates new authToken with username and stores to database
-        authTokenModelDatabase.add(new AuthTokenModel(userName));
+        AuthTokenModel authTokenModel = new AuthTokenModel(username);
+
+        authTokenModelDatabase.add(authTokenModel);
+        return authTokenModel;
     }
 
     /**
@@ -53,6 +56,21 @@ public class AuthTokenDAO {
             if (authTokenModel.getAuthToken().equals(authToken)) {
                 return authTokenModel;
             }
+        }
+        return null;
+    }
+
+    public String setNewAuthToken (String username) throws DataAccessException {
+        try {
+            for (AuthTokenModel authTokenModel : authTokenModelDatabase) {
+                if (authTokenModel.getUsername().equals(username)) {//find AuthTokenModel
+                    authTokenModel.setNewAuthToken();
+                    return authTokenModel.getAuthToken();
+                }
+            }
+        } catch (Exception ex) {
+            // Handle the exception or wrap it in a DataAccessException if necessary
+            throw new DataAccessException("Failed to create authToken");
         }
         return null;
     }

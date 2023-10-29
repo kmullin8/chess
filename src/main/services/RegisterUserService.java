@@ -1,6 +1,7 @@
 package services;
 
 import dataAccess.*;
+import model.AuthTokenModel;
 import model.UserModel;
 import DataAccessException.DataAccessException;
 import spark.utils.StringUtils;
@@ -26,7 +27,7 @@ public class RegisterUserService {
 
         try {
             userDOA.createUser(user);
-            authTokenDAO.createAuthToken(user.getUsername());
+            AuthTokenModel authTokenModel = authTokenDAO.createAuthToken(user.getUsername());
 
             return authTokenDAO.findAuthToken(user.getUsername());
         } catch (DataAccessException ex) {

@@ -11,13 +11,13 @@ import dataAccess.*;
 
 public class Server {
 
-    final RegisterUserService registerUserService;
-    final ListGamesService listGamesService;
-    final CreateGameService createGameService;
-    final JoinGameService joinGameService;
-    final ClearService clearService;
-    final LoginService loginService;
-    final LogoutService logoutService;
+    private static RegisterUserService registerUserService;
+    private static ListGamesService listGamesService;
+    private static CreateGameService createGameService;
+    private static JoinGameService joinGameService;
+    private static ClearService clearService;
+    private static LoginService loginService;
+    private static LogoutService logoutService;
 
     public static void main(String[] args) {
         new Server().run();

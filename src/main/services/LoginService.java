@@ -34,7 +34,8 @@ public class LoginService {
         try {
             UserModel loggedInUser = UserDOA.getUser(user.getUsername());
             if (loggedInUser != null && loggedInUser.getPassword().equals(user.getPassword())) {
-                return authTokenDAO.findAuthToken(user.getUsername());
+                String newAuthToken = authTokenDAO.setNewAuthToken(user.getUsername()); //set new authToken
+                return newAuthToken;
             }
             throw new CodedException(401, "Invalid username or password");
         } catch (DataAccessException ex) {

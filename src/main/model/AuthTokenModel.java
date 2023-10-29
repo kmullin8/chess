@@ -2,6 +2,7 @@ package model;
 
 import com.google.gson.Gson;
 import java.util.UUID;
+import java.util.Random;
 
 /**
  * creates key for a user
@@ -20,6 +21,10 @@ public class AuthTokenModel {
 
     public AuthTokenModel(String username){
         this.username = username;
+        this.authToken = UUID.randomUUID().toString();
+    }
+
+    public void setNewAuthToken(){
         this.authToken = UUID.randomUUID().toString();
     }
 
