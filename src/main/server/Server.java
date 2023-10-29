@@ -48,7 +48,7 @@ public class Server {
             Spark.post("/session", this::logInUser);
             Spark.delete("/session", this::logOutUser);
 //            Spark.get("/game", this::listGames);
-//            Spark.post("/game", this::createGame);
+            Spark.post("/game", this::createGame);
 //            Spark.put("/game", this::joinGame);
 //            Spark.delete("/db", this::clearApplication);
 
@@ -113,16 +113,16 @@ public class Server {
 //        return send("games", games.toArray());
 //    }
 //
-//    /**
-//     * Endpoint for [POST] / game
-//     * Authorization header required.
-//     */
-//    public Object createGame(Request req, Response ignoreRes) throws CodedException {
-//        throwIfUnauthorized(req);
-//        var gameData = getBody(req, GameData.class);
-//        gameData = gameService.createGame(gameData.gameName());
-//        return send("gameID", gameData.gameID());
-//    }
+    /**
+     * Endpoint for [POST] / game
+     * Authorization header required.
+     */
+    public Object createGame(Request req, Response ignoreRes) throws CodedException {
+        throwIfUnauthorized(req);
+        var game = getBody(req, GameModel.class);
+        game = createGameService.createGame(game.getGameName());
+        return send("gameID", game.getGameID());
+    }
 //
 //    /**
 //     * Endpoint for [PUT] /

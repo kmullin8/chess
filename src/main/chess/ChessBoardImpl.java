@@ -25,6 +25,9 @@ public class ChessBoardImpl implements ChessBoard {
         kingPositionBlack = kingPositionBlackInput;
     }
 
+    public ChessBoardImpl(ChessBoard board) {
+    }
+
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
 

@@ -1,8 +1,8 @@
 package services;
 
-import dataAccess.AuthTokenDAO;
-import dataAccess.GameDOA;
-import dataAccess.UserDOA;
+import dataAccess.*;
+import model.*;
+import DataAccessException.DataAccessException;
 import results.CreateGameResult;
 
 /**
@@ -19,4 +19,14 @@ public class CreateGameService {
         this.gameDOA = new GameDOA();
         this.userDOA = new UserDOA();
     }
+
+    public GameModel createGame(String gameName) throws CodedException {
+        try {
+            return gameDOA.newGame(gameName);
+        } catch (DataAccessException ex) {
+            throw new CodedException(500, "Server error");
+        }
+    }
+
+
 }

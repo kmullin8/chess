@@ -1,6 +1,8 @@
 package dataAccess;
 
 import DataAccessException.DataAccessException;
+import chess.ChessGame;
+import chess.ChessGameImpl;
 import model.GameModel;
 import model.UserModel;
 
@@ -16,6 +18,7 @@ public class GameDOA {
      * game database
      */
     private static List<GameModel> gameDatabase;
+    private int nextID = 1000;
 
     public GameDOA(){
         gameDatabase = new ArrayList<>();
@@ -25,8 +28,13 @@ public class GameDOA {
      *
      * @throws DataAccessException throws if error
      */
-    public void insertGame() throws DataAccessException {
-
+    public GameModel newGame(String gameName) throws DataAccessException {
+        var gameID = nextID++;
+        var gameModel = new GameModel(gameID, gameName);
+        gameModel.getGame().setBoard( gameModel.getGame().getBoard());
+        gameModel.getGame().getBoard().resetBoard(); // set board to default
+        gameDatabase.add(gameModel);
+        return gameModel;
     }
 
     /**

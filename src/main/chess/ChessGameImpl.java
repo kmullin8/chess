@@ -10,8 +10,13 @@ public class ChessGameImpl implements ChessGame{
     private TeamColor teamturn;
 
     public ChessGameImpl(){
-        chessBoard = null;
-        teamturn = null;
+        chessBoard = new ChessBoardImpl();
+        teamturn = TeamColor.WHITE;
+    }
+
+    public ChessGameImpl(ChessGame copy) {
+        this.chessBoard = new ChessBoardImpl(copy.getBoard());
+        this.teamturn = copy.getTeamTurn();
     }
     @Override
     public TeamColor getTeamTurn() {
