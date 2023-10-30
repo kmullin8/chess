@@ -55,23 +55,7 @@ public class UserDOA {
      *
      * @throws DataAccessException throws if error
      */
-    public void updateUser() throws DataAccessException {
-
-    }
-
-    /**
-     *
-     * @throws DataAccessException throws if error
-     */
-    public void deleteUser() throws DataAccessException {
-
-    }
-
-    /**
-     *
-     * @throws DataAccessException throws if error
-     */
-    public void deleteAllUsers() throws DataAccessException {
-
+    public void clear() throws DataAccessException {
+        userDatabase.clear();
     }
 }

@@ -63,14 +63,6 @@ public class GameDOA {
      *
      * @throws DataAccessException throws if error
      */
-    public void claimSpot() throws DataAccessException {
-
-    }
-
-    /**
-     *
-     * @throws DataAccessException throws if error
-     */
     public void updateGame(GameModel newGameModel) throws DataAccessException {
         int gameID = newGameModel.getGameID();
 
@@ -87,15 +79,7 @@ public class GameDOA {
      *
      * @throws DataAccessException throws if error
      */
-    public void deleteGame() throws DataAccessException {
-
-    }
-
-    /**
-     *
-     * @throws DataAccessException throws if error
-     */
-    public void deleteAllGames() throws DataAccessException {
-
+    public void clear() throws DataAccessException  {
+        gameDatabase.clear();
     }
 }

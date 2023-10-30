@@ -1,8 +1,7 @@
 package services;
 
-import dataAccess.AuthTokenDAO;
-import dataAccess.GameDOA;
-import dataAccess.UserDOA;
+import dataAccess.*;
+import DataAccessException.DataAccessException;
 import requests.ClearRequest;
 import results.ClearResult;
 
@@ -18,5 +17,15 @@ public class ClearService {
         this.authTokenDAO = new AuthTokenDAO();
         this.gameDOA = new GameDOA();
         this.userDOA = new UserDOA();
+    }
+
+    public void clearApplication()  throws CodedException  {
+        try {
+            authTokenDAO.clear();
+            gameDOA.clear();
+            userDOA.clear();
+        } catch (DataAccessException ex) {
+            throw new CodedException(500, "Server error");
+        }
     }
 }

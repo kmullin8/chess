@@ -143,7 +143,7 @@ public class Server {
      * Endpoint for [DELETE] /db
      */
     public Object clearApplication(Request ignoreReq, Response res) throws CodedException {
-//        adminService.clearApplication();
+        clearService.clearApplication();
         return send();
     }
 

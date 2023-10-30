@@ -94,7 +94,7 @@ public class AuthTokenDAO {
     /**
      * @throws DataAccessException throws if error
      */
-    public void deleteAllAuthTokens() throws DataAccessException{
-
+    public void clear() throws DataAccessException {
+        authTokenModelDatabase.clear();
     }
 }
