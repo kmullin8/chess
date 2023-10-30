@@ -21,7 +21,7 @@ public class RegisterUserService {
         this.userDOA = new UserDOA();
     }
 
-    public Object registerUser(UserModel user) throws CodedException{
+    public Object registerUser(UserModel user) throws CodedException {
         if (StringUtils.isEmpty(user.getUsername())) throw new CodedException(400, "missing username");
         if (StringUtils.isEmpty(user.getPassword())) throw new CodedException(400, "missing password");
 

@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import requests.JoinGameRequest;
 import spark.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,10 +48,10 @@ public class Server {
             Spark.post("/user", this::registerUser);
             Spark.post("/session", this::logInUser);
             Spark.delete("/session", this::logOutUser);
-//            Spark.get("/game", this::listGames);
+            Spark.get("/game", this::listGames);
             Spark.post("/game", this::createGame);
-//            Spark.put("/game", this::joinGame);
-//            Spark.delete("/db", this::clearApplication);
+            Spark.put("/game", this::joinGame);
+            Spark.delete("/db", this::clearApplication);
 
             Spark.exception(CodedException.class, this::errorHandler);
             Spark.exception(Exception.class, (e, req, res) -> errorHandler(new CodedException(500, e.getMessage()), req, res));
@@ -103,16 +104,16 @@ public class Server {
         return send("username", authToken.getUsername(), "authToken", authToken.getAuthToken());
     }
 
-//    /**
-//     * Endpoint for [GET] /game
-//     * Authorization header required.
-//     */
-//    public Object listGames(Request req, Response ignoreRes) throws CodedException {
-//        throwIfUnauthorized(req);
-//        var games = gameService.listGames();
-//        return send("games", games.toArray());
-//    }
-//
+    /**
+     * Endpoint for [GET] /game
+     * Authorization header required.
+     */
+    public Object listGames(Request req, Response ignoreRes) throws CodedException {
+        throwIfUnauthorized(req);
+        var games = listGamesService.listGames();
+        return send("games", games.toArray());
+    }
+
     /**
      * Endpoint for [POST] / game
      * Authorization header required.
@@ -123,26 +124,28 @@ public class Server {
         game = createGameService.createGame(game.getGameName());
         return send("gameID", game.getGameID());
     }
-//
-//    /**
-//     * Endpoint for [PUT] /
-//     * Authorization header required.
-//     * <pre>{ "playerColor":"WHITE/BLACK/empty", "gameID": 1234 }</pre>
-//     */
-//    public Object joinGame(Request req, Response ignoreRes) throws CodedException {
-//        var authData = throwIfUnauthorized(req);
-//        var joinReq = getBody(req, JoinRequest.class);
-//        var gameData = gameService.joinGame(authData.username(), joinReq.playerColor(), joinReq.gameID());
-//        return send("game", gameData);
-//    }
-//
-//    /**
-//     * Endpoint for [DELETE] /db
-//     */
-//    public Object clearApplication(Request ignoreReq, Response res) throws CodedException {
+
+    /**
+     * Endpoint for [PUT] /
+     * Authorization header required.
+     * <pre>{ "playerColor":"WHITE/BLACK/empty", "gameID": 1234 }</pre>
+     */
+    public Object joinGame(Request req, Response ignoreRes) throws CodedException {
+
+        var authTokenModel = throwIfUnauthorized(req);
+        var joinReq = getBody(req, JoinGameRequest.class);
+
+        var game = joinGameService.joinGame(authTokenModel.getUsername(), joinReq.getPlayerColor(), joinReq.getGameID());
+        return send("game", game);
+    }
+
+    /**
+     * Endpoint for [DELETE] /db
+     */
+    public Object clearApplication(Request ignoreReq, Response res) throws CodedException {
 //        adminService.clearApplication();
-//        return send();
-//    }
+        return send();
+    }
 
     private <T> T getBody(Request request, Class<T> clazz) throws CodedException {
         var body = new Gson().fromJson(request.body(), clazz);

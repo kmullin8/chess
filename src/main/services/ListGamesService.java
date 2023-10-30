@@ -1,9 +1,13 @@
 package services;
 
+import DataAccessException.DataAccessException;
 import dataAccess.AuthTokenDAO;
 import dataAccess.GameDOA;
 import dataAccess.UserDOA;
+import model.GameModel;
 import results.ListGamesResult;
+
+import java.util.List;
 
 /**
  * Gives a list of all games.
@@ -18,5 +22,13 @@ public class ListGamesService {
         this.authTokenDAO = new AuthTokenDAO();
         this.gameDOA = new GameDOA();
         this.userDOA = new UserDOA();
+    }
+
+    public List<GameModel> listGames() throws CodedException {
+        try {
+            return gameDOA.getGames();
+        } catch (DataAccessException ex) {
+            throw new CodedException(500, "Server error");
+        }
     }
 }

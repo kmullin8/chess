@@ -15,11 +15,11 @@ public class GameModel {
     /**
      * username of white player
      */
-    private int whiteID;
+    private String whiteUsername;
     /**
      * username of black player
      */
-    private int blackID;
+    private String blackUsername;
     /**
      * name of current game
      */
@@ -32,28 +32,56 @@ public class GameModel {
     public GameModel(GameModel copy){
         this.gameID = copy.gameID;
         this.gameName = copy.gameName;
-        this.blackID = copy.blackID;
-        this.whiteID = copy.whiteID;
+        this.blackUsername = copy.blackUsername;
+        this.whiteUsername = copy.whiteUsername;
         this.game = new chess.ChessGameImpl(copy.getGame());
     }
 
     public GameModel(int gameID, String gameName) {
         this.gameID = gameID;
-        this.blackID = 0;
-        this.whiteID = 0;
+        this.blackUsername = null;
+        this.whiteUsername = null;
         this.gameName = gameName;
         this.game = new chess.ChessGameImpl();
     }
 
-    public ChessGame getGame() {
-        return game;
+    public int getGameID(){
+        return gameID;
+    }
+
+    public String getWhiteUsername(){
+        return whiteUsername;
+    }
+
+    public String getBlackUsername(){
+        return blackUsername;
     }
 
     public String getGameName(){
         return gameName;
     }
 
-    public int getGameID(){
-        return gameID;
+    public ChessGame getGame() {
+        return game;
+    }
+
+    public void setWhiteUsername(String whiteUsername){
+        this.whiteUsername = whiteUsername;
+    }
+
+    public void setBlackUsername(String blackUsername){
+        this.blackUsername = blackUsername;
+    }
+
+    public boolean isGameOver() {
+        var game = this.getGame();
+        if(game.isInCheckmate(ChessGame.TeamColor.BLACK) || game.isInStalemate(ChessGame.TeamColor.BLACK)){
+            return true;
+        }
+        else if(game.isInCheckmate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.WHITE)){
+            return true;
+        }
+
+        return false;
     }
 }

@@ -8,6 +8,7 @@ import model.UserModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * accesses database for game
@@ -41,16 +42,21 @@ public class GameDOA {
      *
      * @throws DataAccessException throws if error
      */
-    public void findGameByID() throws DataAccessException {
-
+    public static GameModel findGameByID(int gameID) throws DataAccessException {
+        for (GameModel gameModel : gameDatabase) {
+            if (Objects.equals(gameModel.getGameID(), gameID)) {
+                return gameModel;
+            }
+        }
+        return null;
     }
 
     /**
      *
      * @throws DataAccessException throws if error
      */
-    public void findAllGames() throws DataAccessException {
-
+    public List<GameModel> getGames() throws DataAccessException {
+        return gameDatabase;
     }
 
     /**
@@ -65,8 +71,16 @@ public class GameDOA {
      *
      * @throws DataAccessException throws if error
      */
-    public void updateGame() throws DataAccessException {
+    public void updateGame(GameModel newGameModel) throws DataAccessException {
+        int gameID = newGameModel.getGameID();
 
+        for (int i = 0; i < gameDatabase.size(); i++) {
+            GameModel gameModel = gameDatabase.get(i);
+            if (Objects.equals(gameModel.getGameID(), gameID)) {
+                gameDatabase.set(i, newGameModel); // Replace the old gameModel with the newGameModel
+                break; // Exit the loop once the update is done
+            }
+        }
     }
 
     /**
