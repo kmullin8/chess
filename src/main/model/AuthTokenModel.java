@@ -1,8 +1,6 @@
 package model;
 
-import com.google.gson.Gson;
 import java.util.UUID;
-import java.util.Random;
 
 /**
  * creates key for a user
