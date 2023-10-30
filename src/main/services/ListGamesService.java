@@ -5,7 +5,6 @@ import dataAccess.AuthTokenDAO;
 import dataAccess.GameDOA;
 import dataAccess.UserDOA;
 import model.GameModel;
-import results.ListGamesResult;
 
 import java.util.List;
 

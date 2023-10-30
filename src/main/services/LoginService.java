@@ -3,10 +3,6 @@ package services;
 import DataAccessException.DataAccessException;
 import dataAccess.*;
 import model.*;
-import requests.LoginRequest;
-import results.LoginResult;
-
-import spark.utils.StringUtils;
 
 /**
  * Logs in an existing user (returns a new authToken)
@@ -42,12 +38,4 @@ public class LoginService {
             throw new CodedException(500, "Internal server error");
         }
     }
-
-//    public AuthTokenModel getAuthData(String authToken) throws CodedException {
-//        try {
-//            return dataAccess.readAuth(authToken);
-//        } catch (DataAccessException ignored) {
-//            throw new CodedException(500, "Internal server error");
-//        }
-//    }
 }

@@ -3,7 +3,6 @@ package services;
 import dataAccess.*;
 import model.*;
 import DataAccessException.DataAccessException;
-import results.CreateGameResult;
 
 /**
  * Creates a new game
