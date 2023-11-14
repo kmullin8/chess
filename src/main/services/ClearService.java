@@ -8,22 +8,16 @@ import DataAccessException.DataAccessException;
  * Clears the database. Removes all users, games, and authTokens.
  */
 public class ClearService {
-    private AuthTokenDAO authTokenDAO;
-    private GameDOA gameDOA;
-    private UserDOA userDOA;
+    private DataAccess dataAccess;
 
-    public ClearService(){
-        this.authTokenDAO = new AuthTokenDAO();
-        this.gameDOA = new GameDOA();
-        this.userDOA = new UserDOA();
+    public ClearService(DataAccess dataAccess){
+        this.dataAccess = dataAccess;
     }
 
     public void clearApplication()  throws CodedException  {
         try {
-            authTokenDAO.clear();
-            gameDOA.clear();
-            userDOA.clear();
-        } catch (DataAccessException ex) {
+            dataAccess.clear();
+        } catch (dataAccess.DataAccessException ex) {
             throw new CodedException(500, "Server error");
         }
     }

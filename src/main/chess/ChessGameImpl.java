@@ -1,23 +1,34 @@
 package chess;
 
-import java.util.ArrayList;
+
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.ArrayList;
+
 
 public class ChessGameImpl implements ChessGame{
 
-    private ChessBoardImpl chessBoard;
+    private ChessBoardImpl chessBoard1;
     private TeamColor teamturn;
 
     public ChessGameImpl(){
-        chessBoard = new ChessBoardImpl();
+        chessBoard1 = new ChessBoardImpl();
         teamturn = TeamColor.WHITE;
     }
 
     public ChessGameImpl(ChessGame copy) {
-        this.chessBoard = new ChessBoardImpl(copy.getBoard());
+        this.chessBoard1 = new ChessBoardImpl(copy.getBoard());
         this.teamturn = copy.getTeamTurn();
     }
+
+    public static ChessGameImpl create(String serializedGame) {
+        return serializer().fromJson(serializedGame, ChessGameImpl.class);
+    }
+
     @Override
     public TeamColor getTeamTurn() {
         return teamturn;
@@ -35,11 +46,11 @@ public class ChessGameImpl implements ChessGame{
             return null;
         }
 
-        ChessPieceImpl currentPiece = (ChessPieceImpl) chessBoard.getPiece(startPosition);
-        Collection <ChessMove> pieceMoves = currentPiece.pieceMoves(chessBoard,startPosition);
+        ChessPieceImpl currentPiece = (ChessPieceImpl) chessBoard1.getPiece(startPosition);
+        Collection <ChessMove> pieceMoves = currentPiece.pieceMoves(chessBoard1,startPosition);
         Collection <ChessMove> validPieceMoves = new ArrayList<>();
 
-        ChessBoardImpl chessBoardCopy = chessBoard;
+        ChessBoardImpl chessBoardCopy = chessBoard1;
 
 //        for (ChessMove move : pieceMoves) {
 ////            chessBoardCopy.movePiece(move.getStartPosition(), move.getEndPosition(), currentPiece);
@@ -64,7 +75,7 @@ public class ChessGameImpl implements ChessGame{
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
         //get piece and valid moves from starting position
-        ChessPieceImpl currentPiece = (ChessPieceImpl) chessBoard.getPiece(move.getStartPosition());
+        ChessPieceImpl currentPiece = (ChessPieceImpl) chessBoard1.getPiece(move.getStartPosition());
 
         if(currentPiece == null){
             validMoves(null);
@@ -83,7 +94,7 @@ public class ChessGameImpl implements ChessGame{
             if (validPieceMoves.contains(move)) {
 
                 //check to see if move would put king in check
-                ChessBoardImpl chessBoardCopy = chessBoard;
+                ChessBoardImpl chessBoardCopy = chessBoard1;
                 chessBoardCopy.movePiece(move.getStartPosition(), move.getEndPosition(), currentPiece);
                 if(getTeamTurn() == TeamColor.WHITE){
 
@@ -103,16 +114,16 @@ public class ChessGameImpl implements ChessGame{
                     ChessGame.TeamColor pieceColor = currentPiece.getTeamColor();
 
                     if(type == ChessPiece.PieceType.ROOK){
-                        chessBoard.movePiece(move.getStartPosition(), move.getEndPosition(), new Rook(pieceColor));
+                        chessBoard1.movePiece(move.getStartPosition(), move.getEndPosition(), new Rook(pieceColor));
                     }
                     else if(type == ChessPiece.PieceType.KNIGHT){
-                        chessBoard.movePiece(move.getStartPosition(), move.getEndPosition(), new Knight(pieceColor));
+                        chessBoard1.movePiece(move.getStartPosition(), move.getEndPosition(), new Knight(pieceColor));
                     }
                     else if(type == ChessPiece.PieceType.BISHOP){
-                        chessBoard.movePiece(move.getStartPosition(), move.getEndPosition(), new Bishop(pieceColor));
+                        chessBoard1.movePiece(move.getStartPosition(), move.getEndPosition(), new Bishop(pieceColor));
                     }
                     else if(type == ChessPiece.PieceType.QUEEN){
-                        chessBoard.movePiece(move.getStartPosition(), move.getEndPosition(), new Queen(pieceColor));
+                        chessBoard1.movePiece(move.getStartPosition(), move.getEndPosition(), new Queen(pieceColor));
                     }
 
 //                    switch (type) {
@@ -128,7 +139,7 @@ public class ChessGameImpl implements ChessGame{
                 }
                 else{
                    //move piece
-                    chessBoard.movePiece(move.getStartPosition(), move.getEndPosition(), currentPiece);
+                    chessBoard1.movePiece(move.getStartPosition(), move.getEndPosition(), currentPiece);
                 }
 
                 //change team turn
@@ -160,35 +171,115 @@ public class ChessGameImpl implements ChessGame{
 
     boolean checkValidMoves(ChessMove move, ChessPieceImpl currentPiece){
 
-        return chessBoard.checkValidMoves(move, currentPiece);
+        return chessBoard1.checkValidMoves(move, currentPiece);
     }
 
     @Override
     public boolean isInCheck(TeamColor teamColor) {
 
-        return chessBoard.isInCheck(teamColor);
+        return chessBoard1.isInCheck(teamColor);
     }
 
     @Override
     public boolean isInCheckmate(TeamColor teamColor) {
 
-        return chessBoard.isInCheckmate(teamColor);
+        return chessBoard1.isInCheckmate(teamColor);
     }
 
     @Override
     public boolean isInStalemate(TeamColor teamColor) {
 
-        return chessBoard.isInStalemate(teamColor);
+        return chessBoard1.isInStalemate(teamColor);
     }
 
     @Override
     public void setBoard(ChessBoard board) {
 
-        chessBoard = (ChessBoardImpl) board;
+        chessBoard1 = (ChessBoardImpl) board;
     }
 
     @Override
     public ChessBoard getBoard() {
-        return chessBoard;
+        return chessBoard1;
+    }
+
+    public static Gson serializer() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(ChessGame.class, new ChessGameAdapter());
+        gsonBuilder.registerTypeAdapter(ChessGameImpl.class, new ChessGameAdapter());
+        return gsonBuilder.create();
+    }
+
+    public static class ChessGameAdapter implements JsonDeserializer<ChessGame> {
+        @Override
+        public ChessGame deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            JsonObject jsonObject = el.getAsJsonObject();
+            Gson gson = new Gson();
+
+            ChessGameImpl chessGame = gson.fromJson(jsonObject, ChessGameImpl.class);
+
+            // Deserialize ChessBoard
+            ChessBoardImpl chessBoard = gson.fromJson(jsonObject.getAsJsonObject("chessBoard"), ChessBoardImpl.class);
+            chessGame.setChessBoard(chessBoard);
+
+            // Deserialize KingPositions
+            ChessPositionImpl kingPositionWhite = gson.fromJson(jsonObject.getAsJsonObject("kingPositionWhite"), ChessPositionImpl.class);
+            chessGame.setKingPositionWhite(kingPositionWhite);
+
+            ChessPositionImpl kingPositionBlack = gson.fromJson(jsonObject.getAsJsonObject("kingPositionBlack"), ChessPositionImpl.class);
+            chessGame.setKingPositionBlack(kingPositionBlack);
+
+            return chessGame;
+        }
+    }
+
+    private void setKingPositionBlack(ChessPositionImpl kingPositionBlack) {
+        this.setKingPositionBlack(kingPositionBlack);
+    }
+
+    private void setKingPositionWhite(ChessPositionImpl kingPositionWhite) {
+        this.setKingPositionWhite(kingPositionWhite);
+    }
+
+    private void setChessBoard(ChessBoardImpl chessBoard) {
+        this.setBoard(chessBoard);
+    }
+
+    //format of json object:
+    // chessBoard1(chessBoard2((chess.chessPositionImpl, ChessPiece(teamColor, chessPiece), ..., ,kingPositionWhite, kingPositionBlack,)) teamturn
+    // chessGameImpl(chessBoardImpl((Map<ChessPosition, ChessPiece>, ChessPositionImpl kingPositionWhite, ChessPositionImpl kingPositionBlack)), teamturn
+
+    //chessGame adapter, chessBoard + teamturn
+
+    //chessBoard adapter, Map<ChessPosition, ChessPiece> + ChessPositionImpl kingPositionWhite + ChessPositionImpl kingPositionBlack
+
+    //chessPiece adapter
+
+    //ChessPosition adapter
+
+    public static class ChessBoardAdapter implements JsonDeserializer<ChessBoard> {
+        @Override
+        public ChessBoard deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            JsonObject jsonObject = el.getAsJsonObject();
+            Gson gson = new Gson();
+
+            ChessBoardImpl chessBoard = gson.fromJson(jsonObject.getAsJsonObject("chessBoard"), ChessBoardImpl.class);
+
+            // Handle other properties if needed
+
+            return chessBoard;
+        }
+    }
+
+    public static class ChessPositionAdapter implements JsonDeserializer<ChessPosition> {
+        @Override
+        public ChessPosition deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            JsonObject jsonObject = el.getAsJsonObject();
+            int row = jsonObject.get("row").getAsInt();
+            int col = jsonObject.get("col").getAsInt();
+
+            // Create and return a new ChessPositionImpl object
+            return new ChessPositionImpl(row, col);
+        }
     }
 }

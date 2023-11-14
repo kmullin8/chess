@@ -55,7 +55,7 @@ public class StandardAPITests {
         registerRequest.email = existingUser.email;
 
         //one user already logged in
-        TestModels.TestLoginRegisterResult regResult = serverFacade.register(registerRequest);
+        var regResult = serverFacade.register(registerRequest);
         existingAuth = regResult.authToken;
     }
 

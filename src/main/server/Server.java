@@ -12,6 +12,7 @@ import dataAccess.*;
 
 public class Server {
 
+    private DataAccess dataAccess;
     private static RegisterUserService registerUserService;
     private static ListGamesService listGamesService;
     private static CreateGameService createGameService;
@@ -20,24 +21,31 @@ public class Server {
     private static LoginService loginService;
     private static LogoutService logoutService;
 
-    public static void main(String[] args) {
-        new Server().run();
+    public static void main(String[] args) throws DataAccessException {
+        DataAccess access;
+        if (args.length > 0 && args[0].equalsIgnoreCase("memory")) {
+            access = new MemoryDataAccess();
+        } else {
+            access = new MySqlDataAccess();
+        }
+        new Server(access).run();
     }
 
     /**
      * server default constructor
      */
-    public Server() {
+    public Server(DataAccess dataAccess) {
         String absolutePath = "C:\\Users\\kaden\\school\\23 Fall\\cs 240\\chess\\src\\web";
         Spark.externalStaticFileLocation(absolutePath);
 
-        registerUserService = new RegisterUserService();
-        listGamesService = new ListGamesService();
-        createGameService = new CreateGameService();
-        joinGameService = new JoinGameService();
-        clearService = new ClearService();
-        loginService = new LoginService();
-        logoutService = new LogoutService();
+        this.dataAccess = dataAccess;
+        registerUserService = new RegisterUserService(dataAccess);
+        listGamesService = new ListGamesService(dataAccess);
+        createGameService = new CreateGameService(dataAccess);
+        joinGameService = new JoinGameService(dataAccess);
+        clearService = new ClearService(dataAccess);
+        loginService = new LoginService(dataAccess);
+        logoutService = new LogoutService(dataAccess);
     }
 
     private void run() {
@@ -81,6 +89,7 @@ public class Server {
     private Object registerUser(Request req, Response ignore) throws CodedException, DataAccessException {
         var user = getBody(req, UserModel.class);
         var authToken = registerUserService.registerUser(user);
+
         return send("username", user.getUsername(), "authToken", authToken);
     }
 
@@ -166,7 +175,7 @@ public class Server {
     private AuthTokenModel throwIfUnauthorized(Request req) throws CodedException {
         var authToken = req.headers("authorization");
         if (authToken != null) {
-            var authTokenModel = AuthTokenDAO.getAuthTokenModel(authToken);
+            var authTokenModel = joinGameService.getAuthData(authToken);
             if (authTokenModel != null) {
                 return authTokenModel;
             }

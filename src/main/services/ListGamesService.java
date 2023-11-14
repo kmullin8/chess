@@ -1,11 +1,10 @@
 package services;
 
 import DataAccessException.DataAccessException;
-import dataAccess.AuthTokenDAO;
-import dataAccess.GameDOA;
-import dataAccess.UserDOA;
+import dataAccess.DataAccess;
 import model.GameModel;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -13,20 +12,16 @@ import java.util.List;
  */
 public class ListGamesService {
 
-    private AuthTokenDAO authTokenDAO;
-    private GameDOA gameDOA;
-    private UserDOA userDOA;
+    private DataAccess dataAccess;
 
-    public ListGamesService(){
-        this.authTokenDAO = new AuthTokenDAO();
-        this.gameDOA = new GameDOA();
-        this.userDOA = new UserDOA();
+    public ListGamesService(DataAccess dataAccess){
+        this.dataAccess = dataAccess;
     }
 
-    public List<GameModel> listGames() throws CodedException {
+    public Collection<GameModel> listGames() throws CodedException {
         try {
-            return gameDOA.getGames();
-        } catch (DataAccessException ex) {
+            return dataAccess.listGames();
+        } catch (dataAccess.DataAccessException ex) {
             throw new CodedException(500, "Server error");
         }
     }

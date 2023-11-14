@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataAccess.*;
 import DataAccessException.DataAccessException;
 
+import model.AuthTokenModel;
 import results.JoinGameResult;
 
 /**
@@ -11,44 +12,48 @@ import results.JoinGameResult;
  */
 public class JoinGameService {
 
-    private AuthTokenDAO authTokenDAO;
-    private GameDOA gameDOA;
-    private UserDOA userDOA;
+    private DataAccess dataAccess;
 
-    public JoinGameService(){
-        this.authTokenDAO = new AuthTokenDAO();
-        this.gameDOA = new GameDOA();
-        this.userDOA = new UserDOA();
+    public JoinGameService(DataAccess dataAccess){
+        this.dataAccess = dataAccess;
     }
 
     public Object joinGame(String username, ChessGame.TeamColor teamColor, int gameID) throws CodedException {
         try {
-            var gameModel = gameDOA.findGameByID(gameID);
-            if (gameModel == null) {
+            var game = dataAccess.readGame(gameID);
+            if (game == null) {
                 throw new CodedException(400, "Unknown game");
             } else if (teamColor == null) {
-                return gameModel;
-            } else if (gameModel.isGameOver()) {
+                return game;
+            } else if (game.isGameOver()) {
                 throw new CodedException(403, "Game is over");
             } else {
                 if (teamColor == ChessGame.TeamColor.WHITE) {
-                    if (gameModel.getWhiteUsername() == null || gameModel.getWhiteUsername().equals(username)) {
-                        gameModel.setWhiteUsername(username);
+                    if (game.getWhiteUsername() == null || game.getWhiteUsername().equals(username)) {
+                        game.setWhiteUsername(username);
                     } else {
                         throw new CodedException(403, "Color taken");
                     }
                 } else if (teamColor == ChessGame.TeamColor.BLACK) {
-                    if (gameModel.getBlackUsername() == null || gameModel.getBlackUsername().equals(username)) {
-                        gameModel.setBlackUsername(username);
+                    if (game.getBlackUsername() == null || game.getBlackUsername().equals(username)) {
+                        game.setBlackUsername(username);
                     } else {
                         throw new CodedException(403, "Color taken");
                     }
                 }
-                gameDOA.updateGame(gameModel);
+                dataAccess.updateGame(game);
             }
-            return gameModel;
-        } catch (DataAccessException ignored) {
+            return game;
+        } catch (dataAccess.DataAccessException ignored) {
             throw new CodedException(500, "Server error");
+        }
+    }
+
+    public AuthTokenModel getAuthData(String authToken) throws CodedException {
+        try {
+            return dataAccess.readAuth(authToken);
+        } catch (dataAccess.DataAccessException ignored) {
+            throw new CodedException(500, "Internal server error");
         }
     }
 }

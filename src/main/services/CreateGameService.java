@@ -9,20 +9,16 @@ import DataAccessException.DataAccessException;
  */
 public class CreateGameService {
 
-    private AuthTokenDAO authTokenDAO;
-    private GameDOA gameDOA;
-    private UserDOA userDOA;
+    private DataAccess dataAccess;
 
-    public CreateGameService(){
-        this.authTokenDAO = new AuthTokenDAO();
-        this.gameDOA = new GameDOA();
-        this.userDOA = new UserDOA();
+    public CreateGameService(DataAccess dataAccess){
+        this.dataAccess = dataAccess;
     }
 
     public GameModel createGame(String gameName) throws CodedException {
         try {
-            return gameDOA.newGame(gameName);
-        } catch (DataAccessException ex) {
+            return dataAccess.newGame(gameName);
+        } catch (dataAccess.DataAccessException ex) {
             throw new CodedException(500, "Server error");
         }
     }

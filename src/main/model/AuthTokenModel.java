@@ -33,4 +33,8 @@ public class AuthTokenModel {
     public String getAuthToken(){
         return authToken;
     }
+
+    public void setAuthToken(String newAuthToken){
+        this.authToken = newAuthToken;
+    }
 }

@@ -1,8 +1,6 @@
 package services;
 
-import dataAccess.AuthTokenDAO;
-import dataAccess.GameDOA;
-import dataAccess.UserDOA;
+import dataAccess.DataAccess;
 import DataAccessException.DataAccessException;
 
 
@@ -11,20 +9,16 @@ import DataAccessException.DataAccessException;
  */
 public class LogoutService {
 
-    private AuthTokenDAO authTokenDAO;
-    private GameDOA gameDOA;
-    private UserDOA userDOA;
+    private DataAccess dataAccess;
 
-    public LogoutService(){
-        this.authTokenDAO = new AuthTokenDAO();
-        this.gameDOA = new GameDOA();
-        this.userDOA = new UserDOA();
+    public LogoutService(DataAccess dataAccess){
+        this.dataAccess = dataAccess;
     }
 
     public void deleteSession(String authToken) throws CodedException {
         try {
-            authTokenDAO.deleteAuth(authToken);
-        } catch (DataAccessException ex) {
+            dataAccess.deleteAuth(authToken);
+        } catch (dataAccess.DataAccessException ex) {
             throw new CodedException(500, "Internal server error");
         }
     }

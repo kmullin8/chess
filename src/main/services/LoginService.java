@@ -9,14 +9,10 @@ import model.*;
  */
 public class LoginService {
 
-    private AuthTokenDAO authTokenDAO;
-    private GameDOA gameDOA;
-    private UserDOA userDOA;
+    private DataAccess dataAccess;
 
-    public LoginService(){
-        this.authTokenDAO = new AuthTokenDAO();
-        this.gameDOA = new GameDOA();
-        this.userDOA = new UserDOA();
+    public LoginService(DataAccess dataAccess){
+        this.dataAccess = dataAccess;
     }
 
     /**
@@ -26,15 +22,14 @@ public class LoginService {
      * @param user to create a session for.
      * @return the authToken for the session.
      */
-    public Object createSession(UserModel user) throws CodedException {
+    public String createSession(UserModel user) throws CodedException {
         try {
-            UserModel loggedInUser = UserDOA.getUser(user.getUsername());
+            UserModel loggedInUser = dataAccess.readUser(user.getUsername());
             if (loggedInUser != null && loggedInUser.getPassword().equals(user.getPassword())) {
-                String newAuthToken = authTokenDAO.setNewAuthToken(user.getUsername()); //set new authToken
-                return newAuthToken;
+                return dataAccess.writeAuth(loggedInUser.getUsername()).getAuthToken();
             }
             throw new CodedException(401, "Invalid username or password");
-        } catch (DataAccessException ex) {
+        } catch (dataAccess.DataAccessException ex) {
             throw new CodedException(500, "Internal server error");
         }
     }

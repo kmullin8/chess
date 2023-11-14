@@ -9,18 +9,18 @@ import java.util.Objects;
 
 public class ChessBoardImpl implements ChessBoard {
 
-    public Map<ChessPosition, ChessPiece> chessBoard;
+    public Map<ChessPosition, ChessPiece> chessBoard2;
     private ChessPositionImpl kingPositionWhite;
     private ChessPositionImpl kingPositionBlack;
 
     public ChessBoardImpl(){
-        this.chessBoard = new HashMap<>();
+        this.chessBoard2 = new HashMap<>();
         kingPositionWhite = null;
         kingPositionBlack = null;
     }
 
     public ChessBoardImpl(Map<ChessPosition, ChessPiece> chessBoardInput, ChessPositionImpl kingPositionWhiteInput, ChessPositionImpl kingPositionBlackInput){
-        this.chessBoard = chessBoardInput;
+        this.chessBoard2 = chessBoardInput;
         kingPositionWhite = kingPositionWhiteInput;
         kingPositionBlack = kingPositionBlackInput;
     }
@@ -31,7 +31,7 @@ public class ChessBoardImpl implements ChessBoard {
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
 
-        chessBoard.put(position, piece);
+        chessBoard2.put(position, piece);
 
         if(piece.getPieceType() == ChessPiece.PieceType.KING){
             if(piece.getTeamColor() == ChessGame.TeamColor.WHITE){
@@ -44,19 +44,19 @@ public class ChessBoardImpl implements ChessBoard {
     }
 
     public void movePiece (ChessPosition startPosition,ChessPosition endPosition, ChessPiece piece){
-        chessBoard.remove(startPosition);
-        chessBoard.remove(endPosition);
+        chessBoard2.remove(startPosition);
+        chessBoard2.remove(endPosition);
         addPiece(endPosition, piece);
     }
 
     @Override
     public ChessPiece getPiece(ChessPosition position) {
-        return chessBoard.get(position);
+        return chessBoard2.get(position);
     }
 
     @Override
     public void resetBoard() {
-        chessBoard.clear();
+        chessBoard2.clear();
 
         //white back row
         addPiece(new ChessPositionImpl(1, 1), new Rook(ChessGame.TeamColor.WHITE));
@@ -124,7 +124,7 @@ public class ChessBoardImpl implements ChessBoard {
     boolean checkValidMoves(ChessMove move, ChessPieceImpl currentPiece){
 
         ChessBoardImpl chessBoardCopy = new ChessBoardImpl();
-        chessBoardCopy.chessBoard.putAll(chessBoard); // Create a copy of the board
+        chessBoardCopy.chessBoard2.putAll(chessBoard2); // Create a copy of the board
         chessBoardCopy.setKingPosition(ChessGame.TeamColor.WHITE, getKingPosition(ChessGame.TeamColor.WHITE));
         chessBoardCopy.setKingPosition(ChessGame.TeamColor.BLACK, getKingPosition(ChessGame.TeamColor.BLACK));
 
@@ -152,7 +152,7 @@ public class ChessBoardImpl implements ChessBoard {
             return inCheck;
         }
 
-        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard.entrySet()) {//iterate through board
+        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard2.entrySet()) {//iterate through board
             ChessPositionImpl currentPosition = (ChessPositionImpl) entry.getKey();
             ChessPieceImpl currentPiece = (ChessPieceImpl) entry.getValue();
 
@@ -186,7 +186,7 @@ public class ChessBoardImpl implements ChessBoard {
             return false;
         }
 
-        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard.entrySet()) {
+        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard2.entrySet()) {
             ChessPositionImpl friendlyPosition = (ChessPositionImpl) entry.getKey();
             ChessPieceImpl friendlyPiece = (ChessPieceImpl) entry.getValue();
             Collection<ChessMove> validPieceMoves = null;
@@ -196,7 +196,7 @@ public class ChessBoardImpl implements ChessBoard {
 
                 for (ChessMove move : validPieceMoves) {
                     ChessBoardImpl chessBoardCopy = new ChessBoardImpl();
-                    chessBoardCopy.chessBoard.putAll(chessBoard); // Create a copy of the board
+                    chessBoardCopy.chessBoard2.putAll(chessBoard2); // Create a copy of the board
                     chessBoardCopy.setKingPosition(ChessGame.TeamColor.WHITE, getKingPosition(ChessGame.TeamColor.WHITE));
                     chessBoardCopy.setKingPosition(ChessGame.TeamColor.BLACK, getKingPosition(ChessGame.TeamColor.BLACK));
 
@@ -214,7 +214,7 @@ public class ChessBoardImpl implements ChessBoard {
     boolean isInStalemate(ChessGame.TeamColor teamColor) {
 
         boolean isInStalemate = true;
-        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard.entrySet()) {
+        for (Map.Entry<ChessPosition, ChessPiece> entry : chessBoard2.entrySet()) {
 
             ChessPositionImpl friendlyPosition = (ChessPositionImpl) entry.getKey();
             ChessPieceImpl friendlyPiece = (ChessPieceImpl) entry.getValue();
@@ -225,7 +225,7 @@ public class ChessBoardImpl implements ChessBoard {
 
                 for (ChessMove move : validPieceMoves) {
                     ChessBoardImpl chessBoardCopy = new ChessBoardImpl();
-                    chessBoardCopy.chessBoard.putAll(chessBoard); // Create a copy of the board
+                    chessBoardCopy.chessBoard2.putAll(chessBoard2); // Create a copy of the board
                     chessBoardCopy.setKingPosition(ChessGame.TeamColor.WHITE, getKingPosition(ChessGame.TeamColor.WHITE));
                     chessBoardCopy.setKingPosition(ChessGame.TeamColor.BLACK, getKingPosition(ChessGame.TeamColor.BLACK));
 
