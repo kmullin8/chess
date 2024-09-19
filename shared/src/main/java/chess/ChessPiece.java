@@ -54,4 +54,28 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
     }
+
+    public String getSymbol() {
+        switch (type) {
+            case ROOK:   return pieceColor == ChessGame.TeamColor.WHITE ? "R" : "r";
+            case KNIGHT: return pieceColor == ChessGame.TeamColor.WHITE ? "N" : "n";
+            case BISHOP: return pieceColor == ChessGame.TeamColor.WHITE ? "B" : "b";
+            case QUEEN:  return pieceColor == ChessGame.TeamColor.WHITE ? "Q" : "q";
+            case KING:   return pieceColor == ChessGame.TeamColor.WHITE ? "K" : "k";
+            case PAWN:   return pieceColor == ChessGame.TeamColor.WHITE ? "P" : "p";
+            default:     return " ";
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ChessPiece)) {
+            return false;
+        }
+        ChessPiece otherPiece = (ChessPiece) obj;
+        return this.pieceColor == otherPiece.pieceColor && this.type == otherPiece.type;
+    }
 }
