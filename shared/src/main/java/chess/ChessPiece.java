@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Represents a single chess piece
@@ -12,6 +14,7 @@ public class ChessPiece {
 
     ChessGame.TeamColor pieceColor;
     ChessPiece.PieceType type;
+    Collection<ChessMove> pieceMoves;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
@@ -52,7 +55,61 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        pieceMoves = new ArrayList<>();
+
+        if(type == PieceType.PAWN){
+            pieceMoves = getPawnMoves(board, myPosition);
+        }
+        else if(type == PieceType.ROOK){
+            pieceMoves = getRookMoves(board, myPosition);
+        }
+        else if(type == PieceType.KNIGHT){
+            pieceMoves = getKnightMoves(board, myPosition);
+        }
+        else if(type == PieceType.BISHOP){
+            pieceMoves = getBishopMoves(board, myPosition);
+        }
+        else if (type == PieceType.QUEEN) {
+            pieceMoves = getQueenMoves(board, myPosition);
+        }
+        else if (type == PieceType.KING){
+            pieceMoves = getKingMoves(board, myPosition);
+        }
+        else {
+            throw new RuntimeException("type not found");
+        }
+
+        return pieceMoves;
+    }
+
+    public Collection<ChessMove> getPawnMoves(ChessBoard board, ChessPosition myPosition){
+        Collection<ChessMove> pawnMoves = new ArrayList<>();
+
+        return pawnMoves;
+    }
+    public Collection<ChessMove> getRookMoves(ChessBoard board, ChessPosition myPosition){
+        Collection<ChessMove> rookMoves = new ArrayList<>();
+        return rookMoves;
+    }
+
+    public Collection<ChessMove> getKnightMoves(ChessBoard board, ChessPosition myPosition){
+        Collection<ChessMove> knightMoves = new ArrayList<>();
+        return knightMoves;
+    }
+
+    public Collection<ChessMove> getBishopMoves(ChessBoard board, ChessPosition myPosition){
+        Collection<ChessMove> bishopMoves = new ArrayList<>();
+        return bishopMoves;
+    }
+
+    public Collection<ChessMove> getQueenMoves(ChessBoard board, ChessPosition myPosition){
+        Collection<ChessMove> queenMoves = new ArrayList<>();
+        return queenMoves;
+    }
+
+    public Collection<ChessMove> getKingMoves(ChessBoard board, ChessPosition myPosition){
+        Collection<ChessMove> kingMoves = new ArrayList<>();
+        return kingMoves;
     }
 
     public String getSymbol() {
