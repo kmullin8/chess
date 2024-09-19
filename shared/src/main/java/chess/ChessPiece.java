@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -58,58 +59,28 @@ public class ChessPiece {
         pieceMoves = new ArrayList<>();
 
         if(type == PieceType.PAWN){
-            pieceMoves = getPawnMoves(board, myPosition);
+            pieceMoves = new PawnMoves().getPawnMoves(board, myPosition, pieceColor);
         }
         else if(type == PieceType.ROOK){
-            pieceMoves = getRookMoves(board, myPosition);
+            pieceMoves = new RookMoves().getRookMoves(board, myPosition, pieceColor);
         }
         else if(type == PieceType.KNIGHT){
-            pieceMoves = getKnightMoves(board, myPosition);
+            pieceMoves = new KnightMoves().getKnightMoves(board, myPosition, pieceColor);
         }
         else if(type == PieceType.BISHOP){
-            pieceMoves = getBishopMoves(board, myPosition);
+            pieceMoves = new BishopMoves().getBishopMoves(board, myPosition, pieceColor);
         }
         else if (type == PieceType.QUEEN) {
-            pieceMoves = getQueenMoves(board, myPosition);
+            pieceMoves = new QueenMoves().getQueenMoves(board, myPosition, pieceColor);
         }
         else if (type == PieceType.KING){
-            pieceMoves = getKingMoves(board, myPosition);
+            pieceMoves = new KingMoves().getKingMoves(board, myPosition, pieceColor);
         }
         else {
             throw new RuntimeException("type not found");
         }
 
         return pieceMoves;
-    }
-
-    public Collection<ChessMove> getPawnMoves(ChessBoard board, ChessPosition myPosition){
-        Collection<ChessMove> pawnMoves = new ArrayList<>();
-
-        return pawnMoves;
-    }
-    public Collection<ChessMove> getRookMoves(ChessBoard board, ChessPosition myPosition){
-        Collection<ChessMove> rookMoves = new ArrayList<>();
-        return rookMoves;
-    }
-
-    public Collection<ChessMove> getKnightMoves(ChessBoard board, ChessPosition myPosition){
-        Collection<ChessMove> knightMoves = new ArrayList<>();
-        return knightMoves;
-    }
-
-    public Collection<ChessMove> getBishopMoves(ChessBoard board, ChessPosition myPosition){
-        Collection<ChessMove> bishopMoves = new ArrayList<>();
-        return bishopMoves;
-    }
-
-    public Collection<ChessMove> getQueenMoves(ChessBoard board, ChessPosition myPosition){
-        Collection<ChessMove> queenMoves = new ArrayList<>();
-        return queenMoves;
-    }
-
-    public Collection<ChessMove> getKingMoves(ChessBoard board, ChessPosition myPosition){
-        Collection<ChessMove> kingMoves = new ArrayList<>();
-        return kingMoves;
     }
 
     public String getSymbol() {
@@ -134,5 +105,10 @@ public class ChessPiece {
         }
         ChessPiece otherPiece = (ChessPiece) obj;
         return this.pieceColor == otherPiece.pieceColor && this.type == otherPiece.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type, pieceMoves);
     }
 }
