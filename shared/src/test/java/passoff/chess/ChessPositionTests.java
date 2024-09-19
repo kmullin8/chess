@@ -23,7 +23,7 @@ public class ChessPositionTests {
     @Test
     @DisplayName("Equals Testing")
     public void equalsTest() {
-        Assertions.assertEquals(original, equal, "equals returned false for equal position");
+        Assertions.assertEquals(original, equal, "equals returned false for equal positions");
         Assertions.assertNotEquals(original, different, "equals returned true for different positions");
     }
 
