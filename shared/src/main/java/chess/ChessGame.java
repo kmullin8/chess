@@ -21,6 +21,11 @@ public class ChessGame {
         this.teamturn = TeamColor.WHITE;
     }
 
+    public ChessGame(ChessGame copy) {
+        this.board = copy.getBoard();
+        this.teamturn = copy.getTeamTurn();
+    }
+
     /**
      * @return Which team's turn it is
      */
@@ -170,7 +175,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        board.resetBoard();
+        this.board = board;
     }
 
     /**
