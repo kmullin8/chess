@@ -58,7 +58,18 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece currPiece = board.getPiece(startPosition);
+        Collection<ChessMove> possMoves = currPiece.pieceMoves(board, startPosition); //all valid moves for current piece
+        Collection<ChessMove> validMoves = new ArrayList<>();
+
+        for(ChessMove move : possMoves){
+            ChessGame tempGame = new ChessGame(this); //setup tempGame and see if move will leave king in check
+            tempGame.board.movePiece(move, currPiece);
+            if(!tempGame.isInCheck(currPiece.getTeamColor())){
+                validMoves.add(move);
+            }
+        }
+        return validMoves;
     }
 
     /**
