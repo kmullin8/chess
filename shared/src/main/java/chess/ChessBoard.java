@@ -113,7 +113,14 @@ public class ChessBoard {
 
     public void movePiece (ChessMove move, ChessPiece piece){
         pieceArray[move.startPosition.getRow() - 1][move.startPosition.getColumn() - 1] = null; //remove current piece
-        pieceArray[move.endPosition.getRow() - 1][move.endPosition.getColumn() - 1] = piece;
+
+        if(move.promotionPiece != null){
+            ChessPiece promotionPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
+            pieceArray[move.endPosition.getRow() - 1][move.endPosition.getColumn() - 1] = promotionPiece;
+        }
+        else {
+            pieceArray[move.endPosition.getRow() - 1][move.endPosition.getColumn() - 1] = piece;
+        }
     }
 
     @Override
