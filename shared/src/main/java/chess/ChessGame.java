@@ -22,7 +22,7 @@ public class ChessGame {
     }
 
     public ChessGame(ChessGame copy) {
-        this.board = copy.getBoard();
+        this.board = new ChessBoard(copy.getBoard());
         this.teamturn = copy.getTeamTurn();
     }
 
@@ -124,8 +124,10 @@ public class ChessGame {
                 if(currPiece != null) {
                     if(currPiece.getTeamColor() == teamColor) {// only look at moves from current team
                         Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
+
                         for (ChessMove move : pieceMoves) {
-                            ChessGame tempGame = this;
+                            ChessGame tempGame = new ChessGame(this); //setup tempGame
+
                             tempGame.board.movePiece(move, currPiece);
                             if(tempGame.isInCheck(teamColor) == false){
                                 return false;

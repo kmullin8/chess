@@ -18,6 +18,21 @@ public class ChessBoard {
         pieceArray = new ChessPiece[8][8];
     }
 
+    public ChessBoard(ChessBoard copy) {
+        this.pieceArray = new ChessPiece[8][8]; // Initialize new piece array
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPiece originalPiece = copy.pieceArray[row][col];
+                if (originalPiece != null) {
+                    this.pieceArray[row][col] = originalPiece;
+                } else {
+                    this.pieceArray[row][col] = null; // No piece at this position
+                }
+            }
+        }
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *

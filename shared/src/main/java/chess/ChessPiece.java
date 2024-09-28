@@ -22,6 +22,12 @@ public class ChessPiece {
         this.type = type;
     }
 
+    public ChessPiece(ChessPiece copy) {
+        this.pieceColor = copy.getTeamColor();
+        this.type = copy.getPieceType();
+        this.pieceMoves = new ArrayList<>(copy.pieceMoves); // If you want to copy moves, else use empty list
+    }
+
     /**
      * The various different chess piece options
      */
