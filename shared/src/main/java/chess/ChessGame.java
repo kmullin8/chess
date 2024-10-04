@@ -69,7 +69,7 @@ public class ChessGame {
                 validMoves.add(move);
             }
         }
-        return validMoves;
+        return validMoves;// test
     }
 
     /**
