@@ -13,7 +13,7 @@ public class JoinGameService {
 
     private DataAccess dataAccess;
 
-    public JoinGameService(DataAccess dataAccess){
+    public JoinGameService(DataAccess dataAccess) {
         this.dataAccess = dataAccess;
     }
 
@@ -23,7 +23,7 @@ public class JoinGameService {
             if (game == null) {
                 throw new CodedException(400, "Unknown game");
             } else if (teamColor == null) {
-                return game;
+                throw new CodedException(400, "Unknown team color");
             } else if (game.isGameOver()) {
                 throw new CodedException(403, "Game is over");
             } else {
