@@ -55,7 +55,7 @@ public class MemoryDataAccess implements DataAccess {
         auths.remove(authToken);
     }
 
-    public GameModel newGame(String gameName) {
+    public GameModel newGame(String gameName) throws DataAccessException {
         var gameID = nextID++;
         var newGame = new GameModel(gameID, null, null, gameName, new ChessGame());
         games.put(newGame.getGameID(), newGame);
