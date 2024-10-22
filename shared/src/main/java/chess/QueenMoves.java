@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class QueenMoves {
-    public Collection<ChessMove> getQueenMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor pieceColor){
+    public Collection<ChessMove> getQueenMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor pieceColor) {
         Collection<ChessMove> queenMoves = new ArrayList<>();
 
         boolean nextPositionValid;
@@ -13,29 +13,27 @@ public class QueenMoves {
         //down
         nextPositionValid = true;
         inicialPosition = (ChessPosition) myPosition;
-        while(nextPositionValid){
+        while (nextPositionValid) {
             ChessPosition nextPosition;
             int newRow = inicialPosition.getRow();
             int newCol = inicialPosition.getColumn() - 1;
 
-            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+            if (newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8) { // is new position outside of board
                 nextPositionValid = false;
-            }
-            else {
+            } else {
                 //initialize new position
                 nextPosition = new ChessPosition(newRow, newCol);
 
-                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+                if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(board.getPiece(nextPosition).getTeamColor() != pieceColor){ //enter if piece at next position is different color
+                    if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
                         queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                         //set myPosition to next nextPosition to increment move
                         inicialPosition = nextPosition;
                     }
                     nextPositionValid = false;
-                }
-                else { //next position does not have a piece add move
+                } else { //next position does not have a piece add move
                     queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                     //set myPosition to next nextPosition to increment move
@@ -47,29 +45,27 @@ public class QueenMoves {
         //down right
         nextPositionValid = true;
         inicialPosition = (ChessPosition) myPosition;
-        while(nextPositionValid){
+        while (nextPositionValid) {
             ChessPosition nextPosition;
             int newRow = inicialPosition.getRow() + 1;
             int newCol = inicialPosition.getColumn() - 1;
 
-            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+            if (newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8) { // is new position outside of board
                 nextPositionValid = false;
-            }
-            else {
+            } else {
                 //initialize new position
                 nextPosition = new ChessPosition(newRow, newCol);
 
-                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+                if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(board.getPiece(nextPosition).getTeamColor() != pieceColor){ //enter if piece at next position is different color
+                    if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
                         queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                         //set myPosition to next nextPosition to increment move
                         inicialPosition = nextPosition;
                     }
                     nextPositionValid = false;
-                }
-                else { //next position does not have a piece add move
+                } else { //next position does not have a piece add move
                     queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                     //set myPosition to next nextPosition to increment move
@@ -81,29 +77,27 @@ public class QueenMoves {
         //right
         nextPositionValid = true;
         inicialPosition = (ChessPosition) myPosition;
-        while(nextPositionValid){
+        while (nextPositionValid) {
             ChessPosition nextPosition;
             int newRow = inicialPosition.getRow() + 1;
             int newCol = inicialPosition.getColumn();
 
-            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+            if (newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8) { // is new position outside of board
                 nextPositionValid = false;
-            }
-            else {
+            } else {
                 //initialize new position
                 nextPosition = new ChessPosition(newRow, newCol);
 
-                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+                if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(board.getPiece(nextPosition).getTeamColor() != pieceColor){ //enter if piece at next position is different color
+                    if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
                         queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                         //set myPosition to next nextPosition to increment move
                         inicialPosition = nextPosition;
                     }
                     nextPositionValid = false;
-                }
-                else { //next position does not have a piece add move
+                } else { //next position does not have a piece add move
                     queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                     //set myPosition to next nextPosition to increment move
@@ -115,29 +109,27 @@ public class QueenMoves {
         //up right
         nextPositionValid = true;
         inicialPosition = (ChessPosition) myPosition;
-        while(nextPositionValid){
+        while (nextPositionValid) {
             ChessPosition nextPosition;
             int newRow = inicialPosition.getRow() + 1;
             int newCol = inicialPosition.getColumn() + 1;
 
-            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+            if (newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8) { // is new position outside of board
                 nextPositionValid = false;
-            }
-            else {
+            } else {
                 //initialize new position
                 nextPosition = new ChessPosition(newRow, newCol);
 
-                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+                if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(board.getPiece(nextPosition).getTeamColor() != pieceColor){ //enter if piece at next position is different color
+                    if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
                         queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                         //set myPosition to next nextPosition to increment move
                         inicialPosition = nextPosition;
                     }
                     nextPositionValid = false;
-                }
-                else { //next position does not have a piece add move
+                } else { //next position does not have a piece add move
                     queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                     //set myPosition to next nextPosition to increment move
@@ -149,29 +141,27 @@ public class QueenMoves {
         //up
         nextPositionValid = true;
         inicialPosition = (ChessPosition) myPosition;
-        while(nextPositionValid){
+        while (nextPositionValid) {
             ChessPosition nextPosition;
             int newRow = inicialPosition.getRow();
             int newCol = inicialPosition.getColumn() + 1;
 
-            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+            if (newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8) { // is new position outside of board
                 nextPositionValid = false;
-            }
-            else {
+            } else {
                 //initialize new position
                 nextPosition = new ChessPosition(newRow, newCol);
 
-                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+                if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(board.getPiece(nextPosition).getTeamColor() != pieceColor){ //enter if piece at next position is different color
+                    if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
                         queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                         //set myPosition to next nextPosition to increment move
                         inicialPosition = nextPosition;
                     }
                     nextPositionValid = false;
-                }
-                else { //next position does not have a piece add move
+                } else { //next position does not have a piece add move
                     queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                     //set myPosition to next nextPosition to increment move
@@ -183,29 +173,27 @@ public class QueenMoves {
         //up left
         nextPositionValid = true;
         inicialPosition = (ChessPosition) myPosition;
-        while(nextPositionValid){
+        while (nextPositionValid) {
             ChessPosition nextPosition;
             int newRow = inicialPosition.getRow() - 1;
             int newCol = inicialPosition.getColumn() + 1;
 
-            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+            if (newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8) { // is new position outside of board
                 nextPositionValid = false;
-            }
-            else {
+            } else {
                 //initialize new position
                 nextPosition = new ChessPosition(newRow, newCol);
 
-                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+                if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(board.getPiece(nextPosition).getTeamColor() != pieceColor){ //enter if piece at next position is different color
+                    if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
                         queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                         //set myPosition to next nextPosition to increment move
                         inicialPosition = nextPosition;
                     }
                     nextPositionValid = false;
-                }
-                else { //next position does not have a piece add move
+                } else { //next position does not have a piece add move
                     queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                     //set myPosition to next nextPosition to increment move
@@ -217,29 +205,27 @@ public class QueenMoves {
         //left
         nextPositionValid = true;
         inicialPosition = (ChessPosition) myPosition;
-        while(nextPositionValid){
+        while (nextPositionValid) {
             ChessPosition nextPosition;
             int newRow = inicialPosition.getRow() - 1;
             int newCol = inicialPosition.getColumn();
 
-            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+            if (newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8) { // is new position outside of board
                 nextPositionValid = false;
-            }
-            else {
+            } else {
                 //initialize new position
                 nextPosition = new ChessPosition(newRow, newCol);
 
-                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+                if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(board.getPiece(nextPosition).getTeamColor() != pieceColor){ //enter if piece at next position is different color
+                    if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
                         queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                         //set myPosition to next nextPosition to increment move
                         inicialPosition = nextPosition;
                     }
                     nextPositionValid = false;
-                }
-                else { //next position does not have a piece add move
+                } else { //next position does not have a piece add move
                     queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                     //set myPosition to next nextPosition to increment move
@@ -252,29 +238,27 @@ public class QueenMoves {
         //down left
         nextPositionValid = true;
         inicialPosition = (ChessPosition) myPosition;
-        while(nextPositionValid){
+        while (nextPositionValid) {
             ChessPosition nextPosition;
             int newRow = inicialPosition.getRow() - 1;
             int newCol = inicialPosition.getColumn() - 1;
 
-            if(newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8){ // is new position outside of board
+            if (newRow <= 0 || newCol <= 0 || newRow > 8 || newCol > 8) { // is new position outside of board
                 nextPositionValid = false;
-            }
-            else {
+            } else {
                 //initialize new position
                 nextPosition = new ChessPosition(newRow, newCol);
 
-                if(board.getPiece(nextPosition) != null){ // enter if next position has a piece
+                if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
 
-                    if(board.getPiece(nextPosition).getTeamColor() != pieceColor){ //enter if piece at next position is different color
+                    if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
                         queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                         //set myPosition to next nextPosition to increment move
                         inicialPosition = nextPosition;
                     }
                     nextPositionValid = false;
-                }
-                else { //next position does not have a piece add move
+                } else { //next position does not have a piece add move
                     queenMoves.add(new ChessMove(myPosition, nextPosition, null));
 
                     //set myPosition to next nextPosition to increment move
@@ -283,12 +267,7 @@ public class QueenMoves {
             }
         }
 
-        //test code
-//        System.out.println("rook moves:");
-//        for (ChessMove move : queenMoves) {
-//            System.out.println(move.getEndPosition().getRow() + ", " + move.getEndPosition().getColumn());
-//        }
-
+        
         return queenMoves;
     }
 }
