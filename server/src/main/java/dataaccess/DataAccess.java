@@ -93,5 +93,4 @@ public interface DataAccess {
      */
     Collection<GameModel> listGames() throws DataAccessException;
 
-    String description();
 }
