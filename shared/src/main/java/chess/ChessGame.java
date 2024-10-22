@@ -62,10 +62,10 @@ public class ChessGame {
         Collection<ChessMove> possMoves = currPiece.pieceMoves(board, startPosition); //all valid moves for current piece
         Collection<ChessMove> validMoves = new ArrayList<>();
 
-        for(ChessMove move : possMoves){
+        for (ChessMove move : possMoves) {
             ChessGame tempGame = new ChessGame(this); //setup tempGame and see if move will leave king in check
             tempGame.board.movePiece(move, currPiece);
-            if(!tempGame.isInCheck(currPiece.getTeamColor())){
+            if (!tempGame.isInCheck(currPiece.getTeamColor())) {
                 validMoves.add(move);
             }
         }
@@ -81,23 +81,24 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece currentPiece = board.getPiece(move.getStartPosition());
 
-        if(currentPiece != null) {
+        if (currentPiece != null) {
             Collection<ChessMove> pieceMoves = currentPiece.pieceMoves(board, move.startPosition);
 
             if (getTeamTurn() == currentPiece.getTeamColor()) {
                 for (ChessMove possMove : pieceMoves) {
-                    if (possMove.endPosition.getRow() == move.endPosition.getRow() && possMove.endPosition.getColumn() == move.endPosition.getColumn()) {
+                    if (possMove.endPosition.getRow() == move.endPosition.getRow() &&
+                            possMove.endPosition.getColumn() == move.endPosition.getColumn()) {
 
                         ChessGame tempGame = new ChessGame(this); //setup tempGame and see if move will leave king in check
                         tempGame.board.movePiece(move, currentPiece);
-                        if(tempGame.isInCheck(currentPiece.getTeamColor())){
+                        if (tempGame.isInCheck(currentPiece.getTeamColor())) {
                             throw new InvalidMoveException("Invalid move: " + move);
                         }
 
                         board.movePiece(move, currentPiece);
-                        if(teamturn == TeamColor.WHITE){ // chang team turn
+                        if (teamturn == TeamColor.WHITE) { // chang team turn
                             teamturn = TeamColor.BLACK;
-                        }else{
+                        } else {
                             teamturn = TeamColor.WHITE;
                         }
                         return;
@@ -117,13 +118,13 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
         boolean inCheck = false;
 
-        for(int row = 8; row >= 1; row--){ // iterate through board
-            for (int col = 1; col <= 8; col++){
+        for (int row = 8; row >= 1; row--) { // iterate through board
+            for (int col = 1; col <= 8; col++) {
                 ChessPosition currPosition = new ChessPosition(row, col);
                 ChessPiece currPiece = board.getPiece(currPosition);
 
-                if(currPiece != null) {
-                    if(currPiece.getTeamColor() != teamColor) {// only look at moves from other team
+                if (currPiece != null) {
+                    if (currPiece.getTeamColor() != teamColor) {// only look at moves from other team
                         Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
 
                         for (ChessMove move : pieceMoves) { //check if king is inside pieceMoves
@@ -149,24 +150,24 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
 
-        if (isInCheck(teamColor) == false){
+        if (isInCheck(teamColor) == false) {
             return false;
         }
 
-        for(int row = 8; row >= 1; row--){ // iterate through board
-            for (int col = 1; col <= 8; col++){
+        for (int row = 8; row >= 1; row--) { // iterate through board
+            for (int col = 1; col <= 8; col++) {
                 ChessPosition currPosition = new ChessPosition(row, col);
                 ChessPiece currPiece = board.getPiece(currPosition);
 
-                if(currPiece != null) {
-                    if(currPiece.getTeamColor() == teamColor) {// only look at moves from current team
+                if (currPiece != null) {
+                    if (currPiece.getTeamColor() == teamColor) {// only look at moves from current team
                         Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
 
                         for (ChessMove move : pieceMoves) {
                             ChessGame tempGame = new ChessGame(this); //setup tempGame
 
                             tempGame.board.movePiece(move, currPiece);
-                            if(tempGame.isInCheck(teamColor) == false){
+                            if (tempGame.isInCheck(teamColor) == false) {
                                 return false;
                             }
                         }
@@ -186,18 +187,18 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
 
-        for(int row = 8; row >= 1; row--){ // iterate through board
-            for (int col = 1; col <= 8; col++){
+        for (int row = 8; row >= 1; row--) { // iterate through board
+            for (int col = 1; col <= 8; col++) {
                 ChessPosition currPosition = new ChessPosition(row, col);
                 ChessPiece currPiece = board.getPiece(currPosition);
 
-                if(currPiece != null) {
-                    if(currPiece.getTeamColor() == teamColor) {// only look at moves from current team
+                if (currPiece != null) {
+                    if (currPiece.getTeamColor() == teamColor) {// only look at moves from current team
                         Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
                         for (ChessMove move : pieceMoves) {
                             ChessGame tempGame = this;
                             tempGame.board.movePiece(move, currPiece);
-                            if(tempGame.isInCheck(teamColor) == false){
+                            if (tempGame.isInCheck(teamColor) == false) {
                                 return false;
                             }
                         }
