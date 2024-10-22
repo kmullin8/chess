@@ -1,6 +1,5 @@
-package dataAccess;
+package dataaccess;
 
-import chess.ChessGame;
 import chess.ChessGame;
 import model.AuthTokenModel;
 import model.GameModel;

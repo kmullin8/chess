@@ -1,6 +1,6 @@
 package services;
 
-import dataAccess.*;
+import dataaccess.*;
 
 /**
  * Clears the database. Removes all users, games, and authTokens.
@@ -8,14 +8,14 @@ import dataAccess.*;
 public class ClearService {
     private DataAccess dataAccess;
 
-    public ClearService(DataAccess dataAccess){
+    public ClearService(DataAccess dataAccess) {
         this.dataAccess = dataAccess;
     }
 
-    public void clearApplication()  throws CodedException  {
+    public void clearApplication() throws CodedException {
         try {
             dataAccess.clear();
-        } catch (dataAccess.DataAccessException ex) {
+        } catch (dataaccess.DataAccessException ex) {
             throw new CodedException(500, "Server error");
         }
     }

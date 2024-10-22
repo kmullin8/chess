@@ -1,10 +1,9 @@
 package services;
 
 import chess.ChessGame;
-import dataAccess.*;
+import dataaccess.*;
 
 import model.AuthTokenModel;
-import results.JoinGameResult;
 
 /**
  * Verifies that the specified game exists, and, if a color is specified, adds the caller as the requested color to the game. If no color is specified the user is joined as an observer. This request is idempotent.
@@ -43,7 +42,7 @@ public class JoinGameService {
                 dataAccess.updateGame(game);
             }
             return game;
-        } catch (dataAccess.DataAccessException ignored) {
+        } catch (dataaccess.DataAccessException ignored) {
             throw new CodedException(500, "Server error");
         }
     }
@@ -51,7 +50,7 @@ public class JoinGameService {
     public AuthTokenModel getAuthData(String authToken) throws CodedException {
         try {
             return dataAccess.readAuth(authToken);
-        } catch (dataAccess.DataAccessException ignored) {
+        } catch (dataaccess.DataAccessException ignored) {
             throw new CodedException(500, "Internal server error");
         }
     }

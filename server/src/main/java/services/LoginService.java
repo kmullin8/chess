@@ -1,6 +1,6 @@
 package services;
 
-import dataAccess.*;
+import dataaccess.*;
 import model.*;
 
 /**
@@ -10,7 +10,7 @@ public class LoginService {
 
     private DataAccess dataAccess;
 
-    public LoginService(DataAccess dataAccess){
+    public LoginService(DataAccess dataAccess) {
         this.dataAccess = dataAccess;
     }
 
@@ -28,7 +28,7 @@ public class LoginService {
                 return dataAccess.writeAuth(loggedInUser.getUsername()).getAuthToken();
             }
             throw new CodedException(401, "Invalid username or password");
-        } catch (dataAccess.DataAccessException ex) {
+        } catch (dataaccess.DataAccessException ex) {
             throw new CodedException(500, "Internal server error");
         }
     }

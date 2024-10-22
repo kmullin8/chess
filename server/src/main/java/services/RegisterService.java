@@ -1,18 +1,17 @@
 package services;
 
-import dataAccess.*;
-import model.AuthTokenModel;
+import dataaccess.*;
 import model.UserModel;
 import spark.utils.StringUtils;
 
 /**
- *Register a new user
+ * Register a new user
  */
 public class RegisterService {
 
     private DataAccess dataAccess;
 
-    public RegisterService(DataAccess dataAccess){
+    public RegisterService(DataAccess dataAccess) {
         this.dataAccess = dataAccess;
     }
 
@@ -23,7 +22,7 @@ public class RegisterService {
         try {
             user = dataAccess.writeUser(user);
             return dataAccess.writeAuth(user.getUsername()).getAuthToken();
-        } catch (dataAccess.DataAccessException ex) {
+        } catch (dataaccess.DataAccessException ex) {
             throw new CodedException(403, "Unable to register user");
         }
     }

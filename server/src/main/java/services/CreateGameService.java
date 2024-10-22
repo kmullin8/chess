@@ -1,6 +1,6 @@
 package services;
 
-import dataAccess.*;
+import dataaccess.*;
 import model.*;
 
 /**
@@ -17,7 +17,7 @@ public class CreateGameService {
     public GameModel createGame(String gameName) throws CodedException {
         try {
             return dataAccess.newGame(gameName);
-        } catch (dataAccess.DataAccessException ex) {
+        } catch (dataaccess.DataAccessException ex) {
             throw new CodedException(500, "Server error");
         }
     }
