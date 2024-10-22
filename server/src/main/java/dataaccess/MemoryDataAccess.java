@@ -76,7 +76,4 @@ public class MemoryDataAccess implements DataAccess {
     }
 
 
-    public String description() {
-        return "Memory Database";
-    }
 }
