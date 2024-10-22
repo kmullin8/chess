@@ -16,8 +16,12 @@ public class RegisterService {
     }
 
     public String registerUser(UserModel user) throws CodedException {
-        if (StringUtils.isEmpty(user.getUsername())) throw new CodedException(400, "missing username");
-        if (StringUtils.isEmpty(user.getPassword())) throw new CodedException(400, "missing password");
+        if (StringUtils.isEmpty(user.getUsername())) {
+            throw new CodedException(400, "missing username");
+        }
+        if (StringUtils.isEmpty(user.getPassword())) {
+            throw new CodedException(400, "missing password");
+        }
 
         try {
             user = dataAccess.writeUser(user);
