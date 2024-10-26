@@ -133,26 +133,21 @@ public class MySqlDataAccess implements DataAccess {
 
     public Collection<GameModel> listGames() throws DataAccessException {
         var result = new ArrayList<GameModel>();
-        var conn = db.getConnection();
-        try (var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerName, blackPlayerName, game FROM `game`")) {
-            try (var rs = preparedStatement.executeQuery()) {
-                while (rs.next()) {
-                    var gameData = readGameData(rs);
-                    result.add(gameData);
-                }
+
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerName, blackPlayerName, game FROM `game`");
+             var rs = preparedStatement.executeQuery()) {
+
+            while (rs.next()) {
+                var gameData = readGameData(rs);
+                result.add(gameData);
             }
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
-        } finally {
-            db.returnConnection(conn);
         }
 
         return result;
-    }
-
-    public String description() {
-        return String.format("MySQL - %s", Database.DB_NAME);
     }
 
     private GameModel readGameData(ResultSet rs) throws SQLException {
