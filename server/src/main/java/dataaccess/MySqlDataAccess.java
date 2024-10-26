@@ -90,7 +90,7 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     public GameModel newGame(String gameName) throws DataAccessException {
-        var game = new ChessGameImpl();
+        var game = new ChessGame();
         game.getBoard().resetBoard();
         Gson gsonGame = new Gson();
         var ID = executeUpdate("INSERT INTO `game` (gameName, whitePlayerName, blackPlayerName, game) VALUES (?, ?, ?, ?)",
@@ -115,8 +115,9 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     public GameModel readGame(int gameID) throws DataAccessException {
-        var conn = db.getConnection();
-        try (var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerName, blackPlayerName, game, FROM `game` WHERE gameID=?")) {
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerName, blackPlayerName, game FROM `game` WHERE gameID=?")) {
+
             preparedStatement.setInt(1, gameID);
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
@@ -125,8 +126,6 @@ public class MySqlDataAccess implements DataAccess {
             }
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
-        } finally {
-            db.returnConnection(conn);
         }
 
         return null;
