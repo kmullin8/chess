@@ -1,5 +1,13 @@
 package chess;
 
+import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+
+import java.lang.reflect.Type;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -25,6 +33,45 @@ public class ChessGame {
         this.board = new ChessBoard(copy.getBoard());
         this.teamturn = copy.getTeamTurn();
     }
+
+    public static ChessGame create(String serializedGame) {
+        return serializer().fromJson(serializedGame, ChessGame.class);
+    }
+
+    private static Gson serializer() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(ChessGame.class, new ChessGameAdapter());
+        return gsonBuilder.create();
+    }
+
+    public static class ChessGameAdapter implements JsonDeserializer<ChessGame>, JsonSerializer<ChessGame> {
+
+        @Override
+        public ChessGame deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) throws JsonParseException {
+            JsonObject jsonObject = el.getAsJsonObject();
+            Gson gson = new Gson();
+
+            ChessGame chessGame = gson.fromJson(jsonObject, ChessGame.class);
+
+            // Deserialize the board
+            ChessBoard board = gson.fromJson(jsonObject.get("board"), ChessBoard.class);
+            chessGame.setBoard(board);
+
+            return chessGame;
+        }
+
+        @Override
+        public JsonElement serialize(ChessGame chessGame, Type type, JsonSerializationContext ctx) {
+            JsonObject jsonObject = new JsonObject();
+            Gson gson = new Gson();
+
+            jsonObject.add("board", gson.toJsonTree(chessGame.getBoard()));
+            jsonObject.add("teamturn", gson.toJsonTree(chessGame.getTeamTurn()));
+
+            return jsonObject;
+        }
+    }
+
 
     /**
      * @return Which team's turn it is

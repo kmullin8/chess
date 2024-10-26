@@ -156,7 +156,7 @@ public class MySqlDataAccess implements DataAccess {
         var gameName = rs.getString("gameName");
         var whitePlayerName = rs.getString("whitePlayerName");
         var blackPlayerName = rs.getString("blackPlayerName");
-        var game = chess.ChessGameImpl.create(gs);
+        var game = chess.ChessGame.create(gs);
 
         return new GameModel(gameID, whitePlayerName, blackPlayerName, gameName, game);
     }
@@ -192,7 +192,7 @@ public class MySqlDataAccess implements DataAccess {
 
 
     private void configureDatabase() throws DataAccessException {
-        db = new Database();
+        db = new DatabaseManager();
         try {
             try (Connection conn = db.getConnection()) {
                 createDatabase(conn);
