@@ -66,9 +66,11 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     public AuthTokenModel readAuth(String authToken) throws DataAccessException {
-        var conn = db.getConnection();
         AuthTokenModel authTokenToReturn = null;
-        try (var preparedStatement = conn.prepareStatement("SELECT username from `authentication` WHERE authToken=?")) {
+
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement("SELECT username FROM `authentication` WHERE authToken=?")) {
+
             preparedStatement.setString(1, authToken);
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
@@ -78,8 +80,6 @@ public class MySqlDataAccess implements DataAccess {
             }
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
-        } finally {
-            db.returnConnection(conn);
         }
 
         return authTokenToReturn;
