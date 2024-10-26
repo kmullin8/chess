@@ -210,10 +210,10 @@ public class MySqlDataAccess implements DataAccess {
 
     private void createDatabase(Connection conn) throws SQLException {
         try (var createStmt = conn.createStatement()) {
-            createStmt.execute("CREATE DATABASE IF NOT EXISTS `" + Database.DB_NAME + "`");
+            createStmt.execute("CREATE DATABASE IF NOT EXISTS `" + "db.name" + "`");
         }
 
-        conn.setCatalog(Database.DB_NAME);
+        conn.setCatalog("db.name");
     }
 
     private void executeCommand(String statement) throws DataAccessException {
