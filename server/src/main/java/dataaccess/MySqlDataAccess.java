@@ -40,8 +40,9 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     public UserModel readUser(String username) throws DataAccessException {
-        var conn = db.getConnection();
-        try (var preparedStatement = conn.prepareStatement("SELECT password, email from `user` WHERE username=?")) {
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement("SELECT password, email FROM `user` WHERE username=?")) {
+
             preparedStatement.setString(1, username);
             try (var rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
@@ -52,8 +53,6 @@ public class MySqlDataAccess implements DataAccess {
             }
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
-        } finally {
-            db.returnConnection(conn);
         }
 
         return null;
