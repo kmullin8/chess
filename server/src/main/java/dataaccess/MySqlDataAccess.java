@@ -195,7 +195,7 @@ public class MySqlDataAccess implements DataAccess {
         db = new DatabaseManager();
         try {
             try (Connection conn = db.getConnection()) {
-                createDatabase(conn);
+                db.createDatabase();
 
                 for (var statement : createStatements) {
                     try (var preparedStatement = conn.prepareStatement(statement)) {
@@ -206,14 +206,6 @@ public class MySqlDataAccess implements DataAccess {
         } catch (SQLException e) {
             throw new DataAccessException(String.format("Unable to configure database: %s", e.getMessage()));
         }
-    }
-
-    private void createDatabase(Connection conn) throws SQLException {
-        try (var createStmt = conn.createStatement()) {
-            createStmt.execute("CREATE DATABASE IF NOT EXISTS `" + "db.name" + "`");
-        }
-
-        conn.setCatalog("db.name");
     }
 
     private void executeCommand(String statement) throws DataAccessException {
