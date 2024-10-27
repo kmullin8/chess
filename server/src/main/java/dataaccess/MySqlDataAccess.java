@@ -9,6 +9,7 @@ import model.UserModel;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -218,30 +219,33 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
-        var conn = db.getConnection();
-        try (var preparedStatement = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+        // Get the connection outside of try-with-resources to manage it manually
+        try (var conn = db.getConnection();
+             var preparedStatement = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+
             for (var i = 0; i < params.length; i++) {
                 var param = params[i];
-                switch (param) {
-                    case String s -> preparedStatement.setString(i + 1, s);
-                    case Integer x -> preparedStatement.setInt(i + 1, x);
-                    case null -> preparedStatement.setNull(i + 1, NULL);
-                    default -> {
-                    }
+                if (param instanceof String s) {
+                    preparedStatement.setString(i + 1, s);
+                } else if (param instanceof Integer x) {
+                    preparedStatement.setInt(i + 1, x);
+                } else if (param == null) {
+                    preparedStatement.setNull(i + 1, java.sql.Types.NULL);
                 }
             }
+
             preparedStatement.executeUpdate();
 
-            var rs = preparedStatement.getGeneratedKeys();
-            if (rs.next()) {
-                return rs.getInt(1);
+            // Use try-with-resources for the ResultSet
+            try (var rs = preparedStatement.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
 
             return 0;
         } catch (SQLException e) {
             throw new DataAccessException(String.format("executeUpdate error: %s, %s", statement, e.getMessage()));
-        } finally {
-            db.returnConnection(conn);
         }
     }
 }
