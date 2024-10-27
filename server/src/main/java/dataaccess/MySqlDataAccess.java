@@ -209,13 +209,11 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     private void executeCommand(String statement) throws DataAccessException {
-        var conn = db.getConnection();
-        try (var preparedStatement = conn.prepareStatement(statement)) {
+        try (var conn = db.getConnection();
+             var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException(String.format("Failed to execute command: %s", e.getMessage()));
-        } finally {
-            db.returnConnection(conn);
         }
     }
 
