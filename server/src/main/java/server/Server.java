@@ -23,7 +23,11 @@ public class Server {
     private static LogoutService logoutService;
 
     public Server() {
-        this.dataAccess = new MemoryDataAccess();
+        try {
+            this.dataAccess = new MySqlDataAccess();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         initializeServices();
     }
 
