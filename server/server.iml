@@ -15,5 +15,6 @@
     <orderEntry type="library" exported="" name="mysql:mysql-connector-java:8.0.30" level="project" />
     <orderEntry type="library" name="sparkjava.spark.core" level="project" />
     <orderEntry type="library" name="m" level="project" />
+    <orderEntry type="library" name="mysql.connector.j" level="project" />
   </component>
 </module>
