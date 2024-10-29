@@ -18,8 +18,6 @@ import static java.sql.Types.NULL;
 
 public class MySqlDataAccess implements DataAccess {
 
-    private DatabaseManager db;
-
     public MySqlDataAccess() throws DataAccessException {
         configureDatabase();
     }
@@ -193,10 +191,9 @@ public class MySqlDataAccess implements DataAccess {
 
 
     private void configureDatabase() throws DataAccessException {
-        db = new DatabaseManager();
+        DatabaseManager.createDatabase();
         try {
-            try (Connection conn = db.getConnection()) {
-                db.createDatabase();
+            try (Connection conn = DatabaseManager.getConnection()) {
 
                 for (var statement : createStatements) {
                     try (var preparedStatement = conn.prepareStatement(statement)) {
@@ -210,7 +207,7 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     private void executeCommand(String statement) throws DataAccessException {
-        try (var conn = db.getConnection();
+        try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -220,7 +217,7 @@ public class MySqlDataAccess implements DataAccess {
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
         // Get the connection outside of try-with-resources to manage it manually
-        try (var conn = db.getConnection();
+        try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
 
             for (var i = 0; i < params.length; i++) {
