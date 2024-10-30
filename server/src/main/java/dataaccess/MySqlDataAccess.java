@@ -105,7 +105,7 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     public void updateGame(GameModel gameData) throws DataAccessException {
-        executeUpdate("UPDATE `game` set gameName=?, whitePlayerName=?, blackPlayerName=?, game=?, state=? WHERE gameID=?",
+        executeUpdate("UPDATE `game` set gameName=?, whitePlayerName=?, blackPlayerName=?, game=? WHERE gameID=?",
                 gameData.getGameName(),
                 gameData.getWhiteUsername(),
                 gameData.getBlackUsername(),
@@ -226,6 +226,8 @@ public class MySqlDataAccess implements DataAccess {
                     preparedStatement.setString(i + 1, s);
                 } else if (param instanceof Integer x) {
                     preparedStatement.setInt(i + 1, x);
+                } else if (param instanceof ChessGame g) {
+                    preparedStatement.setString(i + 1, new Gson().toJson(g));
                 } else if (param == null) {
                     preparedStatement.setNull(i + 1, java.sql.Types.NULL);
                 }
