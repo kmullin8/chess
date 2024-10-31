@@ -31,7 +31,8 @@ public class MySqlDataAccess implements DataAccess {
     public UserModel writeUser(UserModel user) throws DataAccessException {
         if (user.getUsername() != null) {
             var newUser = new UserModel(user.getUsername(), user.getPassword(), user.getEmail());
-            executeUpdate("INSERT INTO `user` (username, password, email) VALUES (?, ?, ?)", newUser.getUsername(), newUser.getPassword(), newUser.getEmail());
+            executeUpdate("INSERT INTO `user` (username, password, email) VALUES (?, ?, ?)",
+                    newUser.getUsername(), newUser.getPassword(), newUser.getEmail());
             return user;
         }
 
@@ -92,13 +93,13 @@ public class MySqlDataAccess implements DataAccess {
         var game = new ChessGame();
         game.getBoard().resetBoard();
         Gson gsonGame = new Gson();
-        var ID = executeUpdate("INSERT INTO `game` (gameName, whitePlayerName, blackPlayerName, game) VALUES (?, ?, ?, ?)",
+        var id = executeUpdate("INSERT INTO `game` (gameName, whitePlayerName, blackPlayerName, game) VALUES (?, ?, ?, ?)",
                 gameName,
                 null,
                 null,
                 gsonGame.toJson(game));
-        if (ID != 0) {
-            return new GameModel(ID, null, null, gameName, game);
+        if (id != 0) {
+            return new GameModel(id, null, null, gameName, game);
         }
 
         return null;
@@ -115,7 +116,8 @@ public class MySqlDataAccess implements DataAccess {
 
     public GameModel readGame(int gameID) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection();
-             var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerName, blackPlayerName, game FROM `game` WHERE gameID=?")) {
+             var preparedStatement = conn.prepareStatement("SELECT gameID, gameName, whitePlayerName, " +
+                     "blackPlayerName, game FROM `game` WHERE gameID=?")) {
 
             preparedStatement.setInt(1, gameID);
             try (var rs = preparedStatement.executeQuery()) {
