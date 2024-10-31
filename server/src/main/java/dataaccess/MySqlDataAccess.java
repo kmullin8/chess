@@ -59,10 +59,28 @@ public class MySqlDataAccess implements DataAccess {
     }
 
     public AuthTokenModel writeAuth(String username) throws DataAccessException {
+        // Check if the user exists first
+        if (!userExists(username)) { // Ensure this method checks the existence of the user
+            throw new DataAccessException("User does not exist.");
+        }
+
         var newAuthToken = new AuthTokenModel(username);
         executeUpdate("INSERT INTO `authentication` (authToken, username) VALUES (?, ?)", newAuthToken.getAuthToken(), newAuthToken.getUsername());
 
         return newAuthToken;
+    }
+
+    private boolean userExists(String username) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement("SELECT 1 FROM `user` WHERE username = ?")) { // Adjusted to use `SELECT 1`
+
+            preparedStatement.setString(1, username);
+            try (var rs = preparedStatement.executeQuery()) {
+                return rs.next(); // Returns true if a user is found
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("Error checking user existence: %s", e.getMessage()));
+        }
     }
 
     public AuthTokenModel readAuth(String authToken) throws DataAccessException {
