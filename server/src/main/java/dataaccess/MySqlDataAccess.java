@@ -235,7 +235,12 @@ public class MySqlDataAccess implements DataAccess {
                 }
             }
 
-            preparedStatement.executeUpdate();
+            int affectedRows = preparedStatement.executeUpdate();
+
+            boolean isDeleteOperation = statement.trim().toUpperCase().startsWith("DELETE");
+            if (!isDeleteOperation && affectedRows == 0) {
+                throw new DataAccessException("No game found to update.");
+            }
 
             // Use try-with-resources for the ResultSet
             try (var rs = preparedStatement.getGeneratedKeys()) {
