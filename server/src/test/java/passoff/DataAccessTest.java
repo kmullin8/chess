@@ -1,4 +1,4 @@
-package passoff.dataaccess;
+package passoff;
 
 import dataaccess.MySqlDataAccess;
 import model.AuthTokenModel;
