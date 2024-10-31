@@ -2,6 +2,7 @@ package services;
 
 import dataaccess.*;
 import model.UserModel;
+import org.mindrot.jbcrypt.BCrypt;
 import spark.utils.StringUtils;
 
 /**
@@ -24,8 +25,11 @@ public class RegisterService {
         }
 
         try {
-            user = dataAccess.writeUser(user);
-            return dataAccess.writeAuth(user.getUsername()).getAuthToken();
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            UserModel hashedUser = new UserModel(user.getUsername(), hashedPassword, user.getEmail());
+
+            hashedUser = dataAccess.writeUser(hashedUser);
+            return dataAccess.writeAuth(hashedUser.getUsername()).getAuthToken();
         } catch (dataaccess.DataAccessException ex) {
             throw new CodedException(403, "Unable to register user");
         }
