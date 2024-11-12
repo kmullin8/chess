@@ -56,7 +56,7 @@ public class ServerFacadeTests {
         assertTrue(exception.getMessage().contains("Request failed"), "Expected failure for invalid registration");
     }
 
-    //login Test
+    //login Tests
     @Test
     public void testLogin_Success() throws Exception {
         facade.registerUser(newUser);
@@ -71,4 +71,54 @@ public class ServerFacadeTests {
             facade.logIn(invalidUser); // Invalid credentials
         });
     }
+
+    //logout tests
+    @Test
+    public void testLogout_Success() throws Exception {
+        // Register and login to get a valid auth token
+        var authData = facade.registerUser(newUser);
+        assertNotNull(authData, "Auth data should not be null after registration");
+
+        // Logout using the auth token
+        facade.logOut(authData.getAuthToken());
+        // There should be no exception; if logout was successful, the test will pass
+    }
+
+    @Test
+    public void testLogout_Failure() {
+        // Attempt to logout with an invalid auth token
+        Exception exception = assertThrows(Exception.class, () -> {
+            facade.logOut("invalidAuthToken");
+        });
+        assertTrue(exception.getMessage().contains("Request failed"), "Expected failure for invalid auth token");
+    }
+
+    //listGames tests
+    @Test
+    public void testListGames_Success() throws Exception {
+        // Register and login to get a valid auth token
+        var authData = facade.registerUser(newUser);
+
+        // Create a game to ensure there's something to list
+        facade.createGame("TestGame1", authData.getAuthToken());
+
+        // List games using the auth token
+        GameModel[] games = facade.listGames(authData.getAuthToken());
+        assertNotNull(games, "Games list should not be null");
+        assertTrue(games.length > 0, "Games list should contain at least one game");
+    }
+
+    @Test
+    public void testListGames_Failure() {
+        // Attempt to list games with an invalid auth token
+        Exception exception = assertThrows(Exception.class, () -> {
+            facade.listGames("invalidAuthToken");
+        });
+        assertTrue(exception.getMessage().contains("Request failed"), "Expected failure for invalid auth token");
+    }
+
+    //create game tests
+
+
+    //join game test
 }
