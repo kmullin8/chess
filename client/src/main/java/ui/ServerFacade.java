@@ -20,9 +20,9 @@ public class ServerFacade {
     }
 
     // Register User
-    public UserModel registerUser(UserModel user) throws Exception {
+    public AuthTokenModel registerUser(UserModel user) throws Exception {
         var path = "/user";
-        return makeRequest("POST", path, user, UserModel.class);
+        return makeRequest("POST", path, user, AuthTokenModel.class);
     }
 
     // Login
