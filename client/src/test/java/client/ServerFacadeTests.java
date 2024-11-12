@@ -55,4 +55,20 @@ public class ServerFacadeTests {
         });
         assertTrue(exception.getMessage().contains("Request failed"), "Expected failure for invalid registration");
     }
+
+    //login Test
+    @Test
+    public void testLogin_Success() throws Exception {
+        facade.registerUser(newUser);
+        var authData = facade.logIn(newUser);
+        assertNotNull(authData);
+        assertTrue(authData.getAuthToken().length() > 10);
+    }
+
+    @Test
+    public void testLogin_Failure() {
+        assertThrows(java.lang.Exception.class, () -> {
+            facade.logIn(invalidUser); // Invalid credentials
+        });
+    }
 }
