@@ -118,7 +118,25 @@ public class ServerFacadeTests {
     }
 
     //create game tests
+    @Test
+    public void testCreateGame_Success() throws Exception {
+        // Register and login to get a valid auth token
+        var authData = facade.registerUser(newUser);
 
+        // Create a game using a valid auth token
+        GameModel game = facade.createGame("TestGame2", authData.getAuthToken());
+        assertNotNull(game, "Game should not be null on successful creation");
+        assertEquals("TestGame2", game.getGameName(), "Game name should match the input");
+    }
+
+    @Test
+    public void testCreateGame_Failure() {
+        // Attempt to create a game with an invalid auth token
+        Exception exception = assertThrows(Exception.class, () -> {
+            facade.createGame("TestGame3", "invalidAuthToken");
+        });
+        assertTrue(exception.getMessage().contains("Request failed"), "Expected failure for invalid auth token");
+    }
 
     //join game test
 }

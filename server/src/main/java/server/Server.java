@@ -128,8 +128,8 @@ public class Server {
     public Object createGame(Request req, Response ignoreRes) throws CodedException {
         throwIfUnauthorized(req);
         var game = getBody(req, GameModel.class);
-        game = createGameService.createGame(game.getGameName());
-        return send("gameID", game.getGameID());
+        return new Gson().toJson(createGameService.createGame(game.getGameName()));
+        //return send("gameID", game.getGameID());
     }
 
     /**
