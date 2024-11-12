@@ -1,10 +1,12 @@
 package client;
 
+import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.AuthTokenModel;
 import model.GameModel;
 import model.UserModel;
 import org.junit.jupiter.api.*;
+import requests.JoinGameRequest;
 import server.Server;
 import ui.ServerFacade;
 
@@ -15,6 +17,7 @@ public class ServerFacadeTests {
     private static Server server;
     private static ServerFacade facade;
     private static UserModel newUser;
+    private static UserModel secondUser;
     private static UserModel invalidUser;
 
     @BeforeAll
@@ -24,8 +27,9 @@ public class ServerFacadeTests {
         System.out.println("Started test HTTP server on " + port);
         facade = new ServerFacade("http://localhost:" + port);
 
-        newUser = new UserModel("player1", "password", "p1@email.com");
+        newUser = new UserModel("player1", "password1", "p1@email.com");
         invalidUser = new UserModel(null, null, null);
+        secondUser = new UserModel("player2", "password2", "p2@email.com");
     }
 
     @AfterAll
@@ -139,4 +143,29 @@ public class ServerFacadeTests {
     }
 
     //join game test
+    @Test
+    public void testJoinGame_Success() throws Exception {
+        // Register two users and have one create a game
+        var authData1 = facade.registerUser(newUser);
+        int gameId = facade.createGame("TestGame4", authData1.getAuthToken()).getGameID();
+
+        // Register a second user and have them join the game
+        var authData2 = facade.registerUser(secondUser);
+
+        JoinGameRequest joinRequest = new JoinGameRequest(gameId, ChessGame.TeamColor.BLACK);
+        GameModel joinedGame = facade.joinGame(joinRequest, authData2.getAuthToken());
+        assertNotNull(joinedGame, "Joined game should not be null on success");
+        assertEquals("TestGame4", joinedGame.getGameName(), "Game name should match the joined game");
+    }
+
+    @Test
+    public void testJoinGame_Failure() {
+        // Attempt to join a game with an invalid auth token
+        JoinGameRequest joinRequest = new JoinGameRequest(00, ChessGame.TeamColor.BLACK);
+
+        Exception exception = assertThrows(Exception.class, () -> {
+            facade.joinGame(joinRequest, "invalidAuthToken");
+        });
+        assertTrue(exception.getMessage().contains("Request failed"), "Expected failure for invalid auth token");
+    }
 }

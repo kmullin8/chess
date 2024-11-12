@@ -142,8 +142,8 @@ public class Server {
         var authTokenModel = throwIfUnauthorized(req);
         var joinReq = getBody(req, JoinGameRequest.class);
 
-        var game = joinGameService.joinGame(authTokenModel.getUsername(), joinReq.getPlayerColor(), joinReq.getGameID());
-        return send("game", game);
+        return new Gson().toJson(joinGameService.joinGame(authTokenModel.getUsername(), joinReq.getPlayerColor(), joinReq.getGameID()));
+        //return send("game", game);
     }
 
     /**
