@@ -1,8 +1,6 @@
 package client;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
-import model.AuthTokenModel;
 import model.GameModel;
 import model.UserModel;
 import org.junit.jupiter.api.*;
@@ -16,8 +14,8 @@ public class ServerFacadeTests {
 
     private static Server server;
     private static ServerFacade facade;
-    private static UserModel newUser;
-    private static UserModel secondUser;
+    private static UserModel user1;
+    private static UserModel user2;
     private static UserModel invalidUser;
 
     @BeforeAll
@@ -27,13 +25,14 @@ public class ServerFacadeTests {
         System.out.println("Started test HTTP server on " + port);
         facade = new ServerFacade("http://localhost:" + port);
 
-        newUser = new UserModel("player1", "password1", "p1@email.com");
+        user1 = new UserModel("player1", "password1", "p1@email.com");
         invalidUser = new UserModel(null, null, null);
-        secondUser = new UserModel("player2", "password2", "p2@email.com");
+        user2 = new UserModel("player2", "password2", "p2@email.com");
     }
 
     @AfterAll
-    public static void stopServer() {
+    public static void stopServer() throws Exception {
+        facade.clearDatabase();
         server.stop();
     }
 
@@ -46,7 +45,7 @@ public class ServerFacadeTests {
     // Register User Tests
     @Test
     public void testRegisterUser_Success() throws Exception {
-        var authData = facade.registerUser(newUser);
+        var authData = facade.registerUser(user1);
         assertNotNull(authData, "Auth data should not be null on success");
 
         assertTrue(authData.getAuthToken().length() > 10, "Auth token should be valid and non-empty");
@@ -63,8 +62,8 @@ public class ServerFacadeTests {
     //login Tests
     @Test
     public void testLogin_Success() throws Exception {
-        facade.registerUser(newUser);
-        var authData = facade.logIn(newUser);
+        facade.registerUser(user1);
+        var authData = facade.logIn(user1);
         assertNotNull(authData);
         assertTrue(authData.getAuthToken().length() > 10);
     }
@@ -80,7 +79,7 @@ public class ServerFacadeTests {
     @Test
     public void testLogout_Success() throws Exception {
         // Register and login to get a valid auth token
-        var authData = facade.registerUser(newUser);
+        var authData = facade.registerUser(user1);
         assertNotNull(authData, "Auth data should not be null after registration");
 
         // Logout using the auth token
@@ -101,7 +100,7 @@ public class ServerFacadeTests {
     @Test
     public void testListGames_Success() throws Exception {
         // Register and login to get a valid auth token
-        var authData = facade.registerUser(newUser);
+        var authData = facade.registerUser(user1);
 
         // Create a game to ensure there's something to list
         facade.createGame("TestGame1", authData.getAuthToken());
@@ -125,7 +124,7 @@ public class ServerFacadeTests {
     @Test
     public void testCreateGame_Success() throws Exception {
         // Register and login to get a valid auth token
-        var authData = facade.registerUser(newUser);
+        var authData = facade.registerUser(user1);
 
         // Create a game using a valid auth token
         GameModel game = facade.createGame("TestGame2", authData.getAuthToken());
@@ -146,11 +145,11 @@ public class ServerFacadeTests {
     @Test
     public void testJoinGame_Success() throws Exception {
         // Register two users and have one create a game
-        var authData1 = facade.registerUser(newUser);
+        var authData1 = facade.registerUser(user1);
         int gameId = facade.createGame("TestGame4", authData1.getAuthToken()).getGameID();
 
         // Register a second user and have them join the game
-        var authData2 = facade.registerUser(secondUser);
+        var authData2 = facade.registerUser(user2);
 
         JoinGameRequest joinRequest = new JoinGameRequest(gameId, ChessGame.TeamColor.BLACK);
         GameModel joinedGame = facade.joinGame(joinRequest, authData2.getAuthToken());
