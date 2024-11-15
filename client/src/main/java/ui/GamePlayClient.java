@@ -36,63 +36,58 @@ public class GamePlayClient implements Client {
     }
 
     private String displayBoard() {
-        ChessBoard chessBoard = currentGame.getGame().getBoard();
+        ChessBoard chessBoard = new ChessBoard();
+        chessBoard.resetBoard();
         StringBuilder boardBuilder = new StringBuilder();
 
-        // Column letters with padding
-        String columnLabels = "   a  b  c  d  e  f  g  h";
-        boardBuilder.append(columnLabels).append("\n");
+        // Column letters for White's perspective
+        String whiteColumnLabels = "   a  b  c  d  e  f  g  h";
+        boardBuilder.append(whiteColumnLabels).append("\n");
 
-        // Draw board from white's perspective (row 8 to 1)
+        // Draw board from White's perspective (row 8 to 1)
         for (int row = 8; row >= 1; row--) {
-            boardBuilder.append(row).append(" "); // Row number with padding
+            boardBuilder.append(row).append(" "); // Row number on the left
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
 
                 boolean isLightSquare = (row + col) % 2 == 0;
-                String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
+                String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_DARK_GREY : EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
 
-                String pieceSymbol;
-                if (chessBoard.getPiece(position) != null) {
-                    pieceSymbol = chessBoard.getPiece(position).getSymbol();
-                } else {
-                    pieceSymbol = " ";
-                }
+                String pieceSymbol = (chessBoard.getPiece(position) != null)
+                        ? chessBoard.getPiece(position).getSymbol()
+                        : " ";
 
-                // Use a padded format for each square
                 boardBuilder.append(bgColor).append(" ").append(pieceSymbol).append(" ").append(EscapeSequences.RESET_BG_COLOR);
             }
-            boardBuilder.append(" ").append(row).append("\n"); // Row number on the other side
+            boardBuilder.append(" ").append(row).append("\n"); // Row number on the right
         }
+        boardBuilder.append(whiteColumnLabels).append("\n\n");
 
-        boardBuilder.append(columnLabels).append("\n");
+        // Separator for Black's perspective
+        boardBuilder.append("Black's Perspective\n");
 
-        // Add separator
-        boardBuilder.append("\n").append("Black's Perspective\n");
+        // Column letters for Black's perspective (reversed)
+        String blackColumnLabels = "   h  g  f  e  d  c  b  a";
+        boardBuilder.append(blackColumnLabels).append("\n");
 
-        // Draw board from black's perspective (row 1 to 8)
-        boardBuilder.append(columnLabels).append("\n");
+        // Draw board from Black's perspective (row 1 to 8, columns reversed)
         for (int row = 1; row <= 8; row++) {
-            boardBuilder.append(row).append(" "); // Row number with padding
-            for (int col = 1; col <= 8; col++) {
+            boardBuilder.append(row).append(" "); // Row number on the left
+            for (int col = 8; col >= 1; col--) { // Iterate columns in reverse
                 ChessPosition position = new ChessPosition(row, col);
 
                 boolean isLightSquare = (row + col) % 2 == 0;
-                String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
+                String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_DARK_GREY : EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
 
-                String pieceSymbol;
-                if (chessBoard.getPiece(position) != null) {
-                    pieceSymbol = chessBoard.getPiece(position).getSymbol();
-                } else {
-                    pieceSymbol = " ";
-                }
+                String pieceSymbol = (chessBoard.getPiece(position) != null)
+                        ? chessBoard.getPiece(position).getSymbol()
+                        : " ";
 
-                // Use a padded format for each square
                 boardBuilder.append(bgColor).append(" ").append(pieceSymbol).append(" ").append(EscapeSequences.RESET_BG_COLOR);
             }
-            boardBuilder.append(" ").append(row).append("\n"); // Row number on the other side
+            boardBuilder.append(" ").append(row).append("\n"); // Row number on the right
         }
-        boardBuilder.append(columnLabels).append("\n");
+        boardBuilder.append(blackColumnLabels).append("\n");
 
         return boardBuilder.toString();
     }
