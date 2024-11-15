@@ -11,6 +11,7 @@ import java.util.*;
 public class PostLoginClient implements Client {
     private ServerFacade facade;
     private AuthTokenModel authToken;
+    private GameModel currentGame;
 
     public PostLoginClient(String serverUrl, AuthTokenModel authToken) {
         facade = new ServerFacade(serverUrl);
@@ -100,7 +101,7 @@ public class PostLoginClient implements Client {
             int realGameId = idList.get(gameNumber);
 
             JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.BLACK);
-            facade.joinGame(joinRequest, authToken.getAuthToken());
+            currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
 
             return "Joined Game as Observer\n";
         }
@@ -136,11 +137,11 @@ public class PostLoginClient implements Client {
 
             if (Objects.equals(playerColor, "white")) {
                 JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.WHITE);
-                facade.joinGame(joinRequest, authToken.getAuthToken());
+                currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
                 return "Joined Game\n";
             } else if (Objects.equals(playerColor, "black")) {
                 JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.WHITE);
-                facade.joinGame(joinRequest, authToken.getAuthToken());
+                currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
                 return "Joined Game\n";
             } else {
                 return "Expected: <ID> <WHITE> <BLACK>\n";
@@ -180,5 +181,13 @@ public class PostLoginClient implements Client {
     @Override
     public AuthTokenModel getAuthToken() {
         return authToken;
+    }
+
+    public void setCurrentGame(GameModel currentGame) {
+        this.currentGame = currentGame;
+    }
+
+    public GameModel getCurrentGame() {
+        return currentGame;
     }
 }

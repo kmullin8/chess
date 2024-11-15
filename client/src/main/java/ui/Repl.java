@@ -29,7 +29,7 @@ public class Repl {
 
         preLoginClient = new PreLoginClient(serverUrl);
         postLoginClient = new PostLoginClient(serverUrl, null);
-        gamePlayClient = new GamePlayClient(serverUrl);
+        gamePlayClient = new GamePlayClient(serverUrl, null);
     }
 
     public void run() {
@@ -52,10 +52,17 @@ public class Repl {
                 //change status
                 if (result.startsWith("Logged in") && state == State.SIGNEDOUT) { // enter if signed out on just logged in
                     state = State.SIGNEDIN;
+
                     postLoginClient.setAuthToken(preLoginClient.getAuthToken());//set authToken once logged in
-                    gamePlayClient.setAuthToken(preLoginClient.getAuthToken());
-                } else if (result.startsWith("Joined Game") && state == State.SIGNEDIN) {
+                    gamePlayClient.setAuthToken(preLoginClient.getAuthToken()); //set authToken once logged in
+                } else if (result.startsWith("Joined Game") && state == State.SIGNEDIN) {// enter when joining game
                     state = State.PLAYINGGAME;
+
+                    gamePlayClient.setCurrentGame(postLoginClient.getCurrentGame()); //ser current game being played
+                    client = getClient();
+
+                    result = client.eval("display"); // display bord after when state is changed from joined to playing
+                    System.out.print(result);
                 } else if (result.startsWith("Loggout out") && state == State.SIGNEDIN) {
                     state = State.SIGNEDOUT;
                 }
