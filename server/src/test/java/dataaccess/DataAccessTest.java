@@ -1,6 +1,5 @@
 package dataaccess;
 
-import dataaccess.MySqlDataAccess;
 import model.AuthTokenModel;
 import model.GameModel;
 import model.UserModel;

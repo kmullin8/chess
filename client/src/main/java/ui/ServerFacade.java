@@ -1,8 +1,6 @@
 package ui;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryDataAccess;
 import model.*;
 import requests.JoinGameRequest;
 
@@ -47,7 +45,7 @@ public class ServerFacade {
     // Create Game
     public GameModel createGame(String gameName, String authToken) throws Exception {
         var path = "/game";
-        GameModel game = new MemoryDataAccess().newGame(gameName);
+        GameModel game = new GameModel(-1, gameName);
         return makeRequest("POST", path, game, GameModel.class, authToken);
     }
 

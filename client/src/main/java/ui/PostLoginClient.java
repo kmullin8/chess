@@ -3,7 +3,6 @@ package ui;
 import chess.ChessGame;
 import model.AuthTokenModel;
 import model.GameModel;
-import model.UserModel;
 import requests.JoinGameRequest;
 
 import java.util.*;
