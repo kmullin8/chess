@@ -54,6 +54,8 @@ public class Repl {
                     state = State.SIGNEDIN;
                     postLoginClient.setAuthToken(preLoginClient.getAuthToken());//set authToken once logged in
                     gamePlayClient.setAuthToken(preLoginClient.getAuthToken());
+                } else if (result.startsWith("Joined Game") && state == State.SIGNEDIN) {
+                    state = State.PLAYINGGAME;
                 }
             } catch (Throwable e) {
                 var msg = e.toString();

@@ -1,9 +1,12 @@
 package ui;
 
+import chess.ChessGame;
 import model.AuthTokenModel;
+import model.GameModel;
 import model.UserModel;
+import requests.JoinGameRequest;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class PostLoginClient implements Client {
     private ServerFacade facade;
@@ -46,16 +49,104 @@ public class PostLoginClient implements Client {
         return ("Expected: <NAME>\n");
     }
 
-    private String observeGame(String... params) {
-        return null;
+    private String listGames() throws Exception {
+        GameModel[] gameList = facade.listGames(authToken.getAuthToken());
+
+        if (gameList == null || gameList.length == 0) {
+            return "No games available.";
+        }
+
+        StringBuilder output = new StringBuilder("Available Games:\n");
+
+        for (int i = 0; i < gameList.length; i++) {
+            GameModel game = gameList[i];
+
+            // Retrieve the usernames for the white and black players
+            String whitePlayer = game.getWhiteUsername();
+            String blackPlayer = game.getBlackUsername();
+
+            // Format the game information
+            output.append(i + 1).append(". ")
+                    .append("Game: ").append(game.getGameName()).append("\n")
+                    .append("Players: ").append(whitePlayer).append(" vs ").append(blackPlayer).append("\n\n");
+        }
+
+        return output.toString();
     }
 
-    private String joinGame(String... params) {
-        return null;
+    private String observeGame(String... params) throws Exception {
+        if (params.length == 1) {
+            String inputGameId = params[0];
+
+            GameModel[] gameList = facade.listGames(authToken.getAuthToken()); // get list of games
+            Map<Integer, Integer> idList = new HashMap<>();
+            for (int i = 0; i < gameList.length; i++) { // map list game numbers to game IDs
+                GameModel game = gameList[i];
+                idList.put(i + 1, game.getGameID()); // use i + 1 as key to start numbering at 1
+            }
+
+            // Convert inputGameId to an Integer and check if it exists in idList
+            int gameNumber;
+            try {
+                gameNumber = Integer.parseInt(inputGameId);
+            } catch (NumberFormatException e) {
+                return "Invalid input. Please enter a valid game number.\n";
+            }
+
+            if (!idList.containsKey(gameNumber)) {
+                return "Invalid game number. Please enter a valid game number.\n";
+            }
+
+            int realGameId = idList.get(gameNumber);
+
+            JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.BLACK);
+            facade.joinGame(joinRequest, authToken.getAuthToken());
+
+            return "Joined Game as Observer\n";
+        }
+        return "Expected: <ID>\n";
     }
 
-    private String listGames() {
-        return null;
+    private String joinGame(String... params) throws Exception {
+        if (params.length == 2) {
+            String inputGameId = params[0];
+            String playerColor = params[1];
+
+            GameModel[] gameList = facade.listGames(authToken.getAuthToken()); // get list of games
+            Map<Integer, Integer> idList = new HashMap<>();
+            for (int i = 0; i < gameList.length; i++) { // map list game numbers to game IDs
+                GameModel game = gameList[i];
+                idList.put(i + 1, game.getGameID()); // use i + 1 as key to start numbering at 1
+            }
+
+            // Convert inputGameId to an Integer and check if it exists in idList
+            int gameNumber;
+            try {
+                gameNumber = Integer.parseInt(inputGameId);
+            } catch (NumberFormatException e) {
+                return "Invalid input. Please enter a valid game number.\n";
+            }
+
+            if (!idList.containsKey(gameNumber)) {
+                return "Invalid game number. Please enter a valid game number.\n";
+            }
+
+            int realGameId = idList.get(gameNumber);
+
+
+            if (Objects.equals(playerColor, "white")) {
+                JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.WHITE);
+                facade.joinGame(joinRequest, authToken.getAuthToken());
+                return "Joined Game\n";
+            } else if (Objects.equals(playerColor, "black")) {
+                JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.WHITE);
+                facade.joinGame(joinRequest, authToken.getAuthToken());
+                return "Joined Game\n";
+            } else {
+                return "Expected: <ID> <WHITE> <BLACK>\n";
+            }
+        }
+        return "Expected: <ID> <WHITE> <BLACK>\n";
     }
 
     private String logout() {

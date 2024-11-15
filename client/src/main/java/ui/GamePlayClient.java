@@ -2,6 +2,8 @@ package ui;
 
 import model.AuthTokenModel;
 
+import java.util.Arrays;
+
 public class GamePlayClient implements Client {
     private ServerFacade server;
     private String serverUrl;
@@ -13,12 +15,24 @@ public class GamePlayClient implements Client {
 
     @Override
     public String eval(String input) {
-        return null;
+        try {
+            var tokens = input.toLowerCase().split(" ");
+            var cmd = (tokens.length > 0) ? tokens[0] : "help";
+            var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+            return switch (cmd) {
+                case "quit" -> "quit";
+                default -> help();
+            };
+        } catch (Exception ex) {
+            return ex.getMessage();
+        }
     }
 
     @Override
     public String help() {
-        return null;
+        return """
+                how do you not know how to play chess
+                """;
     }
 
     @Override
