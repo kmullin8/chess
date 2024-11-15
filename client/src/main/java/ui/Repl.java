@@ -79,8 +79,4 @@ public class Repl {
         }
         return null;
     }
-
-    private void printPrompt() {
-        System.out.print("\n" + RESET_TEXT_COLOR + ">>> " + SET_TEXT_COLOR_GREEN);
-    }
 }
