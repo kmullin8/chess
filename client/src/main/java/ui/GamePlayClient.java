@@ -106,11 +106,6 @@ public class GamePlayClient implements Client {
     }
 
     @Override
-    public void quit() {
-
-    }
-
-    @Override
     public void setAuthToken(AuthTokenModel authToken) {
         this.authToken = authToken;
     }

@@ -103,7 +103,9 @@ public class ServerFacade {
     }
 
     private static <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {
-        if (responseClass == null) return null;
+        if (responseClass == null) {
+            return null;
+        }
         try (InputStream respBody = http.getInputStream()) {
             InputStreamReader reader = new InputStreamReader(respBody);
             return new Gson().fromJson(reader, responseClass);

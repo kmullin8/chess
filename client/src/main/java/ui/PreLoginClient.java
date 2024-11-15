@@ -68,10 +68,6 @@ public class PreLoginClient implements Client {
                 """;
     }
 
-    @Override
-    public void quit() {
-
-    }
 
     public void setAuthToken(AuthTokenModel authToken) {
         this.authToken = authToken;

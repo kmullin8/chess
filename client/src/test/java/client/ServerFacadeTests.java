@@ -44,7 +44,7 @@ public class ServerFacadeTests {
 
     // Register User Tests
     @Test
-    public void testRegisterUser_Success() throws Exception {
+    public void testRegisterUserSuccess() throws Exception {
         var authData = facade.registerUser(user1);
         assertNotNull(authData, "Auth data should not be null on success");
 
@@ -52,7 +52,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testRegisterUser_Failure() {
+    public void testRegisterUserFailure() {
         Exception exception = assertThrows(Exception.class, () -> {
             facade.registerUser(invalidUser);
         });
@@ -61,7 +61,7 @@ public class ServerFacadeTests {
 
     //login Tests
     @Test
-    public void testLogin_Success() throws Exception {
+    public void testLoginSuccess() throws Exception {
         facade.registerUser(user1);
         var authData = facade.logIn(user1);
         assertNotNull(authData);
@@ -69,7 +69,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testLogin_Failure() {
+    public void testLoginFailure() {
         assertThrows(java.lang.Exception.class, () -> {
             facade.logIn(invalidUser); // Invalid credentials
         });
@@ -77,7 +77,7 @@ public class ServerFacadeTests {
 
     //logout tests
     @Test
-    public void testLogout_Success() throws Exception {
+    public void testLogoutSuccess() throws Exception {
         // Register and login to get a valid auth token
         var authData = facade.registerUser(user1);
         assertNotNull(authData, "Auth data should not be null after registration");
@@ -88,7 +88,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testLogout_Failure() {
+    public void testLogoutFailure() {
         // Attempt to logout with an invalid auth token
         Exception exception = assertThrows(Exception.class, () -> {
             facade.logOut("invalidAuthToken");
@@ -98,7 +98,7 @@ public class ServerFacadeTests {
 
     //listGames tests
     @Test
-    public void testListGames_Success() throws Exception {
+    public void testListGamesSuccess() throws Exception {
         // Register and login to get a valid auth token
         var authData = facade.registerUser(user1);
 
@@ -112,7 +112,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testListGames_Failure() {
+    public void testListGamesFailure() {
         // Attempt to list games with an invalid auth token
         Exception exception = assertThrows(Exception.class, () -> {
             facade.listGames("invalidAuthToken");
@@ -122,7 +122,7 @@ public class ServerFacadeTests {
 
     //create game tests
     @Test
-    public void testCreateGame_Success() throws Exception {
+    public void testCreateGameSuccess() throws Exception {
         // Register and login to get a valid auth token
         var authData = facade.registerUser(user1);
 
@@ -133,7 +133,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testCreateGame_Failure() {
+    public void testCreateGameFailure() {
         // Attempt to create a game with an invalid auth token
         Exception exception = assertThrows(Exception.class, () -> {
             facade.createGame("TestGame3", "invalidAuthToken");
@@ -143,7 +143,7 @@ public class ServerFacadeTests {
 
     //join game test
     @Test
-    public void testJoinGame_Success() throws Exception {
+    public void testJoinGameSuccess() throws Exception {
         // Register two users and have one create a game
         var authData1 = facade.registerUser(user1);
         int gameId = facade.createGame("TestGame4", authData1.getAuthToken()).getGameID();
@@ -158,7 +158,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testJoinGame_Failure() {
+    public void testJoinGameFailure() {
         // Attempt to join a game with an invalid auth token
         JoinGameRequest joinRequest = new JoinGameRequest(00, ChessGame.TeamColor.BLACK);
 

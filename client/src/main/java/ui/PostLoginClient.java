@@ -166,10 +166,6 @@ public class PostLoginClient implements Client {
                 """;
     }
 
-    @Override
-    public void quit() {
-
-    }
 
     @Override
     public void setAuthToken(AuthTokenModel authToken) {

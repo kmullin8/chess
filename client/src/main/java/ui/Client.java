@@ -7,8 +7,6 @@ public interface Client {
 
     String help();
 
-    void quit();
-
     void setAuthToken(AuthTokenModel authToken);
 
     AuthTokenModel getAuthToken();
