@@ -2,7 +2,6 @@ package ui;
 
 import model.AuthTokenModel;
 import model.GameModel;
-import server.Server;
 
 import java.util.Scanner;
 
@@ -12,7 +11,6 @@ public class Repl {
     private Client client;
     private String serverUrl;
     private State state;
-    private Server server;
 
     private PreLoginClient preLoginClient;
     private PostLoginClient postLoginClient;
@@ -22,10 +20,6 @@ public class Repl {
     public Repl(String serverUrl) {
         this.serverUrl = serverUrl;
         this.state = State.SIGNEDOUT;
-
-
-        server = new Server();
-        server.run(8080);
 
         preLoginClient = new PreLoginClient(serverUrl);
         postLoginClient = new PostLoginClient(serverUrl, null);
@@ -63,7 +57,7 @@ public class Repl {
 
                     result = client.eval("display"); // display bord after when state is changed from joined to playing
                     System.out.print(result);
-                } else if (result.startsWith("Loggout out") && state == State.SIGNEDIN) {
+                } else if (result.startsWith("Logged out") && state == State.SIGNEDIN) {
                     state = State.SIGNEDOUT;
                 }
             } catch (Throwable e) {

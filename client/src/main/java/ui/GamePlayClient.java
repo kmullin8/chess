@@ -14,7 +14,6 @@ public class GamePlayClient implements Client {
     private GameModel currentGame;
 
     public GamePlayClient(String serverUrl, AuthTokenModel authToken) {
-        facade = new ServerFacade(serverUrl);
         facade = new ServerFacade("http://localhost:8080");
 
         this.authToken = authToken;

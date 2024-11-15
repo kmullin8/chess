@@ -2,7 +2,7 @@ package ui;
 
 import model.AuthTokenModel;
 import model.UserModel;
-import server.Server;
+
 
 import java.util.Arrays;
 
@@ -11,7 +11,6 @@ public class PreLoginClient implements Client {
     private AuthTokenModel authToken;
 
     public PreLoginClient(String serverUrl) {
-        facade = new ServerFacade(serverUrl);
         facade = new ServerFacade("http://localhost:8080");
     }
 

@@ -14,7 +14,6 @@ public class PostLoginClient implements Client {
     private GameModel currentGame;
 
     public PostLoginClient(String serverUrl, AuthTokenModel authToken) {
-        facade = new ServerFacade(serverUrl);
         facade = new ServerFacade("http://localhost:8080");
 
         this.authToken = authToken;
@@ -43,7 +42,7 @@ public class PostLoginClient implements Client {
     private String createGame(String... params) throws Exception {
         if (params.length == 1) {
             var gameName = params[0];
-            facade.createGame(gameName, authToken.getAuthToken());
+            GameModel gameModel = facade.createGame(gameName, authToken.getAuthToken());
 
             return ("Created game " + gameName + "\n");
         }

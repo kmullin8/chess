@@ -83,7 +83,7 @@ public class ServerFacade {
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
-            throw new Exception("Request failed: " + ex.getMessage());
+            throw new Exception("Request failed: " + ex.getMessage() + "\n");
         }
     }
 
@@ -100,7 +100,7 @@ public class ServerFacade {
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException {
         int status = http.getResponseCode();
         if (status < 200 || status >= 300) {
-            throw new IOException("Request failed with status code: " + status);
+            throw new IOException("Request failed with status code: " + status + "\n");
         }
     }
 
