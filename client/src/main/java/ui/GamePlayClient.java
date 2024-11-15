@@ -40,14 +40,14 @@ public class GamePlayClient implements Client {
         ChessBoard chessBoard = currentGame.getGame().getBoard();
         StringBuilder boardBuilder = new StringBuilder();
 
-        // Column letters
-        String columnLabels = "  a  b  c  d  e  f  g  h  ";
+        // Column letters with padding
+        String columnLabels = "   a  b  c  d  e  f  g  h";
         boardBuilder.append(columnLabels).append("\n");
 
         // Draw board from white's perspective (row 8 to 1)
         for (int row = 8; row >= 1; row--) {
-            boardBuilder.append(row).append(" "); // Row number
-            for (int col = 1; col <= 8; col = col + 1) {
+            boardBuilder.append(row).append(" "); // Row number with padding
+            for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
 
                 boolean isLightSquare = (row + col) % 2 == 0;
@@ -60,7 +60,8 @@ public class GamePlayClient implements Client {
                     pieceSymbol = " ";
                 }
 
-                boardBuilder.append(bgColor).append(pieceSymbol).append(EscapeSequences.RESET_BG_COLOR);
+                // Use a padded format for each square
+                boardBuilder.append(bgColor).append(" ").append(pieceSymbol).append(" ").append(EscapeSequences.RESET_BG_COLOR);
             }
             boardBuilder.append(" ").append(row).append("\n"); // Row number on the other side
         }
@@ -73,8 +74,8 @@ public class GamePlayClient implements Client {
         // Draw board from black's perspective (row 1 to 8)
         boardBuilder.append(columnLabels).append("\n");
         for (int row = 1; row <= 8; row++) {
-            boardBuilder.append(row).append(" "); // Row number
-            for (int col = 1; col <= 8; col = col + 1) {
+            boardBuilder.append(row).append(" "); // Row number with padding
+            for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
 
                 boolean isLightSquare = (row + col) % 2 == 0;
@@ -87,7 +88,8 @@ public class GamePlayClient implements Client {
                     pieceSymbol = " ";
                 }
 
-                boardBuilder.append(bgColor).append(pieceSymbol).append(EscapeSequences.RESET_BG_COLOR);
+                // Use a padded format for each square
+                boardBuilder.append(bgColor).append(" ").append(pieceSymbol).append(" ").append(EscapeSequences.RESET_BG_COLOR);
             }
             boardBuilder.append(" ").append(row).append("\n"); // Row number on the other side
         }
@@ -95,6 +97,7 @@ public class GamePlayClient implements Client {
 
         return boardBuilder.toString();
     }
+
 
     @Override
     public String help() {
