@@ -50,12 +50,14 @@ public class Repl {
                 System.out.print(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);
 
                 //change status
-                if (result.startsWith("logged in") && state == State.SIGNEDOUT) { // enter if signed out on just logged in
+                if (result.startsWith("Logged in") && state == State.SIGNEDOUT) { // enter if signed out on just logged in
                     state = State.SIGNEDIN;
                     postLoginClient.setAuthToken(preLoginClient.getAuthToken());//set authToken once logged in
                     gamePlayClient.setAuthToken(preLoginClient.getAuthToken());
                 } else if (result.startsWith("Joined Game") && state == State.SIGNEDIN) {
                     state = State.PLAYINGGAME;
+                } else if (result.startsWith("Loggout out") && state == State.SIGNEDIN) {
+                    state = State.SIGNEDOUT;
                 }
             } catch (Throwable e) {
                 var msg = e.toString();

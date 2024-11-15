@@ -149,8 +149,9 @@ public class PostLoginClient implements Client {
         return "Expected: <ID> <WHITE> <BLACK>\n";
     }
 
-    private String logout() {
-        return null;
+    private String logout() throws Exception {
+        facade.logOut(authToken.getAuthToken());
+        return "Logged out\n";
     }
 
     @Override

@@ -41,7 +41,7 @@ public class PreLoginClient implements Client {
             authToken = facade.logIn(user);
             setAuthToken(authToken);
 
-            return ("logged in as " + username + "\n");
+            return ("Logged in as " + username + "\n");
         }
         return ("Expected: <USERNAME> <PASSWORD>\n");
     }
@@ -55,7 +55,7 @@ public class PreLoginClient implements Client {
             authToken = facade.registerUser(user);
             setAuthToken(authToken);
 
-            return ("logged in as " + username + "\n");
+            return ("Logged in as " + username + "\n");
         }
         return ("Expected: <USERNAME> <PASSWORD> <email>\n");
     }
