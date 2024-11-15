@@ -1,5 +1,7 @@
 package ui;
 
+import model.AuthTokenModel;
+
 public class GamePlayClient implements Client {
     private ServerFacade server;
     private String serverUrl;
@@ -22,5 +24,15 @@ public class GamePlayClient implements Client {
     @Override
     public void quit() {
 
+    }
+
+    @Override
+    public void setAuthToken(AuthTokenModel authToken) {
+
+    }
+
+    @Override
+    public AuthTokenModel getAuthToken() {
+        return null;
     }
 }

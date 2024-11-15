@@ -1,5 +1,7 @@
 package ui;
 
+import model.AuthTokenModel;
+import model.GameModel;
 import server.Server;
 
 import java.util.Scanner;
@@ -12,6 +14,11 @@ public class Repl {
     private State state;
     private Server server;
 
+    private PreLoginClient preLoginClient;
+    private PostLoginClient postLoginClient;
+    private GamePlayClient gamePlayClient;
+    private AuthTokenModel authToken;
+
     public Repl(String serverUrl) {
         this.serverUrl = serverUrl;
         this.state = State.SIGNEDOUT;
@@ -19,15 +26,20 @@ public class Repl {
 
         server = new Server();
         server.run(8080);
+
+        preLoginClient = new PreLoginClient(serverUrl);
+        postLoginClient = new PostLoginClient(serverUrl, null);
+        gamePlayClient = new GamePlayClient(serverUrl);
     }
 
     public void run() {
+        client = preLoginClient; // start in prelogin
+
         System.out.println("\uD83D\uDC36 Welcome to 240 chess. Type help to get started.");
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("quit")) {
-            client = getClient(); // determine what client to use
             // Display prompt inline
             System.out.print("[" + state + "] >>> ");
 
@@ -38,24 +50,27 @@ public class Repl {
                 System.out.print(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);
 
                 //change status
-                if (result.startsWith("logged in")) {
+                if (result.startsWith("logged in") && state == State.SIGNEDOUT) { // enter if signed out on just logged in
                     state = State.SIGNEDIN;
+                    postLoginClient.setAuthToken(preLoginClient.getAuthToken());//set authToken once logged in
+                    gamePlayClient.setAuthToken(preLoginClient.getAuthToken());
                 }
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
             }
+            client = getClient(); // determine what client to use
         }
         System.out.println();
     }
 
     private Client getClient() {
         if (state == State.SIGNEDOUT) {
-            return new PreLoginClient(serverUrl);
+            return preLoginClient;
         } else if (state == State.SIGNEDIN) {
-            return new PostLoginClient(serverUrl);
+            return postLoginClient;
         } else if (state == State.PLAYINGGAME) {
-            return new GamePlayClient(serverUrl);
+            return gamePlayClient;
         }
         return null;
     }

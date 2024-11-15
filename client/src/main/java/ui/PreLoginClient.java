@@ -1,5 +1,6 @@
 package ui;
 
+import model.AuthTokenModel;
 import model.UserModel;
 import server.Server;
 
@@ -7,6 +8,7 @@ import java.util.Arrays;
 
 public class PreLoginClient implements Client {
     private ServerFacade facade;
+    private AuthTokenModel authToken;
 
     public PreLoginClient(String serverUrl) {
         facade = new ServerFacade(serverUrl);
@@ -36,7 +38,8 @@ public class PreLoginClient implements Client {
             var password = params[1];
             var email = "null";
             UserModel user = new UserModel(username, password, email);
-            facade.logIn(user);
+            authToken = facade.logIn(user);
+            setAuthToken(authToken);
 
             return ("logged in as " + username + "\n");
         }
@@ -49,7 +52,9 @@ public class PreLoginClient implements Client {
             var password = params[1];
             var email = params[2];
             UserModel user = new UserModel(username, password, email);
-            facade.registerUser(user);
+            authToken = facade.registerUser(user);
+            setAuthToken(authToken);
+
             return ("logged in as " + username + "\n");
         }
         return ("Expected: <USERNAME> <PASSWORD> <email>\n");
@@ -67,5 +72,13 @@ public class PreLoginClient implements Client {
     @Override
     public void quit() {
 
+    }
+
+    public void setAuthToken(AuthTokenModel authToken) {
+        this.authToken = authToken;
+    }
+
+    public AuthTokenModel getAuthToken() {
+        return authToken;
     }
 }

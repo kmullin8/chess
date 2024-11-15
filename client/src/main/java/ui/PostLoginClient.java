@@ -1,13 +1,19 @@
 package ui;
 
+import model.AuthTokenModel;
+import model.UserModel;
+
 import java.util.Arrays;
 
 public class PostLoginClient implements Client {
     private ServerFacade facade;
+    private AuthTokenModel authToken;
 
-    public PostLoginClient(String serverUrl) {
+    public PostLoginClient(String serverUrl, AuthTokenModel authToken) {
         facade = new ServerFacade(serverUrl);
         facade = new ServerFacade("http://localhost:8080");
+
+        this.authToken = authToken;
     }
 
     @Override
@@ -30,8 +36,14 @@ public class PostLoginClient implements Client {
         }
     }
 
-    private String createGame(String... params) {
-        return null;
+    private String createGame(String... params) throws Exception {
+        if (params.length == 1) {
+            var gameName = params[0];
+            facade.createGame(gameName, authToken.getAuthToken());
+
+            return ("Created game " + gameName + "\n");
+        }
+        return ("Expected: <NAME>\n");
     }
 
     private String observeGame(String... params) {
@@ -52,11 +64,29 @@ public class PostLoginClient implements Client {
 
     @Override
     public String help() {
-        return null;
+        return """
+                create <NAME> - a game
+                list - games
+                join <ID> [WHITE|BLACK] - a game
+                observe <ID> - a game
+                logout - when you are done
+                quit - playing chess
+                help - with possible commands
+                """;
     }
 
     @Override
     public void quit() {
 
+    }
+
+    @Override
+    public void setAuthToken(AuthTokenModel authToken) {
+        this.authToken = authToken;
+    }
+
+    @Override
+    public AuthTokenModel getAuthToken() {
+        return authToken;
     }
 }
