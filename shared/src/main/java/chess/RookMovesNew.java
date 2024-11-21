@@ -1,4 +1,16 @@
 package chess;
 
-public class RookMovesNew {
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class RookMovesNew extends PieceMoves {
+
+    Collection<ChessMove> rookMoves = new ArrayList<>();
+
+    public Collection<ChessMove> getRookMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor pieceColor) {
+
+        rookMoves.addAll(linearMoves(board, myPosition, pieceColor));
+
+        return rookMoves;
+    }
 }

@@ -67,7 +67,7 @@ public class ChessPiece {
         if (type == PieceType.PAWN) {
             pieceMoves = new PawnMoves().getPawnMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.ROOK) {
-            pieceMoves = new RookMoves().getRookMoves(board, myPosition, pieceColor);
+            pieceMoves = new RookMovesNew().getRookMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.KNIGHT) {
             pieceMoves = new KnightMoves().getKnightMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.BISHOP) {
