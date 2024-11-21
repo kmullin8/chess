@@ -411,7 +411,7 @@ public class PieceMoves {
         ChessPosition forwardLeft = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() - 1);
         ChessPosition forwardRight = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() + 1);
 
-        if (forward.getRow() <= 0 || forward.getColumn() <= 0 || forward.getRow() > 8 || forward.getColumn() > 8) { // check bounds
+        if (forward.getRow() <= 8 || forward.getColumn() <= 8 || forward.getRow() > 0 || forward.getColumn() > 0) { // check bounds
 
             // Forward move
             if (board.getPiece(forward) == null) {
@@ -424,7 +424,7 @@ public class PieceMoves {
 
             // capture moves
             //capture left
-            if (forwardLeft.getRow() <= 0 || forwardLeft.getColumn() <= 0 || forwardLeft.getRow() > 8 || forwardLeft.getColumn() > 8) { // check bounds
+            if (forwardLeft.getRow() <= 8 || forwardLeft.getColumn() <= 8 || forwardLeft.getRow() > 0 || forwardLeft.getColumn() > 0) { // check bounds
                 if (board.getPiece(forwardLeft) != null && board.getPiece(forwardLeft).getTeamColor() != pieceColor) {
                     if (forwardLeft.getRow() == promotionRow) {
                         addPromotionMoves(pawnMoves, myPosition, forwardLeft);
@@ -434,7 +434,7 @@ public class PieceMoves {
                 }
             }
 
-            if (forwardRight.getRow() <= 0 || forwardRight.getColumn() <= 0 || forwardRight.getRow() > 8 || forwardRight.getColumn() > 8) { // check bounds
+            if (forwardRight.getRow() <= 8 || forwardRight.getColumn() <= 8 || forwardRight.getRow() > 0 || forwardRight.getColumn() > 0) { // check bounds
                 if (board.getPiece(forwardRight) != null && board.getPiece(forwardRight).getTeamColor() != pieceColor) {
                     if (forwardRight.getRow() == promotionRow) {
                         addPromotionMoves(pawnMoves, myPosition, forwardRight);
@@ -449,7 +449,7 @@ public class PieceMoves {
         // Double forward move
         if (myPosition.getRow() == startRow) {
             ChessPosition doubleForward = new ChessPosition(myPosition.getRow() + 2 * direction, myPosition.getColumn());
-            if (board.getPiece(doubleForward) == null) {
+            if (board.getPiece(doubleForward) == null && board.getPiece(forward) == null) {
                 pawnMoves.add(new ChessMove(myPosition, doubleForward, null));
             }
         }
