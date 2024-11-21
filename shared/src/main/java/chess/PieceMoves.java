@@ -407,39 +407,44 @@ public class PieceMoves {
         int startRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
         int promotionRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 8 : 1;
 
-        // Forward move
         ChessPosition forward = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn());
-        if (board.getPiece(forward) == null) {
-            if (forward.getRow() == promotionRow) {
-                addPromotionMoves(pawnMoves, myPosition, forward);
-            } else {
-                pawnMoves.add(new ChessMove(myPosition, forward, null));
-            }
-        }
-
-        // capture moves
         ChessPosition forwardLeft = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() - 1);
         ChessPosition forwardRight = new ChessPosition(myPosition.getRow() + direction, myPosition.getColumn() + 1);
 
-        if (board.getPiece(forwardLeft) != null) {
-            if (board.getPiece(forwardLeft).getTeamColor() != pieceColor) { // Opponent's piece
-                if (forwardLeft.getRow() == promotionRow) {
-                    addPromotionMoves(pawnMoves, myPosition, forwardLeft);
+        if (forward.getRow() <= 0 || forward.getColumn() <= 0 || forward.getRow() > 8 || forward.getColumn() > 8) { // check bounds
+
+            // Forward move
+            if (board.getPiece(forward) == null) {
+                if (forward.getRow() == promotionRow) {
+                    addPromotionMoves(pawnMoves, myPosition, forward);
                 } else {
-                    pawnMoves.add(new ChessMove(myPosition, forwardLeft, null));
+                    pawnMoves.add(new ChessMove(myPosition, forward, null));
+                }
+            }
+
+            // capture moves
+            //capture left
+            if (forwardLeft.getRow() <= 0 || forwardLeft.getColumn() <= 0 || forwardLeft.getRow() > 8 || forwardLeft.getColumn() > 8) { // check bounds
+                if (board.getPiece(forwardLeft) != null && board.getPiece(forwardLeft).getTeamColor() != pieceColor) {
+                    if (forwardLeft.getRow() == promotionRow) {
+                        addPromotionMoves(pawnMoves, myPosition, forwardLeft);
+                    } else {
+                        pawnMoves.add(new ChessMove(myPosition, forwardLeft, null));
+                    }
+                }
+            }
+
+            if (forwardRight.getRow() <= 0 || forwardRight.getColumn() <= 0 || forwardRight.getRow() > 8 || forwardRight.getColumn() > 8) { // check bounds
+                if (board.getPiece(forwardRight) != null && board.getPiece(forwardRight).getTeamColor() != pieceColor) {
+                    if (forwardRight.getRow() == promotionRow) {
+                        addPromotionMoves(pawnMoves, myPosition, forwardRight);
+                    } else {
+                        pawnMoves.add(new ChessMove(myPosition, forwardRight, null));
+                    }
                 }
             }
         }
 
-        if (board.getPiece(forwardRight) != null) {
-            if (board.getPiece(forwardRight).getTeamColor() != pieceColor) { // Opponent's piece
-                if (forwardRight.getRow() == promotionRow) {
-                    addPromotionMoves(pawnMoves, myPosition, forwardRight);
-                } else {
-                    pawnMoves.add(new ChessMove(myPosition, forwardRight, null));
-                }
-            }
-        }
 
         // Double forward move
         if (myPosition.getRow() == startRow) {
