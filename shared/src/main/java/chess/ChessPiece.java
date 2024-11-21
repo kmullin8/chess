@@ -67,13 +67,13 @@ public class ChessPiece {
         if (type == PieceType.PAWN) {
             pieceMoves = new PawnMoves().getPawnMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.ROOK) {
-            pieceMoves = new RookMovesNew().getRookMoves(board, myPosition, pieceColor);
+            pieceMoves = new RookMoves().getRookMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.KNIGHT) {
             pieceMoves = new KnightMoves().getKnightMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.BISHOP) {
-            pieceMoves = new BishopMovesNew().getBishopMoves(board, myPosition, pieceColor);
+            pieceMoves = new BishopMoves().getBishopMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.QUEEN) {
-            pieceMoves = new QueenMovesNew().getQueenMoves(board, myPosition, pieceColor);
+            pieceMoves = new QueenMoves().getQueenMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.KING) {
             pieceMoves = new KingMoves().getKingMoves(board, myPosition, pieceColor);
         } else {

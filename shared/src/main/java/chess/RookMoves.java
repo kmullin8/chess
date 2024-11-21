@@ -3,7 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class RookMovesNew extends PieceMoves {
+public class RookMoves extends PieceMoves {
 
     Collection<ChessMove> rookMoves = new ArrayList<>();
 
