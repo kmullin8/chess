@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessBoard;
+import chess.ChessGame;
 import chess.ChessPosition;
 import model.AuthTokenModel;
 import model.GameModel;
@@ -36,53 +37,48 @@ public class GamePlayClient implements Client {
     }
 
     private String displayBoard() {
-        ChessBoard chessBoard = currentGame.getGame().getBoard();
+        StringBuilder boardBuilder = new StringBuilder();
+        ChessBoard chessBoard = new ChessGame().getBoard();
+        chessBoard.resetBoard();
+
+        // Draw from White's perspective
+        boardBuilder.append("White's Perspective\n").append(drawBoard(chessBoard, true)).append("\n");
+
+        // Draw from Black's perspective
+        boardBuilder.append("Black's Perspective\n").append(drawBoard(chessBoard, false));
+
+        return boardBuilder.toString();
+    }
+
+    private String drawBoard(ChessBoard chessBoard, boolean isWhitePerspective) {
         StringBuilder boardBuilder = new StringBuilder();
 
-        // Column letters with padding
-        String columnLabels = "   a  b  c  d  e  f  g  h";
+        // Column labels with perspective adjustment
+        String columnLabels = isWhitePerspective ? "   a  b  c  d  e  f  g  h" : "   h  g  f  e  d  c  b  a";
         boardBuilder.append(columnLabels).append("\n");
 
-        // Draw board from white's perspective (row 8 to 1)
-        for (int row = 8; row >= 1; row--) {
+        // Determine row range and step based on perspective
+        int startRow = isWhitePerspective ? 8 : 1;
+        int endRow = isWhitePerspective ? 0 : 9;
+        int step = isWhitePerspective ? -1 : 1;
+
+        for (int row = startRow; row != endRow; row += step) {
             boardBuilder.append(row).append(" "); // Row number with padding
             for (int col = 1; col <= 8; col++) {
-                ChessPosition position = new ChessPosition(row, col);
+                int actualCol = isWhitePerspective ? col : 9 - col; // Adjust column based on perspective
+                ChessPosition position = new ChessPosition(row, actualCol);
 
-                boolean isLightSquare = (row + col) % 2 == 0;
-                String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
+                boolean isLightSquare = (row + actualCol) % 2 == 0;
+                String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_DARK_GREY : EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
 
                 String pieceSymbol;
                 if (chessBoard.getPiece(position) != null) {
                     pieceSymbol = chessBoard.getPiece(position).getSymbol();
-                } else {
-                    pieceSymbol = " ";
-                }
-
-                // Use a padded format for each square
-                boardBuilder.append(bgColor).append(" ").append(pieceSymbol).append(" ").append(EscapeSequences.RESET_BG_COLOR);
-            }
-            boardBuilder.append(" ").append(row).append("\n"); // Row number on the other side
-        }
-
-        boardBuilder.append(columnLabels).append("\n");
-
-        // Add separator
-        boardBuilder.append("\n").append("Black's Perspective\n");
-
-        // Draw board from black's perspective (row 1 to 8)
-        boardBuilder.append(columnLabels).append("\n");
-        for (int row = 1; row <= 8; row++) {
-            boardBuilder.append(row).append(" "); // Row number with padding
-            for (int col = 1; col <= 8; col++) {
-                ChessPosition position = new ChessPosition(row, col);
-
-                boolean isLightSquare = (row + col) % 2 == 0;
-                String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_LIGHT_GREY : EscapeSequences.SET_BG_COLOR_DARK_GREY;
-
-                String pieceSymbol;
-                if (chessBoard.getPiece(position) != null) {
-                    pieceSymbol = chessBoard.getPiece(position).getSymbol();
+                    // Apply piece color based on team
+                    String pieceColor = chessBoard.getPiece(position).getTeamColor() == ChessGame.TeamColor.WHITE
+                            ? EscapeSequences.SET_TEXT_COLOR_BLUE
+                            : EscapeSequences.SET_TEXT_COLOR_RED;
+                    pieceSymbol = pieceColor + pieceSymbol + EscapeSequences.RESET_TEXT_COLOR;
                 } else {
                     pieceSymbol = " ";
                 }
