@@ -71,7 +71,7 @@ public class ChessPiece {
         } else if (type == PieceType.KNIGHT) {
             pieceMoves = new KnightMoves().getKnightMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.BISHOP) {
-            pieceMoves = new BishopMoves().getBishopMoves(board, myPosition, pieceColor);
+            pieceMoves = new BishopMovesNew().getBishopMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.QUEEN) {
             pieceMoves = new QueenMovesNew().getQueenMoves(board, myPosition, pieceColor);
         } else if (type == PieceType.KING) {
