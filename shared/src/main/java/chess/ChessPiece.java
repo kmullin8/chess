@@ -64,25 +64,19 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         pieceMoves = new ArrayList<>();
 
-        if(type == PieceType.PAWN){
+        if (type == PieceType.PAWN) {
             pieceMoves = new PawnMoves().getPawnMoves(board, myPosition, pieceColor);
-        }
-        else if(type == PieceType.ROOK){
+        } else if (type == PieceType.ROOK) {
             pieceMoves = new RookMoves().getRookMoves(board, myPosition, pieceColor);
-        }
-        else if(type == PieceType.KNIGHT){
+        } else if (type == PieceType.KNIGHT) {
             pieceMoves = new KnightMoves().getKnightMoves(board, myPosition, pieceColor);
-        }
-        else if(type == PieceType.BISHOP){
+        } else if (type == PieceType.BISHOP) {
             pieceMoves = new BishopMoves().getBishopMoves(board, myPosition, pieceColor);
-        }
-        else if (type == PieceType.QUEEN) {
-            pieceMoves = new QueenMoves().getQueenMoves(board, myPosition, pieceColor);
-        }
-        else if (type == PieceType.KING){
+        } else if (type == PieceType.QUEEN) {
+            pieceMoves = new QueenMovesNew().getQueenMoves(board, myPosition, pieceColor);
+        } else if (type == PieceType.KING) {
             pieceMoves = new KingMoves().getKingMoves(board, myPosition, pieceColor);
-        }
-        else {
+        } else {
             throw new RuntimeException("type not found");
         }
 
@@ -91,13 +85,20 @@ public class ChessPiece {
 
     public String getSymbol() {
         switch (type) {
-            case ROOK:   return pieceColor == ChessGame.TeamColor.WHITE ? "R" : "r";
-            case KNIGHT: return pieceColor == ChessGame.TeamColor.WHITE ? "N" : "n";
-            case BISHOP: return pieceColor == ChessGame.TeamColor.WHITE ? "B" : "b";
-            case QUEEN:  return pieceColor == ChessGame.TeamColor.WHITE ? "Q" : "q";
-            case KING:   return pieceColor == ChessGame.TeamColor.WHITE ? "K" : "k";
-            case PAWN:   return pieceColor == ChessGame.TeamColor.WHITE ? "P" : "p";
-            default:     return " ";
+            case ROOK:
+                return pieceColor == ChessGame.TeamColor.WHITE ? "R" : "r";
+            case KNIGHT:
+                return pieceColor == ChessGame.TeamColor.WHITE ? "N" : "n";
+            case BISHOP:
+                return pieceColor == ChessGame.TeamColor.WHITE ? "B" : "b";
+            case QUEEN:
+                return pieceColor == ChessGame.TeamColor.WHITE ? "Q" : "q";
+            case KING:
+                return pieceColor == ChessGame.TeamColor.WHITE ? "K" : "k";
+            case PAWN:
+                return pieceColor == ChessGame.TeamColor.WHITE ? "P" : "p";
+            default:
+                return " ";
         }
     }
 
