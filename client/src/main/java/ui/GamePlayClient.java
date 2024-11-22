@@ -102,20 +102,20 @@ public class GamePlayClient implements Client {
     }
 
     @Override
-    public void setAuthToken(AuthTokenModel authToken) {
-        this.authToken = authToken;
-    }
-
-    @Override
     public AuthTokenModel getAuthToken() {
         return authToken;
     }
 
-    public void setCurrentGame(GameModel currentGame) {
-        this.currentGame = currentGame;
+    @Override
+    public void setAuthToken(AuthTokenModel authToken) {
+        this.authToken = authToken;
     }
 
     public GameModel getCurrentGame() {
         return currentGame;
+    }
+
+    public void setCurrentGame(GameModel currentGame) {
+        this.currentGame = currentGame;
     }
 }
