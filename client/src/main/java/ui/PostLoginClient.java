@@ -75,32 +75,9 @@ public class PostLoginClient implements Client {
 
     private String observeGame(String... params) throws Exception {
         if (params.length == 1) {
-            String inputGameId = params[0];
-
-            GameModel[] gameList = facade.listGames(authToken.getAuthToken()); // get list of games
-            Map<Integer, Integer> idList = new HashMap<>();
-            for (int i = 0; i < gameList.length; i++) { // map list game numbers to game IDs
-                GameModel game = gameList[i];
-                idList.put(i + 1, game.getGameID()); // use i + 1 as key to start numbering at 1
-            }
-
-            // Convert inputGameId to an Integer and check if it exists in idList
-            int gameNumber;
-            try {
-                gameNumber = Integer.parseInt(inputGameId);
-            } catch (NumberFormatException e) {
-                return "Invalid input. Please enter a valid game number.\n";
-            }
-
-            if (!idList.containsKey(gameNumber)) {
-                return "Invalid game number. Please enter a valid game number.\n";
-            }
-
-            int realGameId = idList.get(gameNumber);
-
+            int realGameId = validateAndGetGameId(params[0]);
             JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.BLACK);
             currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
-
             return "Joined Game as Observer\n";
         }
         return "Expected: <ID>\n";
@@ -108,44 +85,20 @@ public class PostLoginClient implements Client {
 
     private String joinGame(String... params) throws Exception {
         if (params.length == 2) {
-            String inputGameId = params[0];
-            String playerColor = params[1];
-
-            GameModel[] gameList = facade.listGames(authToken.getAuthToken()); // get list of games
-            Map<Integer, Integer> idList = new HashMap<>();
-            for (int i = 0; i < gameList.length; i++) { // map list game numbers to game IDs
-                GameModel game = gameList[i];
-                idList.put(i + 1, game.getGameID()); // use i + 1 as key to start numbering at 1
-            }
-
-            // Convert inputGameId to an Integer and check if it exists in idList
-            int gameNumber;
-            try {
-                gameNumber = Integer.parseInt(inputGameId);
-            } catch (NumberFormatException e) {
-                return "Invalid input. Please enter a valid game number.\n";
-            }
-
-            if (!idList.containsKey(gameNumber)) {
-                return "Invalid game number. Please enter a valid game number.\n";
-            }
-
-            int realGameId = idList.get(gameNumber);
-
-
-            if (Objects.equals(playerColor, "white")) {
-                JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.WHITE);
-                currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
-                return "Joined Game\n";
-            } else if (Objects.equals(playerColor, "black")) {
-                JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.WHITE);
-                currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
-                return "Joined Game\n";
+            int realGameId = validateAndGetGameId(params[0]);
+            ChessGame.TeamColor teamColor;
+            if ("white".equalsIgnoreCase(params[1])) {
+                teamColor = ChessGame.TeamColor.WHITE;
+            } else if ("black".equalsIgnoreCase(params[1])) {
+                teamColor = ChessGame.TeamColor.BLACK;
             } else {
-                return "Expected: <ID> <WHITE> <BLACK>\n";
+                return "Expected: <ID> <WHITE|BLACK>\n";
             }
+            JoinGameRequest joinRequest = new JoinGameRequest(realGameId, teamColor);
+            currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
+            return "Joined Game\n";
         }
-        return "Expected: <ID> <WHITE> <BLACK>\n";
+        return "Expected: <ID> <WHITE|BLACK>\n";
     }
 
     private String logout() throws Exception {
@@ -164,6 +117,27 @@ public class PostLoginClient implements Client {
                 quit - playing chess
                 help - with possible commands
                 """;
+    }
+
+    private int validateAndGetGameId(String inputGameId) throws Exception {
+        GameModel[] gameList = facade.listGames(authToken.getAuthToken());
+        Map<Integer, Integer> idList = new HashMap<>();
+        for (int i = 0; i < gameList.length; i++) {
+            idList.put(i + 1, gameList[i].getGameID());
+        }
+
+        int gameNumber;
+        try {
+            gameNumber = Integer.parseInt(inputGameId);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid input. Please enter a valid game number.");
+        }
+
+        if (!idList.containsKey(gameNumber)) {
+            throw new IllegalArgumentException("Invalid game number. Please enter a valid game number.");
+        }
+
+        return idList.get(gameNumber);
     }
 
 
