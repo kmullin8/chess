@@ -100,7 +100,7 @@ public class PostLoginClient implements Client {
             try {
                 currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
             } catch (Exception ex) {
-                throw new Exception("Could not find game\n", ex);
+                throw new Exception("Could not join\n", ex);
             }
 
             return "Joined Game\n";
