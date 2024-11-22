@@ -28,189 +28,35 @@ public class PieceMoves {
     public Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor pieceColor) {
         Collection<ChessMove> knightMoves = new ArrayList<>();
 
-        int newRow;
-        int newCol;
-        ChessPosition nextPosition;
+        // Define the possible knight move offsets
+        int[][] knightOffsets = {
+                {-2, -1}, {-2, 1},  // down-left, down-right
+                {-1, 2}, {1, 2},   // right-down, right-up
+                {2, 1}, {2, -1},  // up-right, up-left
+                {1, -2}, {-1, -2}  // left-up, left-down
+        };
 
-        //generate all valid rook moves and add to rookMoves
-        //generate down-left move
-        newRow = myPosition.getRow() - 2;
-        newCol = myPosition.getColumn() - 1;
-
-        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
-
-            //initialize new position
-            nextPosition = new ChessPosition(newRow, newCol);
-
-            if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
-
-                if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
-                    knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-
-                    //set myPosition to next nextPosition to increment move
-                }
-            } else {
-
-                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-            }
+        // Use the helper function to process each potential move
+        for (int[] offset : knightOffsets) {
+            int newRow = myPosition.getRow() + offset[0];
+            int newCol = myPosition.getColumn() + offset[1];
+            addValidKnightMove(knightMoves, board, myPosition, newRow, newCol, pieceColor);
         }
-
-        //generate down-right move
-        newRow = myPosition.getRow() - 2;
-        newCol = myPosition.getColumn() + 1;
-
-        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
-
-            //initialize new position
-            nextPosition = new ChessPosition(newRow, newCol);
-
-            if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
-
-                if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
-                    knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-
-                    //set myPosition to next nextPosition to increment move
-                }
-            } else {
-
-                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-            }
-        }
-
-        //generate right-down
-        newRow = myPosition.getRow() - 1;
-        newCol = myPosition.getColumn() + 2;
-
-        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
-
-            //initialize new position
-            nextPosition = new ChessPosition(newRow, newCol);
-
-            if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
-
-                if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
-                    knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-
-                    //set myPosition to next nextPosition to increment move
-                }
-            } else {
-
-                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-            }
-        }
-
-        //generate right-up
-        newRow = myPosition.getRow() + 1;
-        newCol = myPosition.getColumn() + 2;
-
-        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
-
-            //initialize new position
-            nextPosition = new ChessPosition(newRow, newCol);
-
-            if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
-
-                if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
-                    knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-
-                    //set myPosition to next nextPosition to increment move
-                }
-            } else {
-
-                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-            }
-        }
-
-        //generate up-right
-        newRow = myPosition.getRow() + 2;
-        newCol = myPosition.getColumn() + 1;
-
-        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
-
-            //initialize new position
-            nextPosition = new ChessPosition(newRow, newCol);
-
-            if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
-
-                if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
-                    knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-
-                    //set myPosition to next nextPosition to increment move
-                }
-            } else {
-
-                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-            }
-        }
-
-        //generate up-left
-        newRow = myPosition.getRow() + 2;
-        newCol = myPosition.getColumn() - 1;
-
-        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
-
-            //initialize new position
-            nextPosition = new ChessPosition(newRow, newCol);
-
-            if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
-
-                if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
-                    knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-
-                    //set myPosition to next nextPosition to increment move
-                }
-            } else {
-
-                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-            }
-        }
-
-        //generate left-up
-        newRow = myPosition.getRow() + 1;
-        newCol = myPosition.getColumn() - 2;
-
-        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
-
-            //initialize new position
-            nextPosition = new ChessPosition(newRow, newCol);
-
-            if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
-
-                if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
-                    knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-
-                    //set myPosition to next nextPosition to increment move
-                }
-            } else {
-
-                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-            }
-        }
-
-        //generate left-down
-        newRow = myPosition.getRow() - 1;
-        newCol = myPosition.getColumn() - 2;
-
-        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // is new position outside of board
-
-            //initialize new position
-            nextPosition = new ChessPosition(newRow, newCol);
-
-            if (board.getPiece(nextPosition) != null) { // enter if next position has a piece
-
-                if (board.getPiece(nextPosition).getTeamColor() != pieceColor) { //enter if piece at next position is different color
-                    knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-
-                    //set myPosition to next nextPosition to increment move
-                }
-            } else {
-
-                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
-            }
-        }
-
 
         return knightMoves;
+    }
+
+    // Helper method to validate and add knight moves
+    private void addValidKnightMove(Collection<ChessMove> knightMoves, ChessBoard board, ChessPosition myPosition, int newRow, int newCol, ChessGame.TeamColor pieceColor) {
+        if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // Check bounds
+            ChessPosition nextPosition = new ChessPosition(newRow, newCol);
+            ChessPiece targetPiece = board.getPiece(nextPosition);
+
+            // Add the move if the position is empty or contains an opponent's piece
+            if (targetPiece == null || targetPiece.getTeamColor() != pieceColor) {
+                knightMoves.add(new ChessMove(myPosition, nextPosition, null));
+            }
+        }
     }
 
     public Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor pieceColor) {
