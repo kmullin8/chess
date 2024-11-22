@@ -41,6 +41,7 @@ public class PostLoginClient implements Client {
     private String createGame(String... params) throws Exception {
         if (params.length == 1) {
             var gameName = params[0];
+
             GameModel gameModel = facade.createGame(gameName, authToken.getAuthToken());
 
             return ("Created game " + gameName + "\n");
@@ -77,7 +78,7 @@ public class PostLoginClient implements Client {
         if (params.length == 1) {
             int realGameId = validateAndGetGameId(params[0]);
             JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.BLACK);
-            currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
+            //currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
             return "Joined Game as Observer\n";
         }
         return "Expected: <ID>\n";
@@ -95,7 +96,13 @@ public class PostLoginClient implements Client {
                 return "Expected: <ID> <WHITE|BLACK>\n";
             }
             JoinGameRequest joinRequest = new JoinGameRequest(realGameId, teamColor);
-            currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
+
+            try {
+                currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
+            } catch (Exception ex) {
+                throw new Exception("Could not find game\n", ex);
+            }
+
             return "Joined Game\n";
         }
         return "Expected: <ID> <WHITE|BLACK>\n";
@@ -130,11 +137,11 @@ public class PostLoginClient implements Client {
         try {
             gameNumber = Integer.parseInt(inputGameId);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid input. Please enter a valid game number.");
+            throw new IllegalArgumentException("Please enter a valid game number.\n");
         }
 
         if (!idList.containsKey(gameNumber)) {
-            throw new IllegalArgumentException("Invalid game number. Please enter a valid game number.");
+            throw new IllegalArgumentException("Please enter a valid game number.\n");
         }
 
         return idList.get(gameNumber);

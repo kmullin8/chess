@@ -37,7 +37,13 @@ public class PreLoginClient implements Client {
             var password = params[1];
             var email = "null";
             UserModel user = new UserModel(username, password, email);
-            authToken = facade.logIn(user);
+
+            try {
+                authToken = facade.logIn(user);
+            } catch (Exception ex) {
+                throw new Exception("Could not find username or password\n", ex);
+            }
+
             setAuthToken(authToken);
 
             return ("Logged in as " + username + "\n");
@@ -51,7 +57,12 @@ public class PreLoginClient implements Client {
             var password = params[1];
             var email = params[2];
             UserModel user = new UserModel(username, password, email);
-            authToken = facade.registerUser(user);
+
+            try {
+                authToken = facade.registerUser(user);
+            } catch (Exception ex) {
+                throw new Exception("User already exists\n", ex);
+            }
             setAuthToken(authToken);
 
             return ("Logged in as " + username + "\n");
