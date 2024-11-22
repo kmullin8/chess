@@ -128,28 +128,26 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece currentPiece = board.getPiece(move.getStartPosition());
 
-        if (currentPiece != null) {
+        if (currentPiece != null && getTeamTurn() == currentPiece.getTeamColor()) {
             Collection<ChessMove> pieceMoves = currentPiece.pieceMoves(board, move.startPosition);
 
-            if (getTeamTurn() == currentPiece.getTeamColor()) {
-                for (ChessMove possMove : pieceMoves) {
-                    if (possMove.endPosition.getRow() == move.endPosition.getRow() &&
-                            possMove.endPosition.getColumn() == move.endPosition.getColumn()) {
+            for (ChessMove possMove : pieceMoves) {
+                if (possMove.endPosition.getRow() == move.endPosition.getRow() &&
+                        possMove.endPosition.getColumn() == move.endPosition.getColumn()) {
 
-                        ChessGame tempGame = new ChessGame(this); //setup tempGame and see if move will leave king in check
-                        tempGame.board.movePiece(move, currentPiece);
-                        if (tempGame.isInCheck(currentPiece.getTeamColor())) {
-                            throw new InvalidMoveException("Invalid move: " + move);
-                        }
-
-                        board.movePiece(move, currentPiece);
-                        if (teamturn == TeamColor.WHITE) { // chang team turn
-                            teamturn = TeamColor.BLACK;
-                        } else {
-                            teamturn = TeamColor.WHITE;
-                        }
-                        return;
+                    ChessGame tempGame = new ChessGame(this); //setup tempGame and see if move will leave king in check
+                    tempGame.board.movePiece(move, currentPiece);
+                    if (tempGame.isInCheck(currentPiece.getTeamColor())) {
+                        throw new InvalidMoveException("Invalid move: " + move);
                     }
+
+                    board.movePiece(move, currentPiece);
+                    if (teamturn == TeamColor.WHITE) { // chang team turn
+                        teamturn = TeamColor.BLACK;
+                    } else {
+                        teamturn = TeamColor.WHITE;
+                    }
+                    return;
                 }
             }
         }
@@ -170,17 +168,13 @@ public class ChessGame {
                 ChessPosition currPosition = new ChessPosition(row, col);
                 ChessPiece currPiece = board.getPiece(currPosition);
 
-                if (currPiece != null) {
-                    if (currPiece.getTeamColor() != teamColor) {// only look at moves from other team
-                        Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
+                if (currPiece != null && currPiece.getTeamColor() != teamColor) {// only look at moves from other team
+                    Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
 
-                        for (ChessMove move : pieceMoves) { //check if king is inside pieceMoves
-                            ChessPiece targetPiece = board.getPiece(move.getEndPosition());
-                            if (targetPiece != null) {
-                                if (targetPiece.getPieceType() == ChessPiece.PieceType.KING) {
-                                    inCheck = true;
-                                }
-                            }
+                    for (ChessMove move : pieceMoves) { //check if king is inside pieceMoves
+                        ChessPiece targetPiece = board.getPiece(move.getEndPosition());
+                        if (targetPiece != null && targetPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                            inCheck = true;
                         }
                     }
                 }
@@ -206,17 +200,15 @@ public class ChessGame {
                 ChessPosition currPosition = new ChessPosition(row, col);
                 ChessPiece currPiece = board.getPiece(currPosition);
 
-                if (currPiece != null) {
-                    if (currPiece.getTeamColor() == teamColor) {// only look at moves from current team
-                        Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
+                if (currPiece != null && currPiece.getTeamColor() == teamColor) {// only look at moves from current team
+                    Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
 
-                        for (ChessMove move : pieceMoves) {
-                            ChessGame tempGame = new ChessGame(this); //setup tempGame
+                    for (ChessMove move : pieceMoves) {
+                        ChessGame tempGame = new ChessGame(this); //setup tempGame
 
-                            tempGame.board.movePiece(move, currPiece);
-                            if (tempGame.isInCheck(teamColor) == false) {
-                                return false;
-                            }
+                        tempGame.board.movePiece(move, currPiece);
+                        if (tempGame.isInCheck(teamColor) == false) {
+                            return false;
                         }
                     }
                 }
@@ -239,15 +231,13 @@ public class ChessGame {
                 ChessPosition currPosition = new ChessPosition(row, col);
                 ChessPiece currPiece = board.getPiece(currPosition);
 
-                if (currPiece != null) {
-                    if (currPiece.getTeamColor() == teamColor) {// only look at moves from current team
-                        Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
-                        for (ChessMove move : pieceMoves) {
-                            ChessGame tempGame = this;
-                            tempGame.board.movePiece(move, currPiece);
-                            if (tempGame.isInCheck(teamColor) == false) {
-                                return false;
-                            }
+                if (currPiece != null && currPiece.getTeamColor() == teamColor) {// only look at moves from current team
+                    Collection<ChessMove> pieceMoves = currPiece.pieceMoves(board, currPosition); //all valid moves for current piece
+                    for (ChessMove move : pieceMoves) {
+                        ChessGame tempGame = this;
+                        tempGame.board.movePiece(move, currPiece);
+                        if (tempGame.isInCheck(teamColor) == false) {
+                            return false;
                         }
                     }
                 }
