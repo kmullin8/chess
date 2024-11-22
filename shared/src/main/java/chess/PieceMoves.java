@@ -47,7 +47,8 @@ public class PieceMoves {
     }
 
     // Helper method to validate and add knight moves
-    private void addValidKnightMove(Collection<ChessMove> knightMoves, ChessBoard board, ChessPosition myPosition, int newRow, int newCol, ChessGame.TeamColor pieceColor) {
+    private void addValidKnightMove(Collection<ChessMove> knightMoves, ChessBoard board
+            , ChessPosition myPosition, int newRow, int newCol, ChessGame.TeamColor pieceColor) {
         if (newRow > 0 && newCol > 0 && newRow <= 8 && newCol <= 8) { // Check bounds
             ChessPosition nextPosition = new ChessPosition(newRow, newCol);
             ChessPiece targetPiece = board.getPiece(nextPosition);
@@ -118,7 +119,8 @@ public class PieceMoves {
 
             // capture moves
             //capture left
-            if (forwardLeft.getRow() <= 8 || forwardLeft.getColumn() <= 8 || forwardLeft.getRow() > 0 || forwardLeft.getColumn() > 0) { // check bounds
+            if (forwardLeft.getRow() <= 8 || forwardLeft.getColumn() <= 8 || forwardLeft.getRow() > 0
+                    || forwardLeft.getColumn() > 0) { // check bounds
                 if (board.getPiece(forwardLeft) != null && board.getPiece(forwardLeft).getTeamColor() != pieceColor) {
                     if (forwardLeft.getRow() == promotionRow) {
                         addPromotionMoves(pawnMoves, myPosition, forwardLeft);
@@ -128,7 +130,8 @@ public class PieceMoves {
                 }
             }
 
-            if (forwardRight.getRow() <= 8 || forwardRight.getColumn() <= 8 || forwardRight.getRow() > 0 || forwardRight.getColumn() > 0) { // check bounds
+            if (forwardRight.getRow() <= 8 || forwardRight.getColumn() <= 8 || forwardRight.getRow() > 0
+                    || forwardRight.getColumn() > 0) { // check bounds
                 if (board.getPiece(forwardRight) != null && board.getPiece(forwardRight).getTeamColor() != pieceColor) {
                     if (forwardRight.getRow() == promotionRow) {
                         addPromotionMoves(pawnMoves, myPosition, forwardRight);
@@ -151,7 +154,8 @@ public class PieceMoves {
         return pawnMoves;
     }
 
-    private Collection<ChessMove> generateMoves(ChessBoard board, ChessPosition startPosition, ChessGame.TeamColor pieceColor, int rowIncrement, int colIncrement) {
+    private Collection<ChessMove> generateMoves(ChessBoard board, ChessPosition startPosition
+            , ChessGame.TeamColor pieceColor, int rowIncrement, int colIncrement) {
         Collection<ChessMove> moves = new ArrayList<>();
         boolean nextPositionValid = true;
         ChessPosition currentPosition = startPosition;
