@@ -12,10 +12,20 @@
     <orderEntry type="module" module-name="shared" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="junit.jupiter" level="project" />
-    <orderEntry type="library" exported="" name="mysql:mysql-connector-java:8.0.30" level="project" />
+    <orderEntry type="library" name="mysql:mysql-connector-java:8.0.30" level="project" />
     <orderEntry type="library" name="sparkjava.spark.core" level="project" />
     <orderEntry type="library" name="m" level="project" />
     <orderEntry type="library" name="mysql.connector.j" level="project" />
     <orderEntry type="library" name="mindrot.jbcrypt" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library name="glassfish.tyrus.bundles.standalone.client" type="repository">
+        <properties maven-id="org.glassfish.tyrus.bundles:tyrus-standalone-client:1.15" />
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/tyrus/bundles/tyrus-standalone-client/1.15/tyrus-standalone-client-1.15.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
