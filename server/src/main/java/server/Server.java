@@ -11,6 +11,8 @@ import spark.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import websocket.*;
+
 public class Server {
 
     private DataAccess dataAccess;
@@ -21,6 +23,7 @@ public class Server {
     private static ClearService clearService;
     private static LoginService loginService;
     private static LogoutService logoutService;
+    private static WebSocketHandler webSocketHandler;
 
     public Server() {
         try {
@@ -40,6 +43,7 @@ public class Server {
         clearService = new ClearService(dataAccess);
         loginService = new LoginService(dataAccess);
         logoutService = new LogoutService(dataAccess);
+        webSocketHandler = new WebSocketHandler();
     }
 
     public int run(int desiredPort) {
@@ -47,7 +51,9 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        // Register your endpoints and handle exceptions here.
+        // Register endpoints and handle exceptions here.
+        Spark.webSocket("/ws", webSocketHandler);
+
         Spark.delete("/db", this::clear);
         Spark.post("/user", this::register);
         Spark.post("/session", this::logIn);
