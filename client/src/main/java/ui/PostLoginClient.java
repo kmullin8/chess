@@ -4,6 +4,7 @@ import chess.ChessGame;
 import model.AuthTokenModel;
 import model.GameModel;
 import requests.JoinGameRequest;
+import serveraccess.ServerFacade;
 
 import java.util.*;
 

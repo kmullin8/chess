@@ -1,11 +1,11 @@
 package ui;
 
+import management.State;
 import model.AuthTokenModel;
-import model.GameModel;
 
 import java.util.Scanner;
 
-import static ui.EscapeSequences.*;
+import static management.EscapeSequences.*;
 
 public class Repl {
     private Client client;
@@ -60,6 +60,7 @@ public class Repl {
                 } else if (result.startsWith("Logged out") && state == State.SIGNEDIN) {
                     state = State.SIGNEDOUT;
                 }
+
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);

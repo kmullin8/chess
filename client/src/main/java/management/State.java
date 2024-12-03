@@ -1,4 +1,4 @@
-package ui;
+package management;
 
 public enum State {
     SIGNEDOUT,

@@ -2,6 +2,7 @@ package ui;
 
 import model.AuthTokenModel;
 import model.UserModel;
+import serveraccess.ServerFacade;
 
 
 import java.util.Arrays;

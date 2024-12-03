@@ -6,7 +6,7 @@ import model.UserModel;
 import org.junit.jupiter.api.*;
 import requests.JoinGameRequest;
 import server.Server;
-import ui.ServerFacade;
+import serveraccess.ServerFacade;
 
 import static org.junit.jupiter.api.Assertions.*;
 

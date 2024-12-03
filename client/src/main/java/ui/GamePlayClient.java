@@ -3,21 +3,38 @@ package ui;
 import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPosition;
+import management.EscapeSequences;
 import model.AuthTokenModel;
 import model.GameModel;
+import serveraccess.ServerFacade;
+import serveraccess.WebSocketFacade;
+import websocket.messages.ServerMessage;
 
 import java.util.Arrays;
 
-public class GamePlayClient implements Client {
+public class GamePlayClient implements Client, NotificationHandler {
     private ServerFacade facade;
+    private WebSocketFacade wsFacade;
     private String serverUrl;
     private AuthTokenModel authToken;
     private GameModel currentGame;
 
     public GamePlayClient(String serverUrl, AuthTokenModel authToken) {
-        facade = new ServerFacade("http://localhost:8080");
-
         this.authToken = authToken;
+        this.serverUrl = serverUrl;
+
+        try {
+            wsFacade = new WebSocketFacade(serverUrl, this, authToken.getAuthToken(), currentGame.getGameID());
+            wsFacade.connect();  // Connect to the server
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void notify(ServerMessage notification) {
+        // Handle the notification (e.g., update UI, log message)
+        System.out.println("Received notification: " + notification.getServerMessageType());
     }
 
     @Override
@@ -28,7 +45,10 @@ public class GamePlayClient implements Client {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "display" -> displayBoard();
-                case "quit" -> "quit";
+                case "quit" -> {
+                    wsFacade.disconnect(); // Calls WebSocketFacade to disconnect
+                    yield "quit";
+                }
                 default -> help();
             };
         } catch (Exception ex) {
@@ -37,9 +57,12 @@ public class GamePlayClient implements Client {
     }
 
     private String displayBoard() {
+        if (currentGame == null) {
+            return "No game loaded. Please connect to a game.";
+        }
+
         StringBuilder boardBuilder = new StringBuilder();
-        ChessBoard chessBoard = new ChessGame().getBoard();
-        chessBoard.resetBoard();
+        ChessBoard chessBoard = currentGame.getGame().getBoard();
 
         // Draw from White's perspective
         boardBuilder.append("White's Perspective\n").append(drawBoard(chessBoard, true)).append("\n");
@@ -109,6 +132,9 @@ public class GamePlayClient implements Client {
     @Override
     public void setAuthToken(AuthTokenModel authToken) {
         this.authToken = authToken;
+        if (wsFacade != null) {
+            wsFacade.updateAuthToken(authToken.getAuthToken());
+        }
     }
 
     public GameModel getCurrentGame() {
@@ -118,4 +144,11 @@ public class GamePlayClient implements Client {
     public void setCurrentGame(GameModel currentGame) {
         this.currentGame = currentGame;
     }
+
+    @Override
+    public void updateGameState(GameModel game) {
+        // Update the current game state
+        setCurrentGame(game);
+    }
+
 }
