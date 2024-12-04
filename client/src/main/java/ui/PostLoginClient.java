@@ -10,20 +10,16 @@ import java.util.*;
 
 public class PostLoginClient implements Client {
     private ServerFacade facade;
-    private AuthTokenModel authToken;
-    private GameModel currentGame;
 
-    public PostLoginClient(String serverUrl, AuthTokenModel authToken) {
-        facade = new ServerFacade("http://localhost:8080");
-
-        this.authToken = authToken;
+    public PostLoginClient(String serverUrl) {
+        facade = new ServerFacade(serverUrl);
     }
 
     @Override
     public String eval(String input) {
         try {
             var tokens = input.toLowerCase().split(" ");
-            var cmd = (tokens.length > 0) ? tokens[0] : "help";
+            var cmd = tokens[0];
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "create" -> createGame(params);
@@ -42,15 +38,15 @@ public class PostLoginClient implements Client {
     private String createGame(String... params) throws Exception {
         if (params.length == 1) {
             var gameName = params[0];
-
+            var authToken = AuthManager.getInstance().getAuthToken();
             GameModel gameModel = facade.createGame(gameName, authToken.getAuthToken());
-
-            return ("Created game " + gameName + "\n");
+            return "Created game " + gameName + "\n";
         }
-        return ("Expected: <NAME>\n");
+        return "Expected: <NAME>\n";
     }
 
     private String listGames() throws Exception {
+        var authToken = AuthManager.getInstance().getAuthToken();
         GameModel[] gameList = facade.listGames(authToken.getAuthToken());
 
         if (gameList == null || gameList.length == 0) {
@@ -87,7 +83,9 @@ public class PostLoginClient implements Client {
 
     private String joinGame(String... params) throws Exception {
         if (params.length == 2) {
+            var authToken = AuthManager.getInstance().getAuthToken();
             int realGameId = validateAndGetGameId(params[0]);
+
             ChessGame.TeamColor teamColor;
             if ("white".equalsIgnoreCase(params[1])) {
                 teamColor = ChessGame.TeamColor.WHITE;
@@ -96,13 +94,10 @@ public class PostLoginClient implements Client {
             } else {
                 return "Expected: <ID> <WHITE|BLACK>\n";
             }
-            JoinGameRequest joinRequest = new JoinGameRequest(realGameId, teamColor);
 
-            try {
-                currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
-            } catch (Exception ex) {
-                throw new Exception("Could not join\n", ex);
-            }
+            JoinGameRequest joinRequest = new JoinGameRequest(realGameId, teamColor);
+            var currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
+            setCurrentGame(currentGame);
 
             return "Joined Game\n";
         }
@@ -110,6 +105,7 @@ public class PostLoginClient implements Client {
     }
 
     private String logout() throws Exception {
+        var authToken = AuthManager.getInstance().getAuthToken();
         facade.logOut(authToken.getAuthToken());
         return "Logged out\n";
     }
@@ -128,7 +124,9 @@ public class PostLoginClient implements Client {
     }
 
     private int validateAndGetGameId(String inputGameId) throws Exception {
+        var authToken = AuthManager.getInstance().getAuthToken();
         GameModel[] gameList = facade.listGames(authToken.getAuthToken());
+
         Map<Integer, Integer> idList = new HashMap<>();
         for (int i = 0; i < gameList.length; i++) {
             idList.put(i + 1, gameList[i].getGameID());
@@ -148,22 +146,11 @@ public class PostLoginClient implements Client {
         return idList.get(gameNumber);
     }
 
-
-    @Override
-    public void setAuthToken(AuthTokenModel authToken) {
-        this.authToken = authToken;
+    private void setAuthToken(AuthTokenModel authToken) {
+        AuthManager.getInstance().setAuthToken(authToken); //set auth
     }
 
-    @Override
-    public AuthTokenModel getAuthToken() {
-        return authToken;
-    }
-
-    public void setCurrentGame(GameModel currentGame) {
-        this.currentGame = currentGame;
-    }
-
-    public GameModel getCurrentGame() {
-        return currentGame;
+    private void setCurrentGame(GameModel currentGame) {
+        GameStateManager.getInstance().setCurrentGame(currentGame); //set current game
     }
 }

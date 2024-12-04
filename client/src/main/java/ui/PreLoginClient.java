@@ -9,10 +9,9 @@ import java.util.Arrays;
 
 public class PreLoginClient implements Client {
     private ServerFacade facade;
-    private AuthTokenModel authToken;
 
     public PreLoginClient(String serverUrl) {
-        facade = new ServerFacade("http://localhost:8080");
+        facade = new ServerFacade(serverUrl);
     }
 
     @Override
@@ -40,12 +39,11 @@ public class PreLoginClient implements Client {
             UserModel user = new UserModel(username, password, email);
 
             try {
-                authToken = facade.logIn(user);
+                AuthTokenModel authToken = facade.logIn(user);
+                setAuthToken(authToken);
             } catch (Exception ex) {
                 throw new Exception("Could not find username or password\n", ex);
             }
-
-            setAuthToken(authToken);
 
             return ("Logged in as " + username + "\n");
         }
@@ -60,11 +58,11 @@ public class PreLoginClient implements Client {
             UserModel user = new UserModel(username, password, email);
 
             try {
-                authToken = facade.registerUser(user);
+                AuthTokenModel authToken = facade.logIn(user);
+                setAuthToken(authToken);
             } catch (Exception ex) {
                 throw new Exception("User already exists\n", ex);
             }
-            setAuthToken(authToken);
 
             return ("Logged in as " + username + "\n");
         }
@@ -80,12 +78,7 @@ public class PreLoginClient implements Client {
                 """;
     }
 
-
-    public void setAuthToken(AuthTokenModel authToken) {
-        this.authToken = authToken;
-    }
-
-    public AuthTokenModel getAuthToken() {
-        return authToken;
+    private void setAuthToken(AuthTokenModel authToken) {
+        AuthManager.getInstance().setAuthToken(authToken); //set auth
     }
 }

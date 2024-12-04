@@ -16,12 +16,10 @@ public class GamePlayClient implements Client, NotificationHandler {
     private ServerFacade facade;
     private WebSocketFacade wsFacade;
     private String serverUrl;
-    private AuthTokenModel authToken;
-    private GameModel currentGame;
 
-    public GamePlayClient(String serverUrl, AuthTokenModel authToken) {
-        this.authToken = authToken;
-        this.serverUrl = serverUrl;
+    public GamePlayClient(String serverUrl) {
+        var currentGame = GameStateManager.getInstance().getCurrentGame();
+        var authToken = AuthManager.getInstance().getAuthToken();
 
         try {
             wsFacade = new WebSocketFacade(serverUrl, this, authToken.getAuthToken(), currentGame.getGameID());
@@ -57,6 +55,7 @@ public class GamePlayClient implements Client, NotificationHandler {
     }
 
     private String displayBoard() {
+        var currentGame = GameStateManager.getInstance().getCurrentGame();
         if (currentGame == null) {
             return "No game loaded. Please connect to a game.";
         }
@@ -125,30 +124,9 @@ public class GamePlayClient implements Client, NotificationHandler {
     }
 
     @Override
-    public AuthTokenModel getAuthToken() {
-        return authToken;
-    }
-
-    @Override
-    public void setAuthToken(AuthTokenModel authToken) {
-        this.authToken = authToken;
-        if (wsFacade != null) {
-            wsFacade.updateAuthToken(authToken.getAuthToken());
-        }
-    }
-
-    public GameModel getCurrentGame() {
-        return currentGame;
-    }
-
-    public void setCurrentGame(GameModel currentGame) {
-        this.currentGame = currentGame;
-    }
-
-    @Override
     public void updateGameState(GameModel game) {
         // Update the current game state
-        setCurrentGame(game);
+        GameStateManager.getInstance().setCurrentGame(game);
     }
 
 }
