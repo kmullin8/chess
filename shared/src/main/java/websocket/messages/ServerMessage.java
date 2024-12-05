@@ -1,5 +1,7 @@
 package websocket.messages;
 
+import com.google.gson.Gson;
+
 import java.util.Objects;
 
 /**
@@ -15,7 +17,10 @@ public class ServerMessage {
     public enum ServerMessageType {
         LOAD_GAME,
         ERROR,
-        NOTIFICATION
+        NOTIFICATION,
+        GAME_OVER,        // New: Indicates the game has ended
+        TURN_TRANSITION,  // New: Indicates it's another player's turn
+        INVALID_MOVE      // New: Indicates an invalid move
     }
 
     public ServerMessage(ServerMessageType type) {
@@ -32,6 +37,10 @@ public class ServerMessage {
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public <T> T getPayloadAs(Class<T> clazz) {
+        return new Gson().fromJson(payload, clazz);
     }
 
     @Override

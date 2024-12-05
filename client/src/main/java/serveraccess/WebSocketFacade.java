@@ -91,17 +91,31 @@ public class WebSocketFacade extends Endpoint {
     }
 
     private void handleServerMessage(ServerMessage serverMessage) {
+        String reason = null;
         switch (serverMessage.getServerMessageType()) {
             case LOAD_GAME:
                 GameModel game = new Gson().fromJson(serverMessage.getPayload(), GameModel.class);
                 notificationHandler.updateGameState(game);
                 break;
             case ERROR:
-                // Handle the error properly on the client-side
                 handleError(serverMessage.getPayload());
                 break;
             case NOTIFICATION:
                 notificationHandler.notify(serverMessage);
+                break;
+            case GAME_OVER: // New case for game over
+                String[] gameOverDetails = serverMessage.getPayload().split(",");
+                String winner = gameOverDetails[0];
+                reason = gameOverDetails[1];
+                notificationHandler.showGameOverNotification(winner, reason);
+                break;
+            case TURN_TRANSITION: // New case for turn transition
+                String currentPlayer = serverMessage.getPayload();
+                notificationHandler.showTurnTransition(currentPlayer);
+                break;
+            case INVALID_MOVE: // New case for invalid move
+                reason = serverMessage.getPayload();
+                notificationHandler.showInvalidMoveNotification(reason);
                 break;
             default:
                 System.err.println("Unknown message type: " + serverMessage.getServerMessageType());

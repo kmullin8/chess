@@ -30,12 +30,6 @@ public class GamePlayClient implements Client, NotificationHandler {
     }
 
     @Override
-    public void notify(ServerMessage notification) {
-        // Handle the notification (e.g., update UI, log message)
-        System.out.println("Received notification: " + notification.getServerMessageType());
-    }
-
-    @Override
     public String eval(String input) {
         try {
             var tokens = input.toLowerCase().split(" ");
@@ -52,6 +46,43 @@ public class GamePlayClient implements Client, NotificationHandler {
         } catch (Exception ex) {
             return ex.getMessage();
         }
+    }
+
+    @Override
+    public void notify(ServerMessage notification) {
+        // Handle the notification (e.g., update UI, log message)
+        System.out.println("Received notification: " + notification.getServerMessageType());
+    }
+
+    @Override
+    public void updateGameState(GameModel game) {
+        // Existing logic for updating the game state
+        System.out.println("Game state updated: " + game);
+        // Add logic to visually update the game state in the UI
+    }
+
+    @Override
+    public void showErrorNotification(String message) {
+        System.err.println("Error: " + message);
+        // Add code to display an error notification in the UI
+    }
+
+    @Override
+    public void showGameOverNotification(String winner, String reason) {
+        System.out.println("Game Over! Winner: " + winner + ", Reason: " + reason);
+        // Add logic to display a "Game Over" banner or modal
+    }
+
+    @Override
+    public void showTurnTransition(String currentPlayer) {
+        System.out.println("It's now " + currentPlayer + "'s turn.");
+        // Add a visual cue in the UI (e.g., highlight the current player's area)
+    }
+
+    @Override
+    public void showInvalidMoveNotification(String reason) {
+        System.out.println("Invalid Move: " + reason);
+        // Display the invalid move reason in the UI
     }
 
     private String displayBoard() {
@@ -121,12 +152,6 @@ public class GamePlayClient implements Client, NotificationHandler {
         return """
                 how do you not know how to play chess
                 """;
-    }
-
-    @Override
-    public void updateGameState(GameModel game) {
-        // Update the current game state
-        GameStateManager.getInstance().setCurrentGame(game);
     }
 
 }

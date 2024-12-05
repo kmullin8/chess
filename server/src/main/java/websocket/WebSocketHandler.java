@@ -133,4 +133,25 @@ public class WebSocketHandler {
         // Send the error message back to the client
         session.getRemote().sendString(errorMessage);
     }
+
+    private void notifyGameOver(Session session, String winner, String reason) throws IOException {
+        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.GAME_OVER);
+        serverMessage.setPayload(winner + "," + reason);
+        String responseJson = gson.toJson(serverMessage);
+        session.getRemote().sendString(responseJson);
+    }
+
+    private void notifyTurnTransition(Session session, String currentPlayer) throws IOException {
+        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.TURN_TRANSITION);
+        serverMessage.setPayload(currentPlayer);
+        String responseJson = gson.toJson(serverMessage);
+        session.getRemote().sendString(responseJson);
+    }
+
+    private void notifyInvalidMove(Session session, String reason) throws IOException {
+        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.INVALID_MOVE);
+        serverMessage.setPayload(reason);
+        String responseJson = gson.toJson(serverMessage);
+        session.getRemote().sendString(responseJson);
+    }
 }
