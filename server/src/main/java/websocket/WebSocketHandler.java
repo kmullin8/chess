@@ -10,6 +10,7 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import requests.WebSocketRequest;
 import server.Server;
 import websocket.commands.*;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 
@@ -60,6 +61,22 @@ public class WebSocketHandler {
         System.err.println("WebSocket error: " + throwable.getMessage());
     }
 
+    private void handleError(Session session, String errorMessage) {
+        // Construct the server message with ERROR type
+        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR);
+        serverMessage.setPayload(errorMessage);
+
+        // Convert the server message to JSON
+        String responseJson = gson.toJson(serverMessage);
+
+        // Send the JSON response back to the client
+        try {
+            session.getRemote().sendString(responseJson);
+        } catch (IOException e) {
+            System.err.println("Error sending error response: " + e.getMessage());
+        }
+    }
+
     private void initializeCommands() {
         // Register all commands with their corresponding factories
         commandDispatcher.registerCommand("MAKE_MOVE", new MakeMoveCommandFactory());
@@ -104,9 +121,16 @@ public class WebSocketHandler {
     }
 
     private void sendErrorResponse(Session session, String error) throws IOException {
+        // Detailed error message
         String detailedMessage = "An error occurred while processing the request: " + error;
+
+        // Create the WebSocketResponse to send to the client
         WebSocketResponse response = new WebSocketResponse("ERROR", detailedMessage);
+
+        // Convert the response to JSON
         String errorMessage = gson.toJson(response);
+
+        // Send the error message back to the client
         session.getRemote().sendString(errorMessage);
     }
 }

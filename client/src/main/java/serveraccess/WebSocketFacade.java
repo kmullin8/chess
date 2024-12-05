@@ -97,7 +97,8 @@ public class WebSocketFacade extends Endpoint {
                 notificationHandler.updateGameState(game);
                 break;
             case ERROR:
-                System.err.println("Server error: " + serverMessage.getPayload());
+                // Handle the error properly on the client-side
+                handleError(serverMessage.getPayload());
                 break;
             case NOTIFICATION:
                 notificationHandler.notify(serverMessage);
@@ -106,6 +107,15 @@ public class WebSocketFacade extends Endpoint {
                 System.err.println("Unknown message type: " + serverMessage.getServerMessageType());
                 break;
         }
+    }
+
+    private void handleError(String errorMessage) {
+        // You can use NotificationHandler or directly update UI components (e.g., show alerts)
+        System.err.println("Error received from server: " + errorMessage);
+//
+//        // Propagate the error message to the NotificationHandler or any other front-end logic
+//        // For instance, it could trigger a UI pop-up on the client side
+//        notificationHandler.showErrorNotification(errorMessage);
     }
 
     public void sendCommand(UserGameCommand command) throws IOException {
