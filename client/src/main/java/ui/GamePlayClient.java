@@ -56,6 +56,8 @@ public class GamePlayClient implements Client, NotificationHandler {
 
     @Override
     public void updateGameState(GameModel game) {
+
+        GameStateManager.getInstance().setCurrentGame(game); //update current game
         // Existing logic for updating the game state
         System.out.println("Game state updated: " + game);
         // Add logic to visually update the game state in the UI
