@@ -21,7 +21,6 @@ public class Repl {
 
         preLoginClient = new PreLoginClient(serverUrl);
         postLoginClient = new PostLoginClient(serverUrl);
-        gamePlayClient = new GamePlayClient(serverUrl);
     }
 
     public void run() {
@@ -62,7 +61,7 @@ public class Repl {
         return switch (state) {
             case SIGNEDOUT -> preLoginClient;
             case SIGNEDIN -> postLoginClient;
-            case PLAYINGGAME -> gamePlayClient;
+            case PLAYINGGAME -> new GamePlayClient(serverUrl);
         };
     }
 }

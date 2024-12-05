@@ -58,7 +58,7 @@ public class PreLoginClient implements Client {
             UserModel user = new UserModel(username, password, email);
 
             try {
-                AuthTokenModel authToken = facade.logIn(user);
+                AuthTokenModel authToken = facade.registerUser(user);
                 setAuthToken(authToken);
             } catch (Exception ex) {
                 throw new Exception("User already exists\n", ex);

@@ -152,7 +152,12 @@ public class GamePlayClient implements Client, NotificationHandler {
     @Override
     public String help() {
         return """
-                how do you not know how to play chess
+                help - with possible commands
+                redraw - redraws the chess board
+                moves - highlights legal moves
+                make move <a1><a1> - move piece
+                leave - a game
+                quit - playing chess
                 """;
     }
 

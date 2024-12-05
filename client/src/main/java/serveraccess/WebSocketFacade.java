@@ -69,6 +69,21 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
+    public void updateGameID(Integer newGameID) {
+        this.gameID = newGameID;
+
+        try {
+            if (this.session != null && this.session.isOpen()) {
+                disconnect();
+            }
+
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            container.connectToServer(this, socketURI); // Reconnect with updated token
+        } catch (Exception e) {
+            System.err.println("Failed to update game id and reconnect: " + e.getMessage());
+        }
+    }
+
     public void connect() throws Exception {
         try {
             UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID);
