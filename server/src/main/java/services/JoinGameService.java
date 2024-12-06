@@ -39,6 +39,8 @@ public class JoinGameService {
                     } else {
                         throw new CodedException(403, "Color taken");
                     }
+                } else if (teamColor == ChessGame.TeamColor.Observer) {
+                    System.out.println("observer\n");
                 }
                 dataAccess.updateGame(game);
             }

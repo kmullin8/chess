@@ -73,10 +73,16 @@ public class PostLoginClient implements Client {
 
     private String observeGame(String... params) throws Exception {
         if (params.length == 1) {
+            var authToken = AuthManager.getInstance().getAuthToken();
             int realGameId = validateAndGetGameId(params[0]);
-            JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.BLACK);
-            //currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
-            return "Joined Game as Observer\n";
+
+            JoinGameRequest joinRequest = new JoinGameRequest(realGameId, ChessGame.TeamColor.Observer);
+            var currentGame = facade.joinGame(joinRequest, authToken.getAuthToken());
+
+            setColor(ChessGame.TeamColor.Observer);
+            setCurrentGame(currentGame);
+
+            return "Joined Game\n";
         }
         return "Expected: <ID>\n";
     }
@@ -156,7 +162,7 @@ public class PostLoginClient implements Client {
         GameStateManager.getInstance().setCurrentGame(currentGame); //set current game
     }
 
-    private void setColor(ChessGame.TeamColor color){
+    private void setColor(ChessGame.TeamColor color) {
         GameStateManager.getInstance().setColor(color);
     }
 }
