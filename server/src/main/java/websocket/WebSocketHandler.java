@@ -8,7 +8,6 @@ import model.*;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import requests.WebSocketRequest;
-import server.Server;
 import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
@@ -98,7 +97,7 @@ public class WebSocketHandler {
     private void handleError(Session session, String errorMessage) {
         // Construct the server message with ERROR type
         ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR);
-        serverMessage.setPayload(errorMessage);
+        serverMessage.setErrorMessage(errorMessage);
 
         // Convert the server message to JSON
         String responseJson = gson.toJson(serverMessage);
@@ -141,7 +140,7 @@ public class WebSocketHandler {
 
             // Serialize the game model as JSON and set it as the payload
             String gameStateJson = gson.toJson(gameModel);
-            serverMessage.setPayload(gameStateJson);
+            serverMessage.setGame(gameStateJson);
 
             // Convert the entire server message to JSON
             String responseJson = gson.toJson(serverMessage);
@@ -189,21 +188,21 @@ public class WebSocketHandler {
 
     private void notifyGameOver(Session session, String winner, String reason) throws IOException {
         ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.GAME_OVER);
-        serverMessage.setPayload(winner + "," + reason);
+        serverMessage.setMessage(winner + "," + reason);
         String responseJson = gson.toJson(serverMessage);
         session.getRemote().sendString(responseJson);
     }
 
     private void notifyTurnTransition(Session session, String currentPlayer) throws IOException {
         ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.TURN_TRANSITION);
-        serverMessage.setPayload(currentPlayer);
+        serverMessage.setMessage(currentPlayer);
         String responseJson = gson.toJson(serverMessage);
         session.getRemote().sendString(responseJson);
     }
 
     private void notifyInvalidMove(Session session, String reason) throws IOException {
         ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.INVALID_MOVE);
-        serverMessage.setPayload(reason);
+        serverMessage.setMessage(reason);
         String responseJson = gson.toJson(serverMessage);
         session.getRemote().sendString(responseJson);
     }

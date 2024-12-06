@@ -12,7 +12,9 @@ import java.util.Objects;
  */
 public class ServerMessage {
     ServerMessageType serverMessageType;
-    private String payload;
+    private String game;
+    private String message;
+    private String errorMessage;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -31,16 +33,32 @@ public class ServerMessage {
         return this.serverMessageType;
     }
 
-    public String getPayload() {
-        return payload;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setPayload(String payload) {
-        this.payload = payload;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getGame() {
+        return game;
+    }
+
+    public void setGame(String game) {
+        this.game = game;
     }
 
     public <T> T getPayloadAs(Class<T> clazz) {
-        return new Gson().fromJson(payload, clazz);
+        return new Gson().fromJson(errorMessage, clazz);
     }
 
     @Override

@@ -4,7 +4,6 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPosition;
 import management.EscapeSequences;
-import model.AuthTokenModel;
 import model.GameModel;
 import serveraccess.ServerFacade;
 import serveraccess.WebSocketFacade;
@@ -54,7 +53,7 @@ public class GamePlayClient implements Client, NotificationHandler {
     @Override
     public void notify(ServerMessage notification) {
         // Handle the notification (e.g., update UI, log message)
-        System.out.println("\nReceived notification: " + notification.getPayload());
+        System.out.println("\nReceived notification: " + notification.getMessage());
     }
 
     @Override

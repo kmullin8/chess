@@ -3,7 +3,6 @@ package serveraccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameModel;
-import ui.GameStateManager;
 import ui.NotificationHandler;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
@@ -92,27 +91,27 @@ public class WebSocketFacade extends Endpoint {
         String reason = null;
         switch (serverMessage.getServerMessageType()) {
             case LOAD_GAME:
-                GameModel game = new Gson().fromJson(serverMessage.getPayload(), GameModel.class);
+                GameModel game = new Gson().fromJson(serverMessage.getGame(), GameModel.class);
                 notificationHandler.updateGameState(game);
                 break;
             case ERROR:
-                handleError(serverMessage.getPayload());
+                handleError(serverMessage.getErrorMessage());
                 break;
             case NOTIFICATION:
                 notificationHandler.notify(serverMessage);
                 break;
             case GAME_OVER: // New case for game over
-                String[] gameOverDetails = serverMessage.getPayload().split(",");
+                String[] gameOverDetails = serverMessage.getMessage().split(",");
                 String winner = gameOverDetails[0];
                 reason = gameOverDetails[1];
                 notificationHandler.showGameOverNotification(winner, reason);
                 break;
             case TURN_TRANSITION: // New case for turn transition
-                String currentPlayer = serverMessage.getPayload();
+                String currentPlayer = serverMessage.getMessage();
                 notificationHandler.showTurnTransition(currentPlayer);
                 break;
             case INVALID_MOVE: // New case for invalid move
-                reason = serverMessage.getPayload();
+                reason = serverMessage.getMessage();
                 notificationHandler.showInvalidMoveNotification(reason);
                 break;
             default:

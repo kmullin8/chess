@@ -29,7 +29,7 @@ public class ConnectionManager {
                 try {
                     // Create a ServerMessage with NOTIFICATION type
                     ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-                    serverMessage.setPayload(message);
+                    serverMessage.setMessage(message);
 
                     // Convert the ServerMessage to JSON
                     String jsonMessage = new Gson().toJson(serverMessage);
