@@ -1,7 +1,9 @@
 package serveraccess;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameModel;
+import ui.GameStateManager;
 import ui.NotificationHandler;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
@@ -16,15 +18,17 @@ public class WebSocketFacade extends Endpoint {
     private Session session;
     private String authToken;
     private Integer gameID;
+    private ChessGame.TeamColor color;
     private NotificationHandler notificationHandler;
     private URI socketURI;
 
-    public WebSocketFacade(String serverUrl, NotificationHandler notificationHandler, String authToken, Integer gameID) throws Exception {
+    public WebSocketFacade(String serverUrl, NotificationHandler notificationHandler, String authToken, Integer gameID, ChessGame.TeamColor color) throws Exception {
         try {
             this.socketURI = new URI(serverUrl.replace("http", "ws") + "/ws");
             this.notificationHandler = notificationHandler;
             this.authToken = authToken;
             this.gameID = gameID;
+            this.color = color;
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, socketURI); // Endpoint is passed here
@@ -60,7 +64,7 @@ public class WebSocketFacade extends Endpoint {
             // Ensure session is open before sending the CONNECT command
             if (this.session != null && this.session.isOpen()) {
                 // Send the CONNECT command to the server
-                UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID);
+                UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID, color);
                 String jsonCommand = new Gson().toJson(command);
                 this.session.getBasicRemote().sendText(jsonCommand);  // Sends the CONNECT command
             } else {
@@ -73,7 +77,7 @@ public class WebSocketFacade extends Endpoint {
 
     public void disconnect() throws Exception {
         try {
-            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
+            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID, color);
             String jsonCommand = new Gson().toJson(command);
             this.session.getBasicRemote().sendText(jsonCommand);
             this.session.close();

@@ -89,8 +89,10 @@ public class PostLoginClient implements Client {
             ChessGame.TeamColor teamColor;
             if ("white".equalsIgnoreCase(params[1])) {
                 teamColor = ChessGame.TeamColor.WHITE;
+                setColor(ChessGame.TeamColor.WHITE);
             } else if ("black".equalsIgnoreCase(params[1])) {
                 teamColor = ChessGame.TeamColor.BLACK;
+                setColor(ChessGame.TeamColor.BLACK);
             } else {
                 return "Expected: <ID> <WHITE|BLACK>\n";
             }
@@ -152,5 +154,9 @@ public class PostLoginClient implements Client {
 
     private void setCurrentGame(GameModel currentGame) {
         GameStateManager.getInstance().setCurrentGame(currentGame); //set current game
+    }
+
+    private void setColor(ChessGame.TeamColor color){
+        GameStateManager.getInstance().setColor(color);
     }
 }

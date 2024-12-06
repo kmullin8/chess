@@ -1,10 +1,12 @@
 package ui;
 
+import chess.ChessGame;
 import model.GameModel;
 
 public class GameStateManager {
     private static GameStateManager instance;
     private GameModel currentGame;
+    private ChessGame.TeamColor color;
 
     private GameStateManager() {
     }
@@ -23,6 +25,15 @@ public class GameStateManager {
     public synchronized void setCurrentGame(GameModel game) {
         this.currentGame = game;
     }
+
+    public synchronized ChessGame.TeamColor getColor() {
+        return color;
+    }
+
+    public synchronized void setColor(ChessGame.TeamColor color) {
+        this.color = color;
+    }
+
 
     private void notifySubscribers() {
         // Implement notification logic, e.g., broadcasting the state to WebSocket clients

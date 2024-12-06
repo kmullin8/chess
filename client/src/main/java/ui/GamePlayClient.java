@@ -16,13 +16,15 @@ public class GamePlayClient implements Client, NotificationHandler {
     private ServerFacade facade;
     private WebSocketFacade wsFacade;
     private String serverUrl;
+    private ChessGame.TeamColor color;
 
     public GamePlayClient(String serverUrl) {
         var currentGame = GameStateManager.getInstance().getCurrentGame();
         var authToken = AuthManager.getInstance().getAuthToken();
+        var color = GameStateManager.getInstance().getColor();
 
         try {
-            wsFacade = new WebSocketFacade(serverUrl, this, authToken.getAuthToken(), currentGame.getGameID());
+            wsFacade = new WebSocketFacade(serverUrl, this, authToken.getAuthToken(), currentGame.getGameID(), color);
             //wsFacade.connect();  // Connect to the server
         } catch (Exception e) {
             e.printStackTrace();

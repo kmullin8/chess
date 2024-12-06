@@ -35,10 +35,11 @@ public class WebSocketHandler {
         try {
             // Check if it's a CONNECT command
             if (message.contains("CONNECT")) {
-                System.out.println("Handling CONNECT command");
+                System.out.println("Handling CONNECT command, WebSocketHandler");
 
                 // Perform the necessary logic to handle the CONNECT command, e.g., associate the user with the game
                 UserGameCommand connectCommand = gson.fromJson(message, UserGameCommand.class);
+                int gameId = connectCommand.getGameID();
                 handleConnect(session, connectCommand);
                 return; // Exit after handling the connect command
             }
@@ -117,6 +118,25 @@ public class WebSocketHandler {
 
             default:
                 throw new IllegalArgumentException("Unknown command type: " + request.getType());
+        }
+    }
+
+    private void sendLoadGame(Session session, GameModel gameModel) {
+        try {
+            // Create the ServerMessage with the LOAD_GAME type
+            ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+
+            // Serialize the game model as JSON and set it as the payload
+            String gameStateJson = gson.toJson(gameModel);
+            serverMessage.setPayload(gameStateJson);
+
+            // Convert the entire server message to JSON
+            String responseJson = gson.toJson(serverMessage);
+
+            // Send the JSON message to the client
+            session.getRemote().sendString(responseJson);
+        } catch (IOException e) {
+            System.err.println("Error sending LOAD_GAME command: " + e.getMessage());
         }
     }
 
