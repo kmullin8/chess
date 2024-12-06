@@ -44,6 +44,7 @@ public class Repl {
                     state = State.PLAYINGGAME;
                     //GameStateManager.getInstance().setCurrentGame(postLoginClient.getCurrentGame());
                     client = getClient();
+                    Thread.sleep(1000);
 //                    result = client.eval("display"); //display board
 //                    System.out.print(result);
                 } else if (result.startsWith("Logged out") && state == State.SIGNEDIN) {

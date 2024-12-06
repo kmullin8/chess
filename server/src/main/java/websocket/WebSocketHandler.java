@@ -39,8 +39,15 @@ public class WebSocketHandler {
 
                 // Perform the necessary logic to handle the CONNECT command, e.g., associate the user with the game
                 UserGameCommand connectCommand = gson.fromJson(message, UserGameCommand.class);
-                int gameId = connectCommand.getGameID();
+
                 handleConnect(session, connectCommand);
+
+                //extract nessesary data from connect command and send loadGameCommand
+                String gameID = String.valueOf(connectCommand.getGameID());
+                GameModel gameModel = fetchGameModel(gameID);
+                sendLoadGame(session, gameModel);
+
+
                 return; // Exit after handling the connect command
             }
 

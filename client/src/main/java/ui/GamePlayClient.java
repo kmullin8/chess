@@ -61,8 +61,7 @@ public class GamePlayClient implements Client, NotificationHandler {
 
         GameStateManager.getInstance().setCurrentGame(game); //update current game
         // Existing logic for updating the game state
-        System.out.println("Game state updated: " + game);
-        // Add logic to visually update the game state in the UI
+        System.out.print(displayBoard());
     }
 
     @Override
@@ -91,18 +90,22 @@ public class GamePlayClient implements Client, NotificationHandler {
 
     private String displayBoard() {
         var currentGame = GameStateManager.getInstance().getCurrentGame();
+        var color = GameStateManager.getInstance().getColor();
+
         if (currentGame == null) {
-            return "No game loaded. Please connect to a game.";
+            return "No game loaded. Please connect to a game\n";
         }
 
         StringBuilder boardBuilder = new StringBuilder();
         ChessBoard chessBoard = currentGame.getGame().getBoard();
 
-        // Draw from White's perspective
-        boardBuilder.append("White's Perspective\n").append(drawBoard(chessBoard, true)).append("\n");
-
-        // Draw from Black's perspective
-        boardBuilder.append("Black's Perspective\n").append(drawBoard(chessBoard, false));
+        if (color == ChessGame.TeamColor.WHITE) {// Draw from White's perspective
+            boardBuilder.append("White's Perspective\n").append(drawBoard(chessBoard, true)).append("\n");
+        } else if (color == ChessGame.TeamColor.BLACK) {// Draw from Black's perspective
+            boardBuilder.append("Black's Perspective\n").append(drawBoard(chessBoard, false));
+        } else {
+            return "problem finding correct color\n";
+        }
 
         return boardBuilder.toString();
     }
