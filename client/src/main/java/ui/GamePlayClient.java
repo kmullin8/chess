@@ -22,9 +22,10 @@ public class GamePlayClient implements Client, NotificationHandler {
         var currentGame = GameStateManager.getInstance().getCurrentGame();
         var authToken = AuthManager.getInstance().getAuthToken();
         var color = GameStateManager.getInstance().getColor();
+        var username = GameStateManager.getInstance().getUsername();
 
         try {
-            wsFacade = new WebSocketFacade(serverUrl, this, authToken.getAuthToken(), currentGame.getGameID(), color);
+            wsFacade = new WebSocketFacade(serverUrl, this, authToken.getAuthToken(), currentGame.getGameID(), color, username);
             //wsFacade.connect();  // Connect to the server
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +54,7 @@ public class GamePlayClient implements Client, NotificationHandler {
     @Override
     public void notify(ServerMessage notification) {
         // Handle the notification (e.g., update UI, log message)
-        System.out.println("Received notification: " + notification.getServerMessageType());
+        System.out.println("\nReceived notification: " + notification.getPayload());
     }
 
     @Override

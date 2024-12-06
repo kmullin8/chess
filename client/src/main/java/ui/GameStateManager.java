@@ -8,6 +8,8 @@ public class GameStateManager {
     private GameModel currentGame;
     private ChessGame.TeamColor color;
 
+    private String username;
+
     private GameStateManager() {
     }
 
@@ -26,12 +28,20 @@ public class GameStateManager {
         this.currentGame = game;
     }
 
+    public synchronized void setColor(ChessGame.TeamColor color) {
+        this.color = color;
+    }
+
     public synchronized ChessGame.TeamColor getColor() {
         return color;
     }
 
-    public synchronized void setColor(ChessGame.TeamColor color) {
-        this.color = color;
+    public synchronized void setUsername(String username) {
+        this.username = username;
+    }
+
+    public synchronized String getUsername() {
+        return username;
     }
 
 

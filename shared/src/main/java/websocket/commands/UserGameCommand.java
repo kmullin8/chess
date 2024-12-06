@@ -18,12 +18,14 @@ public class UserGameCommand {
 
     private final Integer gameID;
     private final ChessGame.TeamColor color;
+    private final String username;
 
-    public UserGameCommand(CommandType commandType, String authToken, Integer gameID, ChessGame.TeamColor color) {
+    public UserGameCommand(CommandType commandType, String authToken, Integer gameID, ChessGame.TeamColor color, String username) {
         this.commandType = commandType;
         this.authToken = authToken;
         this.gameID = gameID;
         this.color = color;
+        this.username = username;
     }
 
     public enum CommandType {
@@ -47,6 +49,10 @@ public class UserGameCommand {
 
     public ChessGame.TeamColor getColor() {
         return color;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

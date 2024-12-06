@@ -1,31 +1,42 @@
 package websocket;
 
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
-    private final Map<String, Session> connections = new ConcurrentHashMap<>();
+    private final Map<Integer, Session> connections = new ConcurrentHashMap<>();
 
-    public void add(String username, Session session) {
-        connections.put(username, session);
+    public void add(Integer gameID, Session session) {
+        connections.put(gameID, session);
     }
 
-    public void remove(String username) {
-        connections.remove(username);
+    public void remove(Integer gameID) {
+        connections.remove(gameID);
     }
 
     public void remove(Session session) {
         connections.values().remove(session);
     }
 
-    public void broadcast(String excludeUsername, String message) {
-        for (Map.Entry<String, Session> entry : connections.entrySet()) {
-            if (!entry.getKey().equals(excludeUsername)) {
+    public void broadcast(Integer gameID, String message) {
+        for (Map.Entry<Integer, Session> entry : connections.entrySet()) {
+            if (entry.getKey().equals(gameID)) {
                 try {
-                    entry.getValue().getRemote().sendString(message);
+                    // Create a ServerMessage with NOTIFICATION type
+                    ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+                    serverMessage.setPayload(message);
+
+                    // Convert the ServerMessage to JSON
+                    String jsonMessage = new Gson().toJson(serverMessage);
+
+                    // Send the JSON message to the client
+                    System.err.println("sending broadcast: " + message); // testing
+                    entry.getValue().getRemote().sendString(jsonMessage);
                 } catch (IOException e) {
                     System.err.println("Error broadcasting message: " + e.getMessage());
                 }

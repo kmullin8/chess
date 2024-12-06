@@ -73,9 +73,15 @@ public class WebSocketHandler {
     }
 
     private void handleConnect(Session session, UserGameCommand connectCommand) {
+        Integer gameId = connectCommand.getGameID();
+        String broadcast = connectCommand.getUsername() + " joined the game as " + connectCommand.getColor();
+
         // Handle the connect command, e.g., validate the auth token and game ID
-        System.out.println("Connecting user to game: " + connectCommand.getGameID());
-        // Implement further logic to validate the connection and game
+        System.out.println("Connecting user to game: " + gameId);
+
+        //add connection to connectionManager
+        connections.broadcast(gameId, broadcast);
+        connections.add(gameId, session);
     }
 
     @OnWebSocketClose

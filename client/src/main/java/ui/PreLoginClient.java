@@ -45,6 +45,8 @@ public class PreLoginClient implements Client {
                 throw new Exception("Could not find username or password\n", ex);
             }
 
+            setUsername(username);
+
             return ("Logged in as " + username + "\n");
         }
         return ("Expected: <USERNAME> <PASSWORD>\n");
@@ -64,6 +66,8 @@ public class PreLoginClient implements Client {
                 throw new Exception("User already exists\n", ex);
             }
 
+            setUsername(username);
+
             return ("Logged in as " + username + "\n");
         }
         return ("Expected: <USERNAME> <PASSWORD> <email>\n");
@@ -80,5 +84,9 @@ public class PreLoginClient implements Client {
 
     private void setAuthToken(AuthTokenModel authToken) {
         AuthManager.getInstance().setAuthToken(authToken); //set auth
+    }
+
+    private void setUsername(String username) {
+        GameStateManager.getInstance().setUsername(username);
     }
 }
