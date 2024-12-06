@@ -33,8 +33,22 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
         try {
-            // Parse incoming JSON message
+            // Check if it's a CONNECT command
+            if (message.contains("CONNECT")) {
+                System.out.println("Handling CONNECT command");
+
+                // Perform the necessary logic to handle the CONNECT command, e.g., associate the user with the game
+                UserGameCommand connectCommand = gson.fromJson(message, UserGameCommand.class);
+                handleConnect(session, connectCommand);
+                return; // Exit after handling the connect command
+            }
+
+            // Parse incoming JSON message for other commands
             WebSocketRequest request = gson.fromJson(message, WebSocketRequest.class);
+
+            if (request == null) {
+                throw new IllegalArgumentException("Request is null");
+            }
 
             // Extract command type and parameters
             String commandType = request.getType();
@@ -48,6 +62,12 @@ public class WebSocketHandler {
             e.printStackTrace();
             sendErrorResponse(session, e.getMessage());
         }
+    }
+
+    private void handleConnect(Session session, UserGameCommand connectCommand) {
+        // Handle the connect command, e.g., validate the auth token and game ID
+        System.out.println("Connecting user to game: " + connectCommand.getGameID());
+        // Implement further logic to validate the connection and game
     }
 
     @OnWebSocketClose

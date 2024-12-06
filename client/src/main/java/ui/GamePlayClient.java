@@ -23,7 +23,7 @@ public class GamePlayClient implements Client, NotificationHandler {
 
         try {
             wsFacade = new WebSocketFacade(serverUrl, this, authToken.getAuthToken(), currentGame.getGameID());
-            wsFacade.connect();  // Connect to the server
+            //wsFacade.connect();  // Connect to the server
         } catch (Exception e) {
             e.printStackTrace();
         }

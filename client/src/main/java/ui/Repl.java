@@ -52,7 +52,10 @@ public class Repl {
             } catch (Throwable e) {
                 System.out.print(e.toString());
             }
-            client = getClient();
+
+            if (state != State.PLAYINGGAME) {
+                client = getClient();
+            }
         }
         System.out.println();
     }

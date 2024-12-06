@@ -36,7 +36,7 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig config) {
         this.session = session;
-        System.out.println("WebSocket connection established.");
+        System.out.println("WebSocket connection established. client");
 
         // Add a message handler for incoming messages
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
@@ -47,6 +47,7 @@ public class WebSocketFacade extends Endpoint {
             }
         });
 
+        // Send the CONNECT command
         try {
             connect(); // Automatically send CONNECT command upon establishing connection
         } catch (Exception e) {
@@ -54,41 +55,17 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void updateAuthToken(String newAuthToken) {
-        this.authToken = newAuthToken;
-
-        try {
-            if (this.session != null && this.session.isOpen()) {
-                disconnect();
-            }
-
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, socketURI); // Reconnect with updated token
-        } catch (Exception e) {
-            System.err.println("Failed to update auth token and reconnect: " + e.getMessage());
-        }
-    }
-
-    public void updateGameID(Integer newGameID) {
-        this.gameID = newGameID;
-
-        try {
-            if (this.session != null && this.session.isOpen()) {
-                disconnect();
-            }
-
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, socketURI); // Reconnect with updated token
-        } catch (Exception e) {
-            System.err.println("Failed to update game id and reconnect: " + e.getMessage());
-        }
-    }
-
     public void connect() throws Exception {
         try {
-            UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID);
-            String jsonCommand = new Gson().toJson(command);
-            this.session.getBasicRemote().sendText(jsonCommand);
+            // Ensure session is open before sending the CONNECT command
+            if (this.session != null && this.session.isOpen()) {
+                // Send the CONNECT command to the server
+                UserGameCommand command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID);
+                String jsonCommand = new Gson().toJson(command);
+                this.session.getBasicRemote().sendText(jsonCommand);  // Sends the CONNECT command
+            } else {
+                throw new IllegalStateException("WebSocket session is not open.");
+            }
         } catch (IOException ex) {
             throw new Exception("500 " + ex.getMessage());
         }
@@ -150,6 +127,36 @@ public class WebSocketFacade extends Endpoint {
     public void sendCommand(UserGameCommand command) throws IOException {
         String jsonCommand = new Gson().toJson(command);
         session.getBasicRemote().sendText(jsonCommand);
+    }
+
+    public void updateAuthToken(String newAuthToken) {
+        this.authToken = newAuthToken;
+
+        try {
+            if (this.session != null && this.session.isOpen()) {
+                disconnect();
+            }
+
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            container.connectToServer(this, socketURI); // Reconnect with updated token
+        } catch (Exception e) {
+            System.err.println("Failed to update auth token and reconnect: " + e.getMessage());
+        }
+    }
+
+    public void updateGameID(Integer newGameID) {
+        this.gameID = newGameID;
+
+        try {
+            if (this.session != null && this.session.isOpen()) {
+                disconnect();
+            }
+
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            container.connectToServer(this, socketURI); // Reconnect with updated token
+        } catch (Exception e) {
+            System.err.println("Failed to update game id and reconnect: " + e.getMessage());
+        }
     }
 }
 
