@@ -39,13 +39,15 @@ public class WebSocketHandler {
                 // Perform the necessary logic to handle the CONNECT command, e.g., associate the user with the game
                 UserGameCommand connectCommand = gson.fromJson(message, UserGameCommand.class);
 
-                handleConnect(session, connectCommand);
-
-                //extract nessesary data from connect command and send loadGameCommand
                 String gameID = String.valueOf(connectCommand.getGameID());
                 GameModel gameModel = fetchGameModel(gameID);
-                sendLoadGame(session, gameModel);
 
+                if (gameModel == null) {
+                    handleError(session, "game id does not exist");
+                } else {
+                    handleConnect(session, connectCommand);
+                    sendLoadGame(session, gameModel);
+                }
 
                 return; // Exit after handling the connect command
             }
@@ -72,15 +74,15 @@ public class WebSocketHandler {
     }
 
     private void handleConnect(Session session, UserGameCommand connectCommand) {
-        Integer gameId = connectCommand.getGameID();
+        Integer gameID = connectCommand.getGameID();
         String broadcast = connectCommand.getUsername() + " joined the game as " + connectCommand.getColor();
 
         // Handle the connect command, e.g., validate the auth token and game ID
-        System.out.println("Connecting user to game: " + gameId);
+        System.out.println("Connecting user to game: " + gameID);
 
         //add connection to connectionManager
-        connections.broadcast(gameId, broadcast);
-        connections.add(gameId, session);
+        connections.broadcast(gameID, broadcast);
+        connections.add(gameID, session);
     }
 
     @OnWebSocketClose
@@ -166,9 +168,7 @@ public class WebSocketHandler {
             throw new IllegalArgumentException("Game not found for ID: " + gameId);
         }
 
-        if (gameModel == null) {
-            throw new IllegalArgumentException("Game not found for ID: " + gameId);
-        }
+
         return gameModel;
     }
 
