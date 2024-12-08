@@ -98,16 +98,17 @@ public class WebSocketHandler {
         connections.add(gameID, session);
     }
 
-    private void handleMakeMove(WebSocketRequest request, Session session) throws InvalidMoveException, IOException {
+    private void handleMakeMove(WebSocketRequest request, Session session) throws IOException, DataAccessException {
         GameModel gameModel = fetchGameModel(request.getGameID().toString());
         ChessMove move = request.getMove();
 
         try {
             gameModel.getGame().makeMove(move);
         } catch (InvalidMoveException e) {
-            sendErrorResponse(session, "invalid move");
+            handleError(session, "invalid move");
+            return;
         }
-
+        updateGame(gameModel);
 
         connections.broadcastLoadGame(request.getGameID(),
                 gameModel,
@@ -121,7 +122,8 @@ public class WebSocketHandler {
                         request.getMove().getStartPosition().getColumn() +
                         " to " +
                         request.getMove().getStartPosition().getRow() +
-                        request.getMove().getStartPosition().getColumn()
+                        request.getMove().getStartPosition().getColumn() +
+                        "\n"
         );
         connections.broadcast(request.getGameID(), broadcast, session);
     }
@@ -212,9 +214,17 @@ public class WebSocketHandler {
         return gameModel;
     }
 
+    private void updateGame(GameModel gameModel) throws DataAccessException {
+        // Initialize the data access layer
+        MySqlDataAccess dataAccess = new MySqlDataAccess();
+
+        // Update the game in the database
+        dataAccess.updateGame(gameModel);
+    }
+
     private void sendErrorResponse(Session session, String error) throws IOException {
         // Detailed error message
-        String detailedMessage = "An error occurred while processing the request: " + error;
+        String detailedMessage = "Error occurred while processing the request: " + error;
 
         // Create the WebSocketResponse to send to the client
         WebSocketResponse response = new WebSocketResponse("ERROR", detailedMessage);
