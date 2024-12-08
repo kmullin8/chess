@@ -4,6 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameModel;
 import ui.NotificationHandler;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
@@ -100,20 +101,6 @@ public class WebSocketFacade extends Endpoint {
             case NOTIFICATION:
                 notificationHandler.notify(serverMessage);
                 break;
-            case GAME_OVER: // New case for game over
-                String[] gameOverDetails = serverMessage.getMessage().split(",");
-                String winner = gameOverDetails[0];
-                reason = gameOverDetails[1];
-                notificationHandler.showGameOverNotification(winner, reason);
-                break;
-            case TURN_TRANSITION: // New case for turn transition
-                String currentPlayer = serverMessage.getMessage();
-                notificationHandler.showTurnTransition(currentPlayer);
-                break;
-            case INVALID_MOVE: // New case for invalid move
-                reason = serverMessage.getMessage();
-                notificationHandler.showInvalidMoveNotification(reason);
-                break;
             default:
                 System.err.println("Unknown message type: " + serverMessage.getServerMessageType());
                 break;
@@ -130,6 +117,11 @@ public class WebSocketFacade extends Endpoint {
     }
 
     public void sendCommand(UserGameCommand command) throws IOException {
+        String jsonCommand = new Gson().toJson(command);
+        session.getBasicRemote().sendText(jsonCommand);
+    }
+
+    public void sendMakeMoveCommand(MakeMoveCommand command) throws IOException {
         String jsonCommand = new Gson().toJson(command);
         session.getBasicRemote().sendText(jsonCommand);
     }

@@ -1,6 +1,7 @@
 package websocket;
 
 import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.MySqlDataAccess;
@@ -39,6 +40,12 @@ public class WebSocketHandler {
                 // Perform the necessary logic to handle the CONNECT command, e.g., associate the user with the game
                 UserGameCommand connectCommand = gson.fromJson(message, UserGameCommand.class);
 
+                //verify auth
+                if (!verifyAuth(connectCommand.getUsername(), connectCommand.getAuthToken())) {
+                    handleError(session, "auth token does not match");
+                    return;
+                }
+
                 String gameID = String.valueOf(connectCommand.getGameID());
                 GameModel gameModel = fetchGameModel(gameID);
 
@@ -60,12 +67,18 @@ public class WebSocketHandler {
             }
 
             // Extract command type and parameters
-            String commandType = request.getType();
+            UserGameCommand.CommandType commandType = request.getCommandType();
             Object[] params = extractParams(request, session);
 
             // Dispatch the command
-            GameCommand command = commandDispatcher.getCommand(commandType, params);
-            command.execute();
+//            GameCommand command = commandDispatcher.getCommand(String.valueOf(commandType), params);
+//            command.execute();
+
+            //handle request
+            if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
+                handleMakeMove(request, session);
+            }
+
         } catch (Exception e) {
             System.err.println("Error handling message: " + e.getMessage());
             e.printStackTrace();
@@ -81,8 +94,36 @@ public class WebSocketHandler {
         System.out.println("Connecting user to game: " + gameID);
 
         //add connection to connectionManager
-        connections.broadcast(gameID, broadcast);
+        connections.broadcast(gameID, broadcast, null);
         connections.add(gameID, session);
+    }
+
+    private void handleMakeMove(WebSocketRequest request, Session session) throws InvalidMoveException, IOException {
+        GameModel gameModel = fetchGameModel(request.getGameID().toString());
+        ChessMove move = request.getMove();
+
+        try {
+            gameModel.getGame().makeMove(move);
+        } catch (InvalidMoveException e) {
+            sendErrorResponse(session, "invalid move");
+        }
+
+
+        connections.broadcastLoadGame(request.getGameID(),
+                gameModel,
+                null);//send load game to all clients
+
+        //create broadcast
+        String broadcast = (
+                request.getUsername() +
+                        " moved " +
+                        request.getMove().getStartPosition().getRow() +
+                        request.getMove().getStartPosition().getColumn() +
+                        " to " +
+                        request.getMove().getStartPosition().getRow() +
+                        request.getMove().getStartPosition().getColumn()
+        );
+        connections.broadcast(request.getGameID(), broadcast, session);
     }
 
     @OnWebSocketClose
@@ -120,18 +161,17 @@ public class WebSocketHandler {
     }
 
     private Object[] extractParams(WebSocketRequest request, Session session) {
-        switch (request.getType()) {
-            case "MAKE_MOVE":
-                GameModel gameModel = fetchGameModel(request.getGameId());
-                ChessMove move = gson.fromJson(request.getMove(), ChessMove.class);
+        switch (request.getCommandType()) {
+            case MAKE_MOVE -> {
+                GameModel gameModel = fetchGameModel(request.getGameID().toString());
+                ChessMove move = request.getMove();
                 return new Object[]{gameModel, move};
-
-            case "RESIGN":
-                GameModel resignGameModel = fetchGameModel(request.getGameId());
+            }
+            case RESIGN -> {
+                GameModel resignGameModel = fetchGameModel(request.getGameID().toString());
                 return new Object[]{resignGameModel};
-
-            default:
-                throw new IllegalArgumentException("Unknown command type: " + request.getType());
+            }
+            default -> throw new IllegalArgumentException("Unknown command type: " + request.getCommandType());
         }
     }
 
@@ -186,24 +226,17 @@ public class WebSocketHandler {
         session.getRemote().sendString(errorMessage);
     }
 
-    private void notifyGameOver(Session session, String winner, String reason) throws IOException {
-        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.GAME_OVER);
-        serverMessage.setMessage(winner + "," + reason);
-        String responseJson = gson.toJson(serverMessage);
-        session.getRemote().sendString(responseJson);
-    }
+    public boolean verifyAuth(String username, String keyAuthToken) throws DataAccessException {
+        // Fetch the AuthTokenModel using the provided authToken
+        MySqlDataAccess dataAccess = new MySqlDataAccess();
+        AuthTokenModel authTokenModel = dataAccess.readAuth(keyAuthToken);
 
-    private void notifyTurnTransition(Session session, String currentPlayer) throws IOException {
-        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.TURN_TRANSITION);
-        serverMessage.setMessage(currentPlayer);
-        String responseJson = gson.toJson(serverMessage);
-        session.getRemote().sendString(responseJson);
-    }
+        // If no auth token is found, return false
+        if (authTokenModel == null) {
+            return false;
+        }
 
-    private void notifyInvalidMove(Session session, String reason) throws IOException {
-        ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.INVALID_MOVE);
-        serverMessage.setMessage(reason);
-        String responseJson = gson.toJson(serverMessage);
-        session.getRemote().sendString(responseJson);
+        // Check if the username matches
+        return true;
     }
 }

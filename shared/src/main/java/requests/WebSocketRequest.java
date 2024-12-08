@@ -1,21 +1,49 @@
 package requests;
 
+import chess.ChessGame;
+import chess.ChessMove;
+import websocket.commands.UserGameCommand;
+
 public class WebSocketRequest {
-    private String type;
+    private UserGameCommand.CommandType commandType;
+    private String authToken;
+    private Integer gameID;
+    private ChessMove move;
     private String username;
-    private String gameId; // Add this field
-    private String move; // Assuming this is for moves, adjust as needed
+    private ChessGame.TeamColor color;
 
-    // Getter and Setter for `type`
-    public String getType() {
-        return type;
+    public UserGameCommand.CommandType getCommandType() {
+        return commandType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCommandType(UserGameCommand.CommandType commandType) {
+        this.commandType = commandType;
     }
 
-    // Getter and Setter for `username`
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public Integer getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(Integer gameID) {
+        this.gameID = gameID;
+    }
+
+    public ChessMove getMove() {
+        return move;
+    }
+
+    public void setMove(ChessMove move) {
+        this.move = move;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -24,21 +52,11 @@ public class WebSocketRequest {
         this.username = username;
     }
 
-    // Getter and Setter for `gameId`
-    public String getGameId() {
-        return gameId;
+    public ChessGame.TeamColor getColor() {
+        return color;
     }
 
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
-
-    // Getter and Setter for `move`
-    public String getMove() {
-        return move;
-    }
-
-    public void setMove(String move) {
-        this.move = move;
+    public void setColor(ChessGame.TeamColor color) {
+        this.color = color;
     }
 }

@@ -17,5 +17,6 @@ public class MakeMoveCommand implements GameCommand {
     @Override
     public void execute() throws InvalidMoveException {
         gameModel.getGame().makeMove(move); // Logic to execute the move
+
     }
 }

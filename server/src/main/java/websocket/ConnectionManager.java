@@ -1,6 +1,7 @@
 package websocket;
 
 import com.google.gson.Gson;
+import model.GameModel;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.ServerMessage;
 
@@ -26,11 +27,16 @@ public class ConnectionManager {
     }
 
     // Broadcast a message to all sessions associated with a game ID
-    public void broadcast(Integer gameID, String message) {
+    public void broadcast(Integer gameID, String message, Session ignoreSession) {
         List<Session> sessions = connections.get(gameID);
         if (sessions != null) {
             for (Session session : sessions) {
                 try {
+                    //skip ignoreSession
+                    if (session.equals(ignoreSession)) {
+                        continue; // Skip this session
+                    }
+
                     // Create a ServerMessage with NOTIFICATION type
                     ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
                     serverMessage.setMessage(message);
@@ -41,6 +47,37 @@ public class ConnectionManager {
                     // Send the JSON message to the client
                     System.err.println("sending broadcast to gameID " + gameID + ": " + message); // Testing
                     session.getRemote().sendString(jsonMessage);
+                } catch (IOException e) {
+                    System.err.println("Error broadcasting message: " + e.getMessage());
+                }
+            }
+        } else {
+            System.err.println("No sessions found for gameID " + gameID);
+        }
+    }
+
+    public void broadcastLoadGame(Integer gameID, GameModel gameModel, Session ignoreSession) {
+        List<Session> sessions = connections.get(gameID);
+        if (sessions != null) {
+            for (Session session : sessions) {
+                try {
+                    //skip ignoreSession
+                    if (session.equals(ignoreSession)) {
+                        continue; // Skip this session
+                    }
+
+                    // Create the ServerMessage with the LOAD_GAME type
+                    ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+
+                    // Serialize the game model as JSON and set it as the payload
+                    String gameStateJson = new Gson().toJson(gameModel);
+                    serverMessage.setGame(gameStateJson);
+
+                    // Convert the entire server message to JSON
+                    String responseJson = new Gson().toJson(serverMessage);
+
+                    // Send the JSON message to the client
+                    session.getRemote().sendString(responseJson);
                 } catch (IOException e) {
                     System.err.println("Error broadcasting message: " + e.getMessage());
                 }

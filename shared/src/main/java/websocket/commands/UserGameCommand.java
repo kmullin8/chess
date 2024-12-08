@@ -12,13 +12,13 @@ import java.util.Objects;
  */
 public class UserGameCommand {
 
-    private final CommandType commandType;
+    private CommandType commandType;
 
-    private final String authToken;
+    private String authToken;
 
-    private final Integer gameID;
-    private final ChessGame.TeamColor color;
-    private final String username;
+    private Integer gameID;
+    private ChessGame.TeamColor color;
+    private String username;
 
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID, ChessGame.TeamColor color, String username) {
         this.commandType = commandType;
@@ -39,20 +39,40 @@ public class UserGameCommand {
         return commandType;
     }
 
+    public void setCommandType(CommandType commandType) {
+        this.commandType = commandType;
+    }
+
     public String getAuthToken() {
         return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
     public Integer getGameID() {
         return gameID;
     }
 
+    public void setGameID(Integer gameID) {
+        this.gameID = gameID;
+    }
+
     public ChessGame.TeamColor getColor() {
         return color;
     }
 
+    public void setColor(ChessGame.TeamColor color) {
+        this.color = color;
+    }
+
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

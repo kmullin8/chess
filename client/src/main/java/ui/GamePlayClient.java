@@ -1,21 +1,26 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPosition;
+import chess.*;
 import management.EscapeSequences;
+import model.AuthTokenModel;
 import model.GameModel;
 import serveraccess.ServerFacade;
 import serveraccess.WebSocketFacade;
+import websocket.commands.MakeMoveCommand;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class GamePlayClient implements Client, NotificationHandler {
     private ServerFacade facade;
     private WebSocketFacade wsFacade;
     private String serverUrl;
+    private GameModel currentGame;
+    private AuthTokenModel authToken;
     private ChessGame.TeamColor color;
+    private String username;
 
     public GamePlayClient(String serverUrl) {
         var currentGame = GameStateManager.getInstance().getCurrentGame();
@@ -31,6 +36,13 @@ public class GamePlayClient implements Client, NotificationHandler {
         }
     }
 
+    void setParameters() {
+        this.currentGame = GameStateManager.getInstance().getCurrentGame();
+        this.authToken = AuthManager.getInstance().getAuthToken();
+        this.color = GameStateManager.getInstance().getColor();
+        this.username = GameStateManager.getInstance().getUsername();
+    }
+
     @Override
     public String eval(String input) {
         try {
@@ -38,7 +50,10 @@ public class GamePlayClient implements Client, NotificationHandler {
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "display" -> displayBoard();
+                case "redraw" -> displayBoard();
+                case "moves" -> moves();
+                case "move" -> makeMove(params);
+                case "leave" -> leave();
                 case "quit" -> {
                     wsFacade.disconnect(); // Calls WebSocketFacade to disconnect
                     yield "quit";
@@ -48,6 +63,52 @@ public class GamePlayClient implements Client, NotificationHandler {
         } catch (Exception ex) {
             return ex.getMessage();
         }
+    }
+
+    private String makeMove(String... params) throws IOException {
+        if (params.length == 2) {
+            setParameters();
+
+            String from = params[0];
+            String to = params[1];
+
+            // Convert 'from' string (e.g., "A1") to startRow and startColumn
+            int startRow = Character.getNumericValue(from.charAt(1)); // Rows are numbered 8-1
+            int startColumn = from.toUpperCase().charAt(0) - 'A' + 1;        // Columns A-H map to 0-7
+
+            // Convert 'to' string (e.g., "B2") to endRow and endColumn
+            int endRow = Character.getNumericValue(to.charAt(1));    // Rows are numbered 8-1
+            int endColumn = to.toUpperCase().charAt(0) - 'A' + 1;            // Columns A-H map to 0-7
+
+            ChessMove move = new ChessMove(
+                    new ChessPosition(startRow, startColumn),
+                    new ChessPosition(endRow, endColumn),
+                    null
+            );
+
+            // Create a new UserGameCommand for the move
+            MakeMoveCommand makeMoveCommand = new MakeMoveCommand(
+                    UserGameCommand.CommandType.MAKE_MOVE,
+                    authToken.getAuthToken(),
+                    currentGame.getGameID(),
+                    color,
+                    username,
+                    move
+            );
+
+            // Send the command to the server
+            wsFacade.sendMakeMoveCommand(makeMoveCommand);
+            return "Move sent: " + from + " -> " + to;
+        }
+        return "Expected: <a1> <a1>\n";
+    }
+
+    private String moves(String... params) {
+        return null;
+    }
+
+    private String leave() {
+        return null;
     }
 
     @Override
@@ -62,30 +123,6 @@ public class GamePlayClient implements Client, NotificationHandler {
         GameStateManager.getInstance().setCurrentGame(game); //update current game
         // Existing logic for updating the game state
         System.out.print(displayBoard());
-    }
-
-    @Override
-    public void showErrorNotification(String message) {
-        System.err.println("Error: " + message);
-        // Add code to display an error notification in the UI
-    }
-
-    @Override
-    public void showGameOverNotification(String winner, String reason) {
-        System.out.println("Game Over! Winner: " + winner + ", Reason: " + reason);
-        // Add logic to display a "Game Over" banner or modal
-    }
-
-    @Override
-    public void showTurnTransition(String currentPlayer) {
-        System.out.println("It's now " + currentPlayer + "'s turn.");
-        // Add a visual cue in the UI (e.g., highlight the current player's area)
-    }
-
-    @Override
-    public void showInvalidMoveNotification(String reason) {
-        System.out.println("Invalid Move: " + reason);
-        // Display the invalid move reason in the UI
     }
 
     private String displayBoard() {
@@ -161,7 +198,7 @@ public class GamePlayClient implements Client, NotificationHandler {
                 help - with possible commands
                 redraw - redraws the chess board
                 moves - highlights legal moves
-                make move <a1><a1> - move piece
+                move <a1><a1> - move piece
                 leave - a game
                 quit - playing chess
                 """;
