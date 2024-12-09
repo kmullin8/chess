@@ -162,9 +162,13 @@ public class WebSocketHandler {
         GameModel gameModel = fetchGameModel(request.getGameID().toString());
         MySqlDataAccess dataAccess = new MySqlDataAccess();
         String username = dataAccess.getUsernameByAuthToken(request.getAuthToken());
-        //observer cannot resign
+
+        //determine valid resign
         if (!Objects.equals(gameModel.getWhiteUsername(), username) && !Objects.equals(gameModel.getBlackUsername(), username)) {
             handleError(session, "observer cannot resign");
+            return;
+        } else if (gameModel.isGameOver()) {
+            handleError(session, "game is over");
             return;
         }
 
