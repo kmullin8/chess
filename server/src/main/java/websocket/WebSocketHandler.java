@@ -160,7 +160,7 @@ public class WebSocketHandler {
 
     public void handleResign(WebSocketRequest request, Session session) throws DataAccessException {
         GameModel gameModel = fetchGameModel(request.getGameID().toString());
-        gameModel.setValidGame(false);
+        gameModel.getGame().setValidGame(false);
         updateGame(gameModel);
 
         String message = request.getUsername() + "has resigned";

@@ -29,15 +29,12 @@ public class GameModel {
      */
     private ChessGame game;
 
-    private boolean validGame;
-
     public GameModel(GameModel copy) {
         this.gameID = copy.gameID;
         this.gameName = copy.gameName;
         this.blackUsername = copy.blackUsername;
         this.whiteUsername = copy.whiteUsername;
         this.game = new chess.ChessGame(copy.getGame());
-        this.validGame = true;
     }
 
     public GameModel(int gameID, String gameName) {
@@ -46,7 +43,6 @@ public class GameModel {
         this.whiteUsername = null;
         this.gameName = gameName;
         this.game = new chess.ChessGame();
-        this.validGame = true;
     }
 
     public GameModel(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
@@ -55,7 +51,6 @@ public class GameModel {
         this.blackUsername = blackUsername;
         this.gameName = gameName;
         this.game = game;
-        this.validGame = true;
     }
 
     public int getGameID() {
@@ -93,18 +88,10 @@ public class GameModel {
             return true;
         } else if (game.isInCheckmate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.WHITE)) {
             return true;
-        } else if (!validGame) {
+        } else if (!game.isValidGame()) {
             return true;
         }
 
         return false;
-    }
-
-    public boolean isValidGame() {
-        return validGame;
-    }
-
-    public void setValidGame(boolean validGame) {
-        this.validGame = validGame;
     }
 }

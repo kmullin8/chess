@@ -22,16 +22,19 @@ public class ChessGame {
 
     private ChessBoard board;
     private TeamColor teamturn;
+    private boolean validGame;
 
     public ChessGame() {
         this.board = new ChessBoard();
         board.resetBoard(); //set board
         this.teamturn = TeamColor.WHITE;
+        validGame = true;
     }
 
     public ChessGame(ChessGame copy) {
         this.board = new ChessBoard(copy.getBoard());
         this.teamturn = copy.getTeamTurn();
+        validGame = true;
     }
 
     public static ChessGame create(String serializedGame) {
@@ -42,6 +45,14 @@ public class ChessGame {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(ChessGame.class, new ChessGameAdapter());
         return gsonBuilder.create();
+    }
+
+    public boolean isValidGame() {
+        return validGame;
+    }
+
+    public void setValidGame(boolean validGame) {
+        this.validGame = validGame;
     }
 
     public static class ChessGameAdapter implements JsonDeserializer<ChessGame>, JsonSerializer<ChessGame> {
