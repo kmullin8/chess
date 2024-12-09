@@ -45,7 +45,7 @@ public class WebSocketHandler {
 
                 //verify auth
                 if (!verifyAuth(connectCommand.getUsername(), connectCommand.getAuthToken())) {
-                    handleError(session, "auth token does not match");
+                    handleError(session, "identification does not match");
                     return;
                 }
 
@@ -125,7 +125,7 @@ public class WebSocketHandler {
         } else if (Objects.equals(gameModel.getBlackUsername(), username)) {
             color = ChessGame.TeamColor.BLACK;
         } else {
-            handleError(session, "could not find color invalid auth");
+            handleError(session, "could not make move");
             return;
         }
 
@@ -326,6 +326,4 @@ public class WebSocketHandler {
         // Check if the username matches
         return true;
     }
-
-
 }
