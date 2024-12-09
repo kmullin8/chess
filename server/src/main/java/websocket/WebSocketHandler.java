@@ -166,7 +166,7 @@ public class WebSocketHandler {
         String username = dataAccess.getUsernameByAuthToken(request.getAuthToken());
 
         //determine valid resign
-        if (!Objects.equals(gameModel.getWhiteUsername(), username) && !Objects.equals(gameModel.getBlackUsername(), username)) {
+        if (!Objects.equals(gameModel.getWhiteUsername(), username) || !Objects.equals(gameModel.getBlackUsername(), username)) {
             handleError(session, "observer cannot resign");
             return;
         } else if (gameModel.isGameOver()) {
