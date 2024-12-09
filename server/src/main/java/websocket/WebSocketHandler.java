@@ -105,6 +105,12 @@ public class WebSocketHandler {
 
     private void handleMakeMove(WebSocketRequest request, Session session) throws IOException, DataAccessException {
         GameModel gameModel = fetchGameModel(request.getGameID().toString());
+        //check valid game
+        if (gameModel.isGameOver()) {
+            handleError(session, "game is over");
+            return;
+        }
+
         String authTokenModel = request.getAuthToken();
         ChessMove move = request.getMove();
         ChessPiece piece = gameModel.getGame().getBoard().getPiece(move.getStartPosition());

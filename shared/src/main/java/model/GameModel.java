@@ -88,9 +88,12 @@ public class GameModel {
 
     public boolean isGameOver() {
         var game = this.getGame();
+
         if (game.isInCheckmate(ChessGame.TeamColor.BLACK) || game.isInStalemate(ChessGame.TeamColor.BLACK)) {
             return true;
         } else if (game.isInCheckmate(ChessGame.TeamColor.WHITE) || game.isInStalemate(ChessGame.TeamColor.WHITE)) {
+            return true;
+        } else if (!validGame) {
             return true;
         }
 
