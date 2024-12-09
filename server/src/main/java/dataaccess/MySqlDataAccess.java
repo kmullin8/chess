@@ -6,10 +6,7 @@ import model.AuthTokenModel;
 import model.GameModel;
 import model.UserModel;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -268,5 +265,28 @@ public class MySqlDataAccess implements DataAccess {
         } catch (SQLException e) {
             throw new DataAccessException(String.format("executeUpdate error: %s, %s", statement, e.getMessage()));
         }
+    }
+
+    public String getUsernameByAuthToken(String authToken) throws DataAccessException {
+        String query = "SELECT username FROM `authentication` WHERE authToken=?";
+        String username = null;
+
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement(query)) {
+
+            // Set the parameter directly in the prepared statement
+            preparedStatement.setString(1, authToken);
+
+            // Execute the query
+            try (var resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    username = resultSet.getString("username");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("Error retrieving username by authToken: %s", e.getMessage()));
+        }
+
+        return username;
     }
 }

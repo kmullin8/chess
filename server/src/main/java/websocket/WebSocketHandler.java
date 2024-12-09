@@ -1,6 +1,8 @@
 package websocket;
 
+import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPiece;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
@@ -13,6 +15,7 @@ import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @WebSocket
 public class WebSocketHandler {
@@ -100,8 +103,27 @@ public class WebSocketHandler {
 
     private void handleMakeMove(WebSocketRequest request, Session session) throws IOException, DataAccessException {
         GameModel gameModel = fetchGameModel(request.getGameID().toString());
+        String authTokenModel = request.getAuthToken();
         ChessMove move = request.getMove();
+        ChessPiece piece = gameModel.getGame().getBoard().getPiece(move.getStartPosition());
+        MySqlDataAccess dataAccess = new MySqlDataAccess();
+        String username = dataAccess.getUsernameByAuthToken(authTokenModel);
+        ChessGame.TeamColor color;
 
+        if (Objects.equals(gameModel.getWhiteUsername(), username)) {
+            color = ChessGame.TeamColor.WHITE;
+        } else if (Objects.equals(gameModel.getBlackUsername(), username)) {
+            color = ChessGame.TeamColor.BLACK;
+        } else {
+            handleError(session, "could not find color invalid auth");
+            return;
+        }
+
+        //check colors
+        if (color != piece.getTeamColor()) {
+            handleError(session, "invalid move");
+            return;
+        }
         try {
             gameModel.getGame().makeMove(move);
         } catch (InvalidMoveException e) {
@@ -222,6 +244,13 @@ public class WebSocketHandler {
         dataAccess.updateGame(gameModel);
     }
 
+    private ChessGame.TeamColor getColor(String authToken) throws DataAccessException {
+        MySqlDataAccess dataAccess = new MySqlDataAccess();
+
+        // Update the game in the database
+        return null;
+    }
+
     private void sendErrorResponse(Session session, String error) throws IOException {
         // Detailed error message
         String detailedMessage = "Error occurred while processing the request: " + error;
@@ -249,4 +278,6 @@ public class WebSocketHandler {
         // Check if the username matches
         return true;
     }
+
+
 }
