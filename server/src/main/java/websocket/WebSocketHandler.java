@@ -150,11 +150,11 @@ public class WebSocketHandler {
         String broadcast = (
                 request.getUsername() +
                         " moved " +
+                        (char) ('a' + (request.getMove().getStartPosition().getColumn() - 1)) +
                         request.getMove().getStartPosition().getRow() +
-                        request.getMove().getStartPosition().getColumn() +
                         " to " +
-                        request.getMove().getStartPosition().getRow() +
-                        request.getMove().getStartPosition().getColumn() +
+                        (char) ('a' + (request.getMove().getEndPosition().getColumn() - 1)) +
+                        request.getMove().getEndPosition().getRow() +
                         "\n"
         );
         connections.broadcast(request.getGameID(), broadcast, session);

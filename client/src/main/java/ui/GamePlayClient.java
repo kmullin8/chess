@@ -156,7 +156,6 @@ public class GamePlayClient implements Client, NotificationHandler {
             boardBuilder.append("Black's Perspective\n").append(drawBoard(chessBoard, false));
         } else {
             boardBuilder.append("White's Perspective\n").append(drawBoard(chessBoard, true)).append("\n");
-            boardBuilder.append("Black's Perspective\n").append(drawBoard(chessBoard, false));
         }
 
         return boardBuilder.toString();
