@@ -160,6 +160,14 @@ public class WebSocketHandler {
 
     public void handleResign(WebSocketRequest request, Session session) throws DataAccessException {
         GameModel gameModel = fetchGameModel(request.getGameID().toString());
+        MySqlDataAccess dataAccess = new MySqlDataAccess();
+        String username = dataAccess.getUsernameByAuthToken(request.getAuthToken());
+        //observer cannot resign
+        if (!Objects.equals(gameModel.getWhiteUsername(), username) && !Objects.equals(gameModel.getBlackUsername(), username)) {
+            handleError(session, "observer cannot resign");
+            return;
+        }
+
         gameModel.getGame().setValidGame(false);
         updateGame(gameModel);
 
