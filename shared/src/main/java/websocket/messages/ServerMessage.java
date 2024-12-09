@@ -56,11 +56,7 @@ public class ServerMessage {
     public void setGame(String game) {
         this.game = game;
     }
-
-    public <T> T getPayloadAs(Class<T> clazz) {
-        return new Gson().fromJson(errorMessage, clazz);
-    }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) {

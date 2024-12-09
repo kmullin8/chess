@@ -23,7 +23,8 @@ public class WebSocketFacade extends Endpoint {
     private NotificationHandler notificationHandler;
     private URI socketURI;
 
-    public WebSocketFacade(String serverUrl, NotificationHandler notificationHandler, String authToken, Integer gameID, ChessGame.TeamColor color, String username) throws Exception {
+    public WebSocketFacade(String serverUrl, NotificationHandler notificationHandler, String authToken, Integer gameID,
+                           ChessGame.TeamColor color, String username) throws Exception {
         try {
             this.socketURI = new URI(serverUrl.replace("http", "ws") + "/ws");
             this.notificationHandler = notificationHandler;
@@ -124,36 +125,6 @@ public class WebSocketFacade extends Endpoint {
     public void sendMakeMoveCommand(MakeMoveCommand command) throws IOException {
         String jsonCommand = new Gson().toJson(command);
         session.getBasicRemote().sendText(jsonCommand);
-    }
-
-    public void updateAuthToken(String newAuthToken) {
-        this.authToken = newAuthToken;
-
-        try {
-            if (this.session != null && this.session.isOpen()) {
-                disconnect();
-            }
-
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, socketURI); // Reconnect with updated token
-        } catch (Exception e) {
-            System.err.println("Failed to update auth token and reconnect: " + e.getMessage());
-        }
-    }
-
-    public void updateGameID(Integer newGameID) {
-        this.gameID = newGameID;
-
-        try {
-            if (this.session != null && this.session.isOpen()) {
-                disconnect();
-            }
-
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, socketURI); // Reconnect with updated token
-        } catch (Exception e) {
-            System.err.println("Failed to update game id and reconnect: " + e.getMessage());
-        }
     }
 }
 

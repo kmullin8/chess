@@ -43,11 +43,5 @@ public class GameStateManager {
     public synchronized String getUsername() {
         return username;
     }
-
-
-    private void notifySubscribers() {
-        // Implement notification logic, e.g., broadcasting the state to WebSocket clients
-        System.out.println("Game state updated. Notifying subscribers...");
-    }
 }
 
