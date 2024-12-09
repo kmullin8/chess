@@ -80,6 +80,8 @@ public class WebSocketHandler {
             //handle request
             if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
                 handleMakeMove(request, session);
+            } else if (commandType == UserGameCommand.CommandType.RESIGN) {
+                handleResign(request, session);
             }
 
         } catch (Exception e) {
@@ -148,6 +150,15 @@ public class WebSocketHandler {
                         "\n"
         );
         connections.broadcast(request.getGameID(), broadcast, session);
+    }
+
+    public void handleResign(WebSocketRequest request, Session session) throws DataAccessException {
+        GameModel gameModel = fetchGameModel(request.getGameID().toString());
+        gameModel.setValidGame(false);
+        updateGame(gameModel);
+
+        String message = request.getUsername() + "has resigned";
+        connections.broadcast(request.getGameID(), message, null);
     }
 
     @OnWebSocketClose

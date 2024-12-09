@@ -12,6 +12,7 @@ import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class GamePlayClient implements Client, NotificationHandler {
     private ServerFacade facade;
@@ -53,6 +54,7 @@ public class GamePlayClient implements Client, NotificationHandler {
                 case "redraw" -> displayBoard();
                 case "moves" -> moves();
                 case "move" -> makeMove(params);
+                case "resign" -> resignGame();
                 case "leave" -> leave();
                 case "quit" -> {
                     wsFacade.disconnect(); // Calls WebSocketFacade to disconnect
@@ -191,6 +193,28 @@ public class GamePlayClient implements Client, NotificationHandler {
         return boardBuilder.toString();
     }
 
+    private String resignGame() throws IOException {
+        Scanner scanner = new Scanner(System.in); // Create a scanner to accept user input
+        System.out.println("Are you sure you want to resign? Type 'yes' to confirm or 'no' to cancel:");
+
+        // Get user input
+        String userInput = scanner.nextLine().trim().toLowerCase();
+
+        // Check the input
+        if (userInput.equals("yes")) {
+            UserGameCommand resignCommand = new UserGameCommand(UserGameCommand.CommandType.RESIGN,
+                    authToken.getAuthToken(),
+                    currentGame.getGameID(),
+                    color,
+                    username
+            );
+            wsFacade.sendCommand(resignCommand);
+            return "resigned\n";
+        } else {
+            return "not resigned\n";
+        }
+    }
+
 
     @Override
     public String help() {
@@ -199,6 +223,7 @@ public class GamePlayClient implements Client, NotificationHandler {
                 redraw - redraws the chess board
                 moves - highlights legal moves
                 move <a1><a1> - move piece
+                resign - resign game
                 leave - a game
                 quit - playing chess
                 """;
