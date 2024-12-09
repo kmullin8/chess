@@ -109,8 +109,20 @@ public class GamePlayClient implements Client, NotificationHandler {
         return null;
     }
 
-    private String leave() {
-        return null;
+    private String leave() throws Exception {
+        UserGameCommand leaveCommand = new UserGameCommand(
+                UserGameCommand.CommandType.LEAVE,
+                AuthManager.getInstance().getAuthToken().getAuthToken(),
+                GameStateManager.getInstance().getCurrentGame().getGameID(),
+                color,
+                username
+        );
+
+        // Send the command to the server
+        wsFacade.sendCommand(leaveCommand);
+        wsFacade.disconnect();
+
+        return "left game\n";
     }
 
     @Override

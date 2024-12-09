@@ -37,16 +37,13 @@ public class Repl {
                 result = client.eval(line);
                 System.out.print(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);
 
-                if (result.startsWith("Logged in") && state == State.SIGNEDOUT) {
+                if (result.startsWith("Logged in") && state == State.SIGNEDOUT || result.startsWith("left game") && state == State.PLAYINGGAME) {
                     state = State.SIGNEDIN;
-                    //AuthManager.getInstance().setAuthToken(preLoginClient.getAuthToken());
                 } else if (result.startsWith("Joined Game") && state == State.SIGNEDIN) {
                     state = State.PLAYINGGAME;
                     //GameStateManager.getInstance().setCurrentGame(postLoginClient.getCurrentGame());
                     client = getClient();
                     Thread.sleep(1000);
-//                    result = client.eval("display"); //display board
-//                    System.out.print(result);
                 } else if (result.startsWith("Logged out") && state == State.SIGNEDIN) {
                     state = State.SIGNEDOUT;
                 }

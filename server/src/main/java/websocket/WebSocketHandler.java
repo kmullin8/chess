@@ -82,6 +82,8 @@ public class WebSocketHandler {
                 handleMakeMove(request, session);
             } else if (commandType == UserGameCommand.CommandType.RESIGN) {
                 handleResign(request, session);
+            } else if (commandType == UserGameCommand.CommandType.LEAVE) {
+                handleLeaveCommand(request, session);
             }
 
         } catch (Exception e) {
@@ -179,6 +181,20 @@ public class WebSocketHandler {
         connections.broadcast(request.getGameID(), message, null);
     }
 
+    public void handleLeaveCommand(WebSocketRequest request, Session session) throws DataAccessException {
+        GameModel gameModel = fetchGameModel(request.getGameID().toString());
+        MySqlDataAccess dataAccess = new MySqlDataAccess();
+        String username = dataAccess.getUsernameByAuthToken(request.getAuthToken());
+
+        //set username to null
+        gameModel.setWhiteUsername(null);
+        updateGame(gameModel);
+
+        //notify other players
+        connections.broadcast(request.getGameID(), username + " has left the game", session);
+        connections.remove(session);
+    }
+
     @OnWebSocketClose
     public void onClose(Session session, int statusCode, String reason) {
         System.out.println("WebSocket connection closed: " + session);
@@ -223,6 +239,9 @@ public class WebSocketHandler {
             case RESIGN -> {
                 GameModel resignGameModel = fetchGameModel(request.getGameID().toString());
                 return new Object[]{resignGameModel};
+            }
+            case LEAVE -> {
+                return null;
             }
             default -> throw new IllegalArgumentException("Unknown command type: " + request.getCommandType());
         }
