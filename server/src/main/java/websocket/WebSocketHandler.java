@@ -188,7 +188,11 @@ public class WebSocketHandler {
         String username = dataAccess.getUsernameByAuthToken(request.getAuthToken());
 
         //set username to null
-        gameModel.setWhiteUsername(null);
+        if (Objects.equals(gameModel.getWhiteUsername(), username)) {
+            gameModel.setWhiteUsername(null);
+        } else if (Objects.equals(gameModel.getBlackUsername(), username)) {
+            gameModel.setBlackUsername(null);
+        }
         updateGame(gameModel);
 
         //notify other players
