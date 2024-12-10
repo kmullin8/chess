@@ -73,9 +73,6 @@ public class WebSocketHandler {
             UserGameCommand.CommandType commandType = request.getCommandType();
             Object[] params = extractParams(request, session);
 
-            // Dispatch the command
-//            GameCommand command = commandDispatcher.getCommand(String.valueOf(commandType), params);
-//            command.execute();
 
             //handle request
             if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
@@ -120,11 +117,19 @@ public class WebSocketHandler {
         MySqlDataAccess dataAccess = new MySqlDataAccess();
         String username = dataAccess.getUsernameByAuthToken(authTokenModel);
         ChessGame.TeamColor color;
+        ChessGame.TeamColor opponentColor;
+        String opponentName;
 
         if (Objects.equals(gameModel.getWhiteUsername(), username)) {
             color = ChessGame.TeamColor.WHITE;
+
+            opponentColor = ChessGame.TeamColor.BLACK;
+            opponentName = gameModel.getBlackUsername();
         } else if (Objects.equals(gameModel.getBlackUsername(), username)) {
             color = ChessGame.TeamColor.BLACK;
+
+            opponentColor = ChessGame.TeamColor.WHITE;
+            opponentName = gameModel.getWhiteUsername();
         } else {
             handleError(session, "could not make move");
             return;
@@ -159,6 +164,17 @@ public class WebSocketHandler {
                         "\n"
         );
         connections.broadcast(request.getGameID(), broadcast, session);
+
+        //check game status
+        if (gameModel.getGame().isInCheckmate(opponentColor)) {
+            String checkMakeBroadcast = (opponentName + " is in checkmate");
+            connections.broadcast(request.getGameID(), checkMakeBroadcast, null);
+            gameModel.getGame().setValidGame(false);
+            updateGame(gameModel);
+        } else if (gameModel.getGame().isInCheck(opponentColor)) {
+            String checkBroadcast = (opponentName + " is in check");
+            connections.broadcast(request.getGameID(), checkBroadcast, null);
+        }
     }
 
     public void handleResign(WebSocketRequest request, Session session) throws DataAccessException {
