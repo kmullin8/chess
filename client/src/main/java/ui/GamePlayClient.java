@@ -11,8 +11,7 @@ import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class GamePlayClient implements Client, NotificationHandler {
     private ServerFacade facade;
@@ -22,6 +21,7 @@ public class GamePlayClient implements Client, NotificationHandler {
     private AuthTokenModel authToken;
     private ChessGame.TeamColor color;
     private String username;
+    Collection<ChessMove> validMoves;
 
     public GamePlayClient(String serverUrl) {
         var currentGame = GameStateManager.getInstance().getCurrentGame();
@@ -52,7 +52,7 @@ public class GamePlayClient implements Client, NotificationHandler {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "redraw" -> displayBoard();
-                case "moves" -> moves();
+                case "moves" -> moves(params);
                 case "move" -> makeMove(params);
                 case "resign" -> resignGame();
                 case "leave" -> leave();
@@ -68,11 +68,12 @@ public class GamePlayClient implements Client, NotificationHandler {
     }
 
     private String makeMove(String... params) throws IOException {
-        if (params.length == 2) {
+        if (params.length >= 2 && params.length <= 3) {
             setParameters();
 
             String from = params[0];
             String to = params[1];
+            ChessPiece.PieceType promotionPiece = null;
 
             // Convert 'from' string (e.g., "A1") to startRow and startColumn
             int startRow = Character.getNumericValue(from.charAt(1)); // Rows are numbered 8-1
@@ -82,10 +83,34 @@ public class GamePlayClient implements Client, NotificationHandler {
             int endRow = Character.getNumericValue(to.charAt(1));    // Rows are numbered 8-1
             int endColumn = to.toUpperCase().charAt(0) - 'A' + 1;            // Columns A-H map to 0-7
 
+            if (params.length == 3) {
+                //verify promotion can happen
+                ChessBoard currentGame = GameStateManager.getInstance().getCurrentGame().getGame().getBoard();
+                ChessPiece currentPiece = currentGame.getPiece(new ChessPosition(startRow, startColumn));
+
+                if (currentPiece.getPieceType() != ChessPiece.PieceType.PAWN) {
+                    return "cannot promote piece";
+                } else if (endRow != 8 && endRow != 1) {
+                    return "cannot promote piece";
+                }
+
+                String piece = params[2];
+                switch (piece) {
+                    case "pawn" -> promotionPiece = ChessPiece.PieceType.PAWN;
+                    case "bishop" -> promotionPiece = ChessPiece.PieceType.BISHOP;
+                    case "knight" -> promotionPiece = ChessPiece.PieceType.KNIGHT;
+                    case "rook" -> promotionPiece = ChessPiece.PieceType.ROOK;
+                    case "queen" -> promotionPiece = ChessPiece.PieceType.QUEEN;
+                    default -> {
+                        return "Expected: pawn/bishop/knight/rook/queen";
+                    }
+                }
+            }
+
             ChessMove move = new ChessMove(
                     new ChessPosition(startRow, startColumn),
                     new ChessPosition(endRow, endColumn),
-                    null
+                    promotionPiece
             );
 
             // Create a new UserGameCommand for the move
@@ -100,13 +125,29 @@ public class GamePlayClient implements Client, NotificationHandler {
 
             // Send the command to the server
             wsFacade.sendMakeMoveCommand(makeMoveCommand);
-            return "Move sent: " + from + " -> " + to;
+            return "Move sent: " + from + " -> " + to + "\n";
         }
         return "Expected: <a1> <a1>\n";
     }
 
     private String moves(String... params) {
-        return null;
+        if (params.length == 1) {
+            setParameters();
+
+            String position = params[0];
+
+            // Convert 'from' string (e.g., "A1") to startRow and startColumn
+            int startRow = Character.getNumericValue(position.charAt(1)); // Rows are numbered 8-1
+            int startColumn = position.toUpperCase().charAt(0) - 'A' + 1;        // Columns A-H map to 0-7
+
+            ChessGame game = currentGame.getGame();
+            ChessPosition currentPosition = new ChessPosition(startRow, startColumn);
+            validMoves = game.validMoves(currentPosition);
+            String board = displayBoard();
+            validMoves = null;
+            return board;
+        }
+        return "Expected:<a1>\n";
     }
 
     private String leave() throws Exception {
@@ -182,6 +223,19 @@ public class GamePlayClient implements Client, NotificationHandler {
                 boolean isLightSquare = (row + actualCol) % 2 == 0;
                 String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_DARK_GREY : EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
 
+                if (validMoves != null) {
+                    Iterator<ChessMove> iterator = validMoves.iterator();
+                    while (iterator.hasNext()) {
+                        ChessMove move = iterator.next();
+                        int validMoveRow = move.getEndPosition().getRow();
+                        int validMoveCol = move.getEndPosition().getColumn();
+
+                        if (row == validMoveRow && col == validMoveCol) {
+                            bgColor = EscapeSequences.SET_BG_COLOR_MAGENTA;
+                        }
+                    }
+                }
+
                 String pieceSymbol;
                 if (chessBoard.getPiece(position) != null) {
                     pieceSymbol = chessBoard.getPiece(position).getSymbol();
@@ -232,8 +286,8 @@ public class GamePlayClient implements Client, NotificationHandler {
         return """
                 help - with possible commands
                 redraw - redraws the chess board
-                moves - highlights legal moves
-                move <a1><a1> - move piece
+                moves <a1> - highlights legal moves
+                move <a1><a1> [promotion] - move piece
                 resign - resign game
                 leave - a game
                 quit - playing chess

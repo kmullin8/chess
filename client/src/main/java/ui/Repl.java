@@ -23,13 +23,14 @@ public class Repl {
         postLoginClient = new PostLoginClient(serverUrl);
     }
 
-    public void run() {
+    public void run() throws InterruptedException {
         client = preLoginClient; // start in prelogin
 
         System.out.println("\uD83D\uDC36 Welcome to 240 chess. Type help to get started.");
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("quit")) {
+            Thread.sleep(1000);
             System.out.print("[" + state + "] >>> ");
             String line = scanner.nextLine();
 
@@ -43,7 +44,6 @@ public class Repl {
                     state = State.PLAYINGGAME;
                     //GameStateManager.getInstance().setCurrentGame(postLoginClient.getCurrentGame());
                     client = getClient();
-                    Thread.sleep(1000);
                 } else if (result.startsWith("Logged out") && state == State.SIGNEDIN) {
                     state = State.SIGNEDOUT;
                 }
