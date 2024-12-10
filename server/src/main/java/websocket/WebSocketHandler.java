@@ -84,6 +84,7 @@ public class WebSocketHandler {
                 handleResign(request, session);
             } else if (commandType == UserGameCommand.CommandType.LEAVE) {
                 handleLeaveCommand(request, session);
+                connections.remove(session);
             }
 
         } catch (Exception e) {
@@ -192,7 +193,6 @@ public class WebSocketHandler {
 
         //notify other players
         connections.broadcast(request.getGameID(), username + " has left the game", session);
-        connections.remove(session);
     }
 
     @OnWebSocketClose

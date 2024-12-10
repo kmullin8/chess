@@ -43,7 +43,7 @@ public class WebSocketFacade extends Endpoint {
     @Override
     public void onOpen(Session session, EndpointConfig config) {
         this.session = session;
-        System.out.println("WebSocket connection established. client");
+        //System.out.println("WebSocket connection established. client");
 
         // Add a message handler for incoming messages
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {

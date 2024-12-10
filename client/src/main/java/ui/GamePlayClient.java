@@ -160,7 +160,7 @@ public class GamePlayClient implements Client, NotificationHandler {
         );
 
         // Send the command to the server
-        wsFacade.sendCommand(leaveCommand);
+        //wsFacade.sendCommand(leaveCommand);
         wsFacade.disconnect();
 
         return "left game\n";
