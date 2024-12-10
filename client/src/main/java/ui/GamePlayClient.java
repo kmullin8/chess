@@ -223,7 +223,7 @@ public class GamePlayClient implements Client, NotificationHandler {
                 boolean isLightSquare = (row + actualCol) % 2 == 0;
                 String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_DARK_GREY : EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
 
-                String newBgColor = checkValidMoves(row, col);
+                String newBgColor = checkValidMoves(row, col, isWhitePerspective);
                 if (newBgColor != null) {
                     bgColor = newBgColor;
                 }
@@ -250,15 +250,16 @@ public class GamePlayClient implements Client, NotificationHandler {
         return boardBuilder.toString();
     }
 
-    private String checkValidMoves(int row, int col) {
+    private String checkValidMoves(int row, int col, boolean isWhitePerspective) {
         if (validMoves != null) {
-            Iterator<ChessMove> iterator = validMoves.iterator();
-            while (iterator.hasNext()) {
-                ChessMove move = iterator.next();
+            for (ChessMove move : validMoves) {
                 int validMoveRow = move.getEndPosition().getRow();
                 int validMoveCol = move.getEndPosition().getColumn();
 
-                if (row == validMoveRow && col == validMoveCol) {
+                // Adjust column for Black's perspective
+                int adjustedCol = isWhitePerspective ? col : 9 - col;
+
+                if (row == validMoveRow && adjustedCol == validMoveCol) {
                     return EscapeSequences.SET_BG_COLOR_MAGENTA;
                 }
             }
