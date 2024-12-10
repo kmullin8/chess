@@ -223,17 +223,9 @@ public class GamePlayClient implements Client, NotificationHandler {
                 boolean isLightSquare = (row + actualCol) % 2 == 0;
                 String bgColor = isLightSquare ? EscapeSequences.SET_BG_COLOR_DARK_GREY : EscapeSequences.SET_BG_COLOR_LIGHT_GREY;
 
-                if (validMoves != null) {
-                    Iterator<ChessMove> iterator = validMoves.iterator();
-                    while (iterator.hasNext()) {
-                        ChessMove move = iterator.next();
-                        int validMoveRow = move.getEndPosition().getRow();
-                        int validMoveCol = move.getEndPosition().getColumn();
-
-                        if (row == validMoveRow && col == validMoveCol) {
-                            bgColor = EscapeSequences.SET_BG_COLOR_MAGENTA;
-                        }
-                    }
+                String newBgColor = checkValidMoves(row, col);
+                if (newBgColor != null) {
+                    bgColor = newBgColor;
                 }
 
                 String pieceSymbol;
@@ -256,6 +248,22 @@ public class GamePlayClient implements Client, NotificationHandler {
         boardBuilder.append(columnLabels).append("\n");
 
         return boardBuilder.toString();
+    }
+
+    private String checkValidMoves(int row, int col) {
+        if (validMoves != null) {
+            Iterator<ChessMove> iterator = validMoves.iterator();
+            while (iterator.hasNext()) {
+                ChessMove move = iterator.next();
+                int validMoveRow = move.getEndPosition().getRow();
+                int validMoveCol = move.getEndPosition().getColumn();
+
+                if (row == validMoveRow && col == validMoveCol) {
+                    return EscapeSequences.SET_BG_COLOR_MAGENTA;
+                }
+            }
+        }
+        return null;
     }
 
     private String resignGame() throws IOException {
