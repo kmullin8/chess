@@ -10,10 +10,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
+    private static ConnectionManager instance; // Singleton instance
+
     private final Map<Integer, List<Session>> connections = new HashMap<>();
+
+    // Private constructor to prevent instantiation
+    private ConnectionManager() {
+    }
+
+    // Public method to get the singleton instance
+    public static synchronized ConnectionManager getInstance() {
+        if (instance == null) {
+            instance = new ConnectionManager();
+        }
+        return instance;
+    }
 
     // Add a session for a specific game ID
     public void add(Integer gameID, Session session) {
@@ -32,19 +45,15 @@ public class ConnectionManager {
         if (sessions != null) {
             for (Session session : sessions) {
                 try {
-                    //skip ignoreSession
                     if (session.equals(ignoreSession)) {
                         continue; // Skip this session
                     }
 
-                    // Create a ServerMessage with NOTIFICATION type
                     ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
                     serverMessage.setMessage(message);
 
-                    // Convert the ServerMessage to JSON
                     String jsonMessage = new Gson().toJson(serverMessage);
 
-                    // Send the JSON message to the client
                     System.err.println("sending broadcast to gameID " + gameID + ": " + message); // Testing
                     session.getRemote().sendString(jsonMessage);
                 } catch (IOException e) {
@@ -61,22 +70,17 @@ public class ConnectionManager {
         if (sessions != null) {
             for (Session session : sessions) {
                 try {
-                    //skip ignoreSession
                     if (session.equals(ignoreSession)) {
                         continue; // Skip this session
                     }
 
-                    // Create the ServerMessage with the LOAD_GAME type
                     ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
 
-                    // Serialize the game model as JSON and set it as the payload
                     String gameStateJson = new Gson().toJson(gameModel);
                     serverMessage.setGame(gameStateJson);
 
-                    // Convert the entire server message to JSON
                     String responseJson = new Gson().toJson(serverMessage);
 
-                    // Send the JSON message to the client
                     session.getRemote().sendString(responseJson);
                 } catch (IOException e) {
                     System.err.println("Error broadcasting message: " + e.getMessage());

@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @WebSocket
 public class WebSocketHandler {
-    private final ConnectionManager connections = new ConnectionManager();
+    private final ConnectionManager connections = ConnectionManager.getInstance(); // Singleton instance
     private final Gson gson = new Gson();
     private final CommandDispatcher commandDispatcher;
 
